@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "title": "Identité Visuelle pour une Start-up",
+        "description": "Création d'un logo, d'une charte graphique et de supports de communication pour une start-up innovante dans le domaine des énergies renouvelables.",
+        "image": "/images/project1.jpg",
+        "tags": [
+            "Graphisme",
+            "Branding",
+            "Logo"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Illustrations pour un Livre pour Enfants",
+        "description": "Réalisation d'illustrations originales pour un livre destiné aux enfants de 6 à 10 ans, avec un style coloré et ludique.",
+        "image": "/images/project2.jpg",
+        "tags": [
+            "Illustration",
+            "Livre",
+            "Enfants"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Design d'Interface pour une Application Mobile",
+        "description": "Conception de l'interface utilisateur et des maquettes pour une application mobile de gestion de tâches.",
+        "image": "/images/project3.jpg",
+        "tags": [
+            "UI/UX",
+            "Application Mobile",
+            "Design Numérique"
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Affiche pour un Festival de Musique",
+        "description": "Création d'une affiche promotionnelle pour un festival de musique électronique, avec un style moderne et dynamique.",
+        "image": "/images/project4.jpg",
+        "tags": [
+            "Affiche",
+            "Musique",
+            "Événementiel"
+        ]
+    },
+    {
+        "id": 5,
+        "title": "Animation 2D pour une Campagne Publicitaire",
+        "description": "Production d'une animation 2D pour une campagne publicitaire en ligne, mettant en avant un produit innovant.",
+        "image": "/images/project5.jpg",
+        "tags": [
+            "Animation",
+            "Publicité",
+            "Motion Design"
+        ]
+    }
+]
