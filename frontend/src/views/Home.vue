@@ -31,25 +31,16 @@
             <section class="home__projects">
                 <h2>Derniers projets</h2>
                 <div class="projects-grid">
-                    <div v-for="project in projects" :key="project.id" class="project-item">
+                    <div v-for="project in latestProjects" :key="project.id" class="project-item">
                         <img :src="`http://localhost:3000${project.image}`" :alt="project.title" />
                         <p class="project-title">{{ project.title }}</p>
                         <p class="project-desc">{{ project.description }}</p>
                     </div>
                 </div>
+                <router-link to="/projects" class="btn-more">Voir plus</router-link>
             </section>
 
             <!-- Réseaux & CV -->
-            <div class="home__links">
-                <a href="#" aria-label="WhatsApp">Whatsapp</a>
-                <a href="#" aria-label="LinkedIn">LinkedIn</a>
-                <a href="mailto:sashacarton2005@gmail.com" aria-label="Email">mail</a>
-                <a href="#" aria-label="GitHub">GitHub</a>
-                <a href="#" aria-label="Instagram">Instagram</a>
-                <a href="/assets/CV_Pénélope_LETIENNE.pdf" class="btn-cv" download>
-                    Télécharger le CV
-                </a>
-            </div>
 
             <div class="home__arrow home__arrow--bottom">↓</div>
         </main>
@@ -60,16 +51,29 @@
 import { ref, onMounted } from 'vue';
 
 const projects = ref([]);
+const latestProjects = ref([]);
 
 onMounted(async () => {
     try {
         const response = await fetch('http://localhost:3000/api/projects');
         if (!response.ok) throw new Error('Erreur réseau');
-        projects.value = await response.json();
+        const data = await response.json();
+        projects.value = data;
+        latestProjects.value = data.slice(-3).reverse(); // Récupère les 3 derniers projets
     } catch (error) {
         console.error('Impossible de charger les projets :', error);
     }
 });
+
+onMounted(() => {
+    document.querySelector('.home__arrow').addEventListener('click', () => {
+        document.querySelector('.home__text').scrollIntoView({ behavior: 'smooth' });
+    });
+    document.querySelector('.home__arrow--bottom').addEventListener('click', () => {
+        document.querySelector('.home__projects').scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
 </script>
 
 <style scoped>
@@ -79,6 +83,7 @@ onMounted(async () => {
     color: #6a4b8a;
     font-family: "Helvetica Neue", sans-serif;
     overflow: hidden;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
 /* Skip link invisible sauf au focus */
@@ -135,10 +140,12 @@ onMounted(async () => {
     margin-bottom: 2rem;
     opacity: 0.5;
     animation: bounce 2s infinite;
+    cursor: pointer;
 }
 
 .home__arrow--bottom {
     margin-top: 2rem;
+    cursor: pointer;
 }
 
 /* Texte d’introduction */
@@ -170,6 +177,8 @@ onMounted(async () => {
 
 .projects-grid {
     display: grid;
+    width: 50%;
+    margin: 0 auto; 
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Colonnes adaptatives */
     gap: 2rem; /* Espacement entre les projets */
 }
@@ -216,6 +225,26 @@ onMounted(async () => {
     color: #fff;
 }
 
+/* Bouton Voir plus */
+.btn-more {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #6a4b8a;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: 300;
+    letter-spacing: 1px;
+    transition: background 0.3s ease;
+}
+
+.btn-more:hover {
+    background: #563d6e;
+}
+
 /* Animation simple */
 @keyframes bounce {
 
@@ -226,6 +255,18 @@ onMounted(async () => {
 
     50% {
         transform: translateY(10px)
+    }
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

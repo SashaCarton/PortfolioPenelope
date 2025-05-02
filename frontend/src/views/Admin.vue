@@ -1,64 +1,88 @@
 <template>
   <div class="admin">
-    <h1>Gestion des Projets</h1>
+    <h1>Gestion des Projets et Messages</h1>
 
-    <!-- Indicateur de mode édition -->
-    <div v-if="isEditing" class="edit-banner">
-      <p>✏️ Modification du projet : <strong>{{ form.title }}</strong></p>
-      <button @click="resetForm" class="btn-cancel">Annuler</button>
+    <!-- Onglets pour basculer entre Projets et Messages -->
+    <div class="tabs">
+      <button :class="{ active: activeTab === 'projects' }" @click="activeTab = 'projects'">Projets</button>
+      <button :class="{ active: activeTab === 'messages' }" @click="activeTab = 'messages'">Messages</button>
     </div>
 
-    <!-- Formulaire pour créer ou modifier un projet -->
-    <form @submit.prevent="handleSubmit" class="project-form">
-      <div class="form-group">
-        <label for="title">Titre</label>
-        <input type="text" id="title" v-model="form.title" required />
+    <!-- Contenu des Projets -->
+    <div v-if="activeTab === 'projects'">
+      <!-- Indicateur de mode édition pour les projets -->
+      <div v-if="isEditing" class="edit-banner">
+        <p>✏️ Modification du projet : <strong>{{ form.title }}</strong></p>
+        <button @click="resetForm" class="btn-cancel">Annuler</button>
       </div>
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" v-model="form.description" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="link">Lien</label>
-        <input type="url" id="link" v-model="form.link" />
-      </div>
-      <div class="form-group">
-        <label for="image">Image</label>
-        <input type="file" id="image" @change="handleImageUpload" />
-        <img v-if="previewImage" :src="previewImage" alt="Aperçu de l'image" class="preview-image" />
-      </div>
-      <div class="form-group">
-        <label for="tags">Tags (séparés par des virgules)</label>
-        <input type="text" id="tags" v-model="form.tags" placeholder="Exemple : Graphisme, Branding, Logo" />
-      </div>
-      <button type="submit" class="btn-primary">
-        {{ isEditing ? 'Modifier' : 'Créer' }} le projet
-      </button>
-    </form>
 
-    <hr />
-
-    <!-- Liste des projets existants -->
-    <h2>Projets existants</h2>
-    <ul class="project-list">
-      <li v-for="project in projects" :key="project.id" class="project-item">
-        <div class="project-header">
-          <h3>{{ project.title }}</h3>
-          <div class="project-actions">
-            <button @click="editProject(project)" class="btn-secondary">Modifier</button>
-            <button @click="deleteProject(project.id)" class="btn-danger">Supprimer</button>
-          </div>
+      <!-- Formulaire pour créer ou modifier un projet -->
+      <form @submit.prevent="handleSubmit" class="project-form">
+        <div class="form-group">
+          <label for="title">Titre</label>
+          <input type="text" id="title" v-model="form.title" required />
         </div>
-        <p>{{ project.description }}</p>
-        <img :src="`http://localhost:3000${project.image}`" :alt="project.title" />
-        <ul class="tags-list" v-if="project.tags && project.tags.length">
-          <li v-for="tag in project.tags" :key="tag" class="tag-item">{{ tag }}</li>
-        </ul>
-        <a :href="project.link" target="_blank" class="project-link" v-if="project.link">
-          Voir le projet
-        </a>
-      </li>
-    </ul>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" v-model="form.description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="link">Lien</label>
+          <input type="url" id="link" v-model="form.link" />
+        </div>
+        <div class="form-group">
+          <label for="image">Image</label>
+          <input type="file" id="image" @change="handleImageUpload" />
+          <img v-if="previewImage" :src="previewImage" alt="Aperçu de l'image" class="preview-image" />
+        </div>
+        <div class="form-group">
+          <label for="tags">Tags (séparés par des virgules)</label>
+          <input type="text" id="tags" v-model="form.tags" placeholder="Exemple : Graphisme, Branding, Logo" />
+        </div>
+        <button type="submit" class="btn-primary">
+          {{ isEditing ? 'Modifier' : 'Créer' }} le projet
+        </button>
+      </form>
+
+      <hr />
+
+      <!-- Liste des projets existants -->
+      <h2>Projets existants</h2>
+      <ul class="project-list">
+        <li v-for="project in projects" :key="project.id" class="project-item">
+          <div class="project-header">
+            <h3>{{ project.title }}</h3>
+            <div class="project-actions">
+              <button @click="editProject(project)" class="btn-secondary">Modifier</button>
+              <button @click="deleteProject(project.id)" class="btn-danger">Supprimer</button>
+            </div>
+          </div>
+          <p>{{ project.description }}</p>
+          <img :src="`http://localhost:3000${project.image}`" :alt="project.title" />
+          <ul class="tags-list" v-if="project.tags && project.tags.length">
+            <li v-for="tag in project.tags" :key="tag" class="tag-item">{{ tag }}</li>
+          </ul>
+          <a :href="project.link" target="_blank" class="project-link" v-if="project.link">
+            Voir le projet
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Contenu des Messages -->
+    <div v-if="activeTab === 'messages'">
+      <h2>Messages reçus</h2>
+      <ul class="message-list">
+        <li v-for="message in messages" :key="message.id" class="message-item">
+          <div class="message-header">
+            <h3>{{ message.name }} ({{ message.email }})</h3>
+            <button @click="deleteMessage(message.id)" class="btn-danger">Supprimer</button>
+          </div>
+          <p>{{ message.message }}</p>
+          <small>Reçu le : {{ new Date(message.date).toLocaleString() }}</small>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -69,7 +93,9 @@ export default {
   name: 'AdminProjects',
   data() {
     return {
+      activeTab: 'projects', // Onglet actif par défaut
       projects: [],
+      messages: [],
       form: { id: null, title: '', description: '', link: '', image: null, tags: '' },
       isEditing: false,
       previewImage: null,
@@ -82,6 +108,30 @@ export default {
         this.projects = data;
       } catch (err) {
         console.error('Erreur lors de la récupération des projets :', err);
+      }
+    },
+
+    async fetchMessages() {
+      try {
+        const { data } = await axios.get('http://localhost:3000/api/messages');
+        this.messages = data;
+      } catch (err) {
+        console.error('Erreur lors de la récupération des messages :', err);
+      }
+    },
+
+    async deleteMessage(id) {
+      console.log('Tentative de suppression du message avec ID :', id); // Log pour vérifier l'ID
+      try {
+        const response = await axios.delete(`/api/messages/${id.toString()}`); // Conversion explicite de l'ID en chaîne
+        if (response.status === 204) {
+          this.messages = this.messages.filter(m => m.id !== id);
+          console.log('Message supprimé avec succès'); // Log pour succès
+        } else {
+          console.error('Erreur inattendue lors de la suppression du message');
+        }
+      } catch (err) {
+        console.error('Erreur lors de la suppression du message :', err);
       }
     },
 
@@ -146,9 +196,11 @@ export default {
     },
 
     async deleteProject(id) {
+      console.log('Tentative de suppression du projet avec ID :', id); // Log pour vérifier l'ID
       try {
         await axios.delete(`http://localhost:3000/api/projects/${id}`);
         this.projects = this.projects.filter(p => p.id !== id);
+        console.log('Projet supprimé avec succès'); // Log pour succès
       } catch (err) {
         console.error('Erreur lors de la suppression du projet :', err);
       }
@@ -156,11 +208,27 @@ export default {
   },
   mounted() {
     this.fetchProjects();
+    this.fetchMessages();
   },
 };
 </script>
 
 <style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
 .admin {
   max-width: 800px;
   margin: 2rem auto;
@@ -170,6 +238,28 @@ export default {
   font-family: 'Helvetica Neue', sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  background: none;
+  border: 1px solid #6a4b8a;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  color: #6a4b8a;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.tabs button.active {
+  background: #6a4b8a;
+  color: white;
 }
 
 .edit-banner {
@@ -324,5 +414,24 @@ img {
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
+}
+
+.message-list {
+  list-style: none;
+  padding: 0;
+}
+
+.message-item {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

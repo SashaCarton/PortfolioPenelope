@@ -21,6 +21,17 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Admin',
         component: () => import('./views/Admin.vue'),
     },
+    {
+        path: '/projects',
+        name: 'Projects',
+        component: () => import('./views/Projects.vue'),
+    },
+    {
+        path: '/projects/:id',
+        name: 'ProjectDetails',
+        component: () => import('./views/ProjectDetails.vue'),
+        props: true,
+    },
 ];
 
 const router = createRouter({

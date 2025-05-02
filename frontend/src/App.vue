@@ -15,6 +15,16 @@
     </main>
 
     <footer>
+      <div class="home__links">
+                <a href="#" aria-label="WhatsApp">Whatsapp</a>
+                <a href="#" aria-label="LinkedIn">LinkedIn</a>
+                <a href="mailto:sashacarton2005@gmail.com" aria-label="Email">mail</a>
+                <a href="#" aria-label="GitHub">GitHub</a>
+                <a href="#" aria-label="Instagram">Instagram</a>
+                <a href="/assets/CV_Pénélope_LETIENNE.pdf" class="btn-cv" download>
+                    Télécharger le CV
+                </a>
+            </div>
       <p>&copy; 2023 Pénélope Letienne. Tous droits réservés.</p>
     </footer>
   </div>
@@ -42,8 +52,8 @@ import router from './router'
   text-decoration: none;
   color: #6a4b8a;
   /* Violet élégant */
-  font-size: 0.875rem;
-  font-weight: 300;
+  font-size: 1rem;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -51,23 +61,69 @@ import router from './router'
 .home__nav a:hover {
   color: #4b306a;
   /* Violet plus foncé pour le survol */
-  text-decoration: underline;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 footer {
-  background: #6a4b8a; /* même couleur que les liens nav */
-  color: #fff;
+  color: #6a4b8a;
   text-align: center;
   padding: 1.5rem 0;
   font-size: 0.875rem;
   font-weight: 300;
   letter-spacing: 0.5px;
-  border-top: 3px solid #4b306a; /* rappel du hover */
   text-transform: uppercase;
+  align-items: center;
 }
 
 footer p {
   margin: 0;
 }
 
+.btn-cv {
+    border: 1px solid #6a4b8a;
+    padding: 0.5rem 1rem;
+  }
+
+.btn-cv:hover {
+    background: #6a4b8a;
+    color: #fff;
+}
+
+/* Réseaux sociaux & CV */
+.home__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+    align-items: center;
+}
+
+.home__links a {
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: #6a4b8a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none!important;
+}
+.home__links a:hover {
+    color: #4b306a;
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: slideFadeIn 1s ease-in-out;
+}
 </style>

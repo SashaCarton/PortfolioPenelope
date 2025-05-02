@@ -7,7 +7,8 @@
     "tags": [
       "Graphisme",
       "Branding",
-      "Logo"
+      "Logo",
+      "Affiche"
     ],
     "link": "undefined"
   },
@@ -15,7 +16,7 @@
     "id": 2,
     "title": "Illustrations pour un Livre pour Enfants",
     "description": "Réalisation d'illustrations originales pour un livre destiné aux enfants de 6 à 10 ans, avec un style coloré et ludique.",
-    "image": "1746174622253-836986974.png",
+    "image": "1746173719002-573425683.png",
     "tags": [
       "Illustration",
       "Livre",
@@ -27,33 +28,156 @@
     "id": 3,
     "title": "Design d'Interface pour une Application Mobile",
     "description": "Conception de l'interface utilisateur et des maquettes pour une application mobile de gestion de tâches.",
-    "image": "/images/project3.jpg",
+    "image": "1746173719002-573425683.png",
     "tags": [
       "UI/UX",
       "Application Mobile",
       "Design Numérique"
-    ]
+    ],
+    "link": "undefined"
   },
   {
     "id": 4,
     "title": "Affiche pour un Festival de Musique",
     "description": "Création d'une affiche promotionnelle pour un festival de musique électronique, avec un style moderne et dynamique.",
-    "image": "/images/project4.jpg",
+    "image": "1746173719002-573425683.png",
     "tags": [
       "Affiche",
       "Musique",
       "Événementiel"
-    ]
+    ],
+    "link": "undefined"
   },
   {
     "id": 5,
     "title": "Animation 2D pour une Campagne Publicitaire",
     "description": "Production d'une animation 2D pour une campagne publicitaire en ligne, mettant en avant un produit innovant.",
-    "image": "/images/project5.jpg",
+    "image": "1746173719002-573425683.png",
     "tags": [
       "Animation",
       "Publicité",
       "Motion Design"
-    ]
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 6,
+    "title": "Conception d'un Site Web pour une ONG",
+    "description": "Développement d'un site web interactif pour une ONG, mettant en avant leurs projets et permettant les dons en ligne.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Web Design",
+      "Développement",
+      "ONG"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 7,
+    "title": "Photographie pour une Campagne Mode",
+    "description": "Shooting photo pour une campagne publicitaire d'une marque de vêtements, avec un style urbain et moderne.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Photographie",
+      "Mode",
+      "Publicité"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 8,
+    "title": "Vidéo Promotionnelle pour un Produit Tech",
+    "description": "Réalisation d'une vidéo promotionnelle pour un produit technologique innovant, avec des animations 3D.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Vidéo",
+      "Technologie",
+      "3D"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 9,
+    "title": "Création d'une Infographie pour une Étude",
+    "description": "Conception d'une infographie claire et visuellement attrayante pour présenter les résultats d'une étude.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Infographie",
+      "Design",
+      "Données"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 10,
+    "title": "Packaging pour une Marque de Cosmétiques",
+    "description": "Design d'un packaging élégant et écologique pour une nouvelle gamme de cosmétiques.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Packaging",
+      "Cosmétiques",
+      "Écologie"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 11,
+    "title": "Campagne de Réseaux Sociaux pour une Start-up",
+    "description": "Création de visuels et de contenus pour une campagne de réseaux sociaux visant à promouvoir une start-up.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Réseaux Sociaux",
+      "Marketing",
+      "Start-up"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 12,
+    "title": "Design d'un Magazine Culturel",
+    "description": "Mise en page et design graphique d'un magazine culturel, avec un style moderne et épuré.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Magazine",
+      "Culture",
+      "Graphisme"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 13,
+    "title": "Création d'un Jeu Vidéo 2D",
+    "description": "Développement d'un jeu vidéo 2D avec des graphismes pixel art et une mécanique de plateforme.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Jeu Vidéo",
+      "2D",
+      "Pixel Art"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 14,
+    "title": "Brochure pour une Agence de Voyage",
+    "description": "Conception d'une brochure attrayante pour promouvoir les offres d'une agence de voyage.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Brochure",
+      "Voyage",
+      "Publicité"
+    ],
+    "link": "undefined"
+  },
+  {
+    "id": 15,
+    "title": "Logo pour une Entreprise de Technologie",
+    "description": "Création d'un logo minimaliste et moderne pour une entreprise spécialisée dans les solutions technologiques.",
+    "image": "1746173719002-573425683.png",
+    "tags": [
+      "Logo",
+      "Technologie",
+      "Design"
+    ],
+    "link": "undefined"
   }
 ]

@@ -89,6 +89,7 @@
     background: #fff;
     color: #6a4b8a;
     font-family: "Helvetica Neue", sans-serif;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
 /* Titre et sous-titre */
@@ -194,5 +195,16 @@ footer {
     .text-block h2 {
         font-size: 1.3rem;
     }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
