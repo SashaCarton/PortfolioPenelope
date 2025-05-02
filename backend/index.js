@@ -44,6 +44,21 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5 Mo
 });
 
+// Modification de la configuration de multer pour gérer plusieurs fichiers
+const uploadMultiple = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            console.error(`Type de fichier non supporté : ${file.mimetype}`);
+            return cb(new Error('Type de fichier non supporté'), false);
+        }
+        console.log(`Fichier accepté : ${file.originalname}`);
+        cb(null, true);
+    },
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limite de 50 Mo
+});
+
 // Middleware pour gérer les erreurs de multer
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
@@ -105,7 +120,7 @@ app.get('/api/projects', (req, res) => {
     res.json(updatedProjects);
 });
 
-// Endpoint pour récupérer un projet par ID
+// Endpoint pour récupérer un projet par ID avec ses médias
 app.get('/api/projects/:id', (req, res) => {
     try {
         const projects = readProjects();
@@ -116,54 +131,46 @@ app.get('/api/projects/:id', (req, res) => {
             return res.status(404).json({ error: 'Projet non trouvé.' });
         }
 
-        res.json({
-            ...project,
-            image: project.image ? `/uploads/${project.image}` : null, // Assurez-vous que le chemin est correct
-        });
+        res.json(project);
     } catch (error) {
         console.error('Erreur lors de la récupération du projet :', error);
         res.status(500).json({ error: 'Erreur interne du serveur.' });
     }
 });
 
-// Endpoint pour créer un projet
-app.post('/api/projects', upload.single('image'), (req, res) => {
+// Endpoint pour créer un projet avec plusieurs fichiers
+app.post('/api/projects', uploadMultiple.array('media', 10), (req, res) => {
     try {
-        console.log('Requête reçue pour créer un projet'); // Log pour début de requête
-        if (req.file) {
-            console.log(`Fichier téléchargé : ${req.file.filename}`); // Log pour fichier téléchargé
-        } else {
-            console.warn('Aucun fichier téléchargé'); // Log si aucun fichier
-        }
-
+        console.log('Requête reçue pour créer un projet');
         const projects = readProjects();
         const { title, description, link, tags } = req.body;
-        const image = req.file ? req.file.filename : null;
+
+        const mediaFiles = req.files.map(file => ({
+            filename: file.filename,
+            type: file.mimetype.startsWith('image/') ? 'image' : 'video',
+        }));
 
         const newProject = {
             id: Date.now(),
-            title: title || 'Sans titre', // Valeur par défaut si le titre est absent
+            title: title || 'Sans titre',
             description: description || '',
-            link: link && link !== 'undefined' ? link : '', // Remplace "undefined" par une chaîne vide
-            tags: tags ? tags.split(',').map(tag => tag.trim()) : [], // Gérer les tags absents
-            image,
+            link: link && link !== 'undefined' ? link : '',
+            tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+            media: mediaFiles,
         };
 
         projects.push(newProject);
         writeProjects(projects);
 
-        res.status(201).json({
-            ...newProject,
-            image: newProject.image ? `/uploads/${newProject.image}` : null, // Assurez-vous que le chemin est correct
-        });
+        res.status(201).json(newProject);
     } catch (error) {
         console.error('Erreur lors de la création du projet :', error);
         res.status(500).send('Erreur interne du serveur');
     }
 });
 
-// Endpoint pour modifier un projet
-app.put('/api/projects/:id', upload.single('image'), (req, res) => {
+// Correction de la logique pour enregistrer correctement les médias
+app.put('/api/projects/:id', uploadMultiple.array('media', 10), (req, res) => {
     try {
         const projects = readProjects();
         const id = parseInt(req.params.id, 10);
@@ -174,7 +181,15 @@ app.put('/api/projects/:id', upload.single('image'), (req, res) => {
         }
 
         const { title, description, link, tags } = req.body;
-        const image = req.file ? req.file.filename : projects[index].image;
+
+        // Ajouter les nouveaux fichiers médias
+        const mediaFiles = req.files.map(file => ({
+            filename: file.filename,
+            type: file.mimetype.startsWith('image/') ? 'image' : 'video',
+        }));
+
+        // Conserver les médias existants et ajouter les nouveaux
+        const updatedMedia = projects[index].media ? [...projects[index].media, ...mediaFiles] : mediaFiles;
 
         projects[index] = {
             ...projects[index],
@@ -182,15 +197,12 @@ app.put('/api/projects/:id', upload.single('image'), (req, res) => {
             description: description || projects[index].description,
             link: link && link !== 'undefined' ? link : projects[index].link, // Remplace "undefined" par la valeur existante ou une chaîne vide
             tags: tags ? tags.split(',').map(tag => tag.trim()) : projects[index].tags, // Conserver les tags existants si absents
-            image,
+            media: updatedMedia,
         };
 
         writeProjects(projects);
 
-        res.json({
-            ...projects[index],
-            image: projects[index].image ? `/uploads/${projects[index].image}` : null, // Assurez-vous que le chemin est correct
-        });
+        res.json(projects[index]);
     } catch (error) {
         console.error('Erreur lors de la modification du projet :', error);
         res.status(500).send('Erreur interne du serveur');
@@ -310,6 +322,26 @@ app.delete('/api/messages/:id', (req, res) => {
 // Endpoint pour gérer les requêtes GET sur /api/contact
 app.get('/api/contact', (req, res) => {
     res.status(405).json({ error: "Méthode non autorisée. Utilisez une requête POST pour soumettre le formulaire." });
+});
+
+// Chemin vers le fichier JSON contenant les utilisateurs
+const usersFilePath = path.join(__dirname, 'data', 'users.json');
+
+// Endpoint pour l'authentification
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Lire les utilisateurs depuis le fichier JSON
+    const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf-8'));
+
+    // Vérifier si l'utilisateur existe et si le mot de passe correspond
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        return res.json({ success: true, token: 'admin-token' }); // Retourne un token fictif
+    }
+
+    res.status(401).json({ success: false, message: 'Identifiants invalides' });
 });
 
 app.listen(3000, () => console.log('Backend en écoute sur http://localhost:3000'));

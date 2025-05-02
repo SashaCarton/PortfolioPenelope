@@ -9,21 +9,21 @@
                 Pénélope<br>
                 <span class="home__lastname">Letienne</span>
             </h1>
-            <p class="home__subtitle">Digital Design Student</p>
+            <p class="home__subtitle">Étudiante en design numérique</p>
 
             <div class="home__arrow">↓</div>
 
             <div class="home__text">
                 <p>
-                    Now a digital design student at the ENSAAMA school of Paris since September,
-                    I am currently looking for an internship in the world of new technologies
-                    combined with creative techniques and knowledge.
+                    Actuellement étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre,
+                    je suis à la recherche d'un stage dans le monde des nouvelles technologies
+                    combinées à des techniques créatives et des connaissances.
                 </p>
                 <p>
-                    Trained in fine arts for 9 years at the plastic arts school of Lens since 2012,
-                    I then joined the ESAAT school of Roubaix in order to achieve a BAC STD2A
-                    (applied art). At the same time, I worked on many digital projects, because
-                    I am a fan of technologies, web, games, immersive experiences …
+                    Formée aux beaux-arts pendant 9 ans à l'école d'arts plastiques de Lens depuis 2012,
+                    j'ai ensuite rejoint l'école ESAAT de Roubaix afin d'obtenir un BAC STD2A
+                    (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car
+                    je suis passionnée par les technologies, le web, les jeux, les expériences immersives …
                 </p>
             </div>
 
@@ -31,7 +31,12 @@
             <section class="home__projects">
                 <h2>Derniers projets</h2>
                 <div class="projects-grid">
-                    <div v-for="project in latestProjects" :key="project.id" class="project-item">
+                    <div
+                        v-for="project in latestProjects"
+                        :key="project.id"
+                        class="project-item"
+                        @click="goToProjectDetails(project.id)"
+                    >
                         <img :src="`http://localhost:3000${project.image}`" :alt="project.title" />
                         <p class="project-title">{{ project.title }}</p>
                         <p class="project-desc">{{ project.description }}</p>
@@ -49,9 +54,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const projects = ref([]);
 const latestProjects = ref([]);
+const router = useRouter();
 
 onMounted(async () => {
     try {
@@ -74,6 +81,9 @@ onMounted(() => {
     });
 });
 
+function goToProjectDetails(projectId) {
+    router.push({ name: 'ProjectDetails', params: { id: projectId } });
+}
 </script>
 
 <style scoped>
@@ -187,6 +197,18 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .project-item img {

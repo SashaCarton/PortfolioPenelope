@@ -9,22 +9,21 @@
         <li><router-link to="/admin">Admin</router-link></li>
       </ul>
     </nav>
-
+    
     <main>
       <router-view></router-view> <!-- C'est ici que les pages vont s'afficher -->
     </main>
-
+    
     <footer>
       <div class="home__links">
-                <a href="#" aria-label="WhatsApp">Whatsapp</a>
-                <a href="#" aria-label="LinkedIn">LinkedIn</a>
-                <a href="mailto:sashacarton2005@gmail.com" aria-label="Email">mail</a>
-                <a href="#" aria-label="GitHub">GitHub</a>
-                <a href="#" aria-label="Instagram">Instagram</a>
-                <a href="/assets/CV_Pénélope_LETIENNE.pdf" class="btn-cv" download>
-                    Télécharger le CV
-                </a>
-            </div>
+        <a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="mailto:sashacarton2005@gmail.com" aria-label="Email" rel="noopener noreferrer">Email</a>
+        <a href="https://github.com/Penny0507" aria-label="GitHub" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.instagram.com/penelope.ltn" aria-label="Instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="/assets/Cv.pdf" class="btn-cv" download>
+          Télécharger le CV
+        </a>
+      </div>
       <p>&copy; 2023 Pénélope Letienne. Tous droits réservés.</p>
     </footer>
   </div>
@@ -81,35 +80,35 @@ footer p {
 }
 
 .btn-cv {
-    border: 1px solid #6a4b8a;
-    padding: 0.5rem 1rem;
-  }
+  border: 1px solid #6a4b8a;
+  padding: 0.5rem 1rem;
+}
 
 .btn-cv:hover {
-    background: #6a4b8a;
-    color: #fff;
+  background: #6a4b8a;
+  color: #fff;
 }
 
 /* Réseaux sociaux & CV */
 .home__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    margin: 2rem 0;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+  align-items: center;
 }
 
 .home__links a {
-    font-size: 0.875rem;
-    font-weight: 300;
-    color: #6a4b8a;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-decoration: none!important;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: #6a4b8a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none!important;
 }
 .home__links a:hover {
-    color: #4b306a;
+  color: #4b306a;
 }
 
 @keyframes slideFadeIn {

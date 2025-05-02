@@ -11,9 +11,15 @@
       </ul>
       <a v-if="project.link" :href="project.link" target="_blank" class="project-link">Voir le projet</a>
 
-      <!-- Galerie d'images associées au projet -->
+      <!-- Galerie d'images et vidéos associées au projet -->
       <div class="project-gallery">
-        <img v-for="(image, index) in project.gallery" :key="index" :src="image" :alt="`Image ${index + 1}`" />
+        <div v-for="(media, index) in project.media" :key="index" class="media-item">
+          <img v-if="media.type === 'image'" :src="`http://localhost:3000/uploads/${media.filename}`" :alt="`Image ${index + 1}`" />
+          <video v-else-if="media.type === 'video'" controls>
+            <source :src="`http://localhost:3000/uploads/${media.filename}`" :type="media.type" />
+            Votre navigateur ne supporte pas la lecture de vidéos.
+          </video>
+        </div>
       </div>
     </div>
   </section>
@@ -36,15 +42,7 @@ onMounted(async () => {
       throw new Error(`Erreur réseau : ${response.statusText}`);
     }
     const data = await response.json();
-    project.value = {
-      ...data,
-      gallery: [
-        // Exemple d'images associées au projet
-        `http://localhost:3000/uploads/${data.image}`,
-        `http://localhost:3000/uploads/example1.jpg`,
-        `http://localhost:3000/uploads/example2.jpg`,
-      ],
-    };
+    project.value = data;
   } catch (err) {
     console.error('Erreur lors du chargement du projet :', err);
     error.value = 'Impossible de charger le projet. Veuillez réessayer plus tard.';
@@ -95,54 +93,17 @@ onMounted(async () => {
 
 .project-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
   margin-top: 2rem;
 }
 
-.project-gallery img {
+.media-item img,
+.media-item video {
   width: 100%;
   height: auto;
-  border-radius: 8px; /* Coins arrondis pour un style plus doux */
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  object-fit: cover;
-}
-
-/* Styles pour des hauteurs et tailles variées */
-.project-gallery img:nth-child(1) {
-  grid-row: span 2;
-  grid-column: span 2;
-  height: 300px;
-}
-
-.project-gallery img:nth-child(2) {
-  grid-row: span 1;
-  grid-column: span 1;
-  height: 150px;
-}
-
-.project-gallery img:nth-child(3) {
-  grid-row: span 1;
-  grid-column: span 2;
-  height: 200px;
-}
-
-.project-gallery img:nth-child(4) {
-  grid-row: span 2;
-  grid-column: span 1;
-  height: 250px;
-}
-
-.project-gallery img:nth-child(5) {
-  grid-row: span 1;
-  grid-column: span 1;
-  height: 150px;
-}
-
-.project-gallery img:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .project-description {

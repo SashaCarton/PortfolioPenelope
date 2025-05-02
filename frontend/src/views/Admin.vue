@@ -36,6 +36,19 @@
           <img v-if="previewImage" :src="previewImage" alt="Aperçu de l'image" class="preview-image" />
         </div>
         <div class="form-group">
+          <label for="media">Médias (images/vidéos)</label>
+          <input type="file" id="media" multiple @change="handleMediaUpload" />
+          <div class="media-preview">
+            <div v-for="(file, index) in previewMedia" :key="index" class="media-item">
+              <img v-if="file.type.startsWith('image/')" :src="file.preview" :alt="`Image ${index + 1}`" />
+              <video v-else controls>
+                <source :src="file.preview" :type="file.type" />
+                Votre navigateur ne supporte pas la lecture de vidéos.
+              </video>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
           <label for="tags">Tags (séparés par des virgules)</label>
           <input type="text" id="tags" v-model="form.tags" placeholder="Exemple : Graphisme, Branding, Logo" />
         </div>
@@ -86,6 +99,20 @@
   </div>
 </template>
 
+<script setup>
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+onMounted(() => {
+  const token = localStorage.getItem('adminToken');
+  if (!token) {
+    router.push('/login'); // Redirige vers la page de connexion si non authentifié
+  }
+});
+</script>
+
 <script>
 import axios from 'axios';
 
@@ -99,6 +126,7 @@ export default {
       form: { id: null, title: '', description: '', link: '', image: null, tags: '' },
       isEditing: false,
       previewImage: null,
+      previewMedia: [],
     };
   },
   methods: {
@@ -143,6 +171,14 @@ export default {
       }
     },
 
+    handleMediaUpload(event) {
+      const files = event.target.files;
+      this.previewMedia = Array.from(files).map(file => ({
+        type: file.type,
+        preview: URL.createObjectURL(file),
+      }));
+    },
+
     async handleSubmit() {
       try {
         const formData = new FormData();
@@ -152,6 +188,11 @@ export default {
         formData.append('tags', this.form.tags.split(',').map(tag => tag.trim()).join(','));
         if (this.form.image) {
           formData.append('image', this.form.image);
+        }
+        if (this.previewMedia.length) {
+          this.previewMedia.forEach((file, index) => {
+            formData.append(`media_${index}`, file);
+          });
         }
 
         if (this.isEditing) {
@@ -178,9 +219,14 @@ export default {
       this.form = { id: null, title: '', description: '', link: '', image: null, tags: '' };
       this.isEditing = false;
       this.previewImage = null;
+      this.previewMedia = [];
       const imageInput = document.getElementById('image');
       if (imageInput) {
         imageInput.value = '';
+      }
+      const mediaInput = document.getElementById('media');
+      if (mediaInput) {
+        mediaInput.value = '';
       }
     },
 
@@ -325,6 +371,21 @@ export default {
 .preview-image {
   margin-top: 0.5rem;
   max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.media-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.media-item img,
+.media-item video {
+  max-width: 100%;
+  width: 50%;
   height: auto;
   border-radius: 4px;
 }
