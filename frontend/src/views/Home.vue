@@ -32,7 +32,7 @@
                 <h2>Derniers projets</h2>
                 <div class="projects-grid">
                     <div v-for="project in projects" :key="project.id" class="project-item">
-                        <img :src="`/assets/project${project.id}.jpg`" :alt="project.title" />
+                        <img :src="`http://localhost:3000${project.image}`" :alt="project.title" />
                         <p class="project-title">{{ project.title }}</p>
                         <p class="project-desc">{{ project.description }}</p>
                     </div>
@@ -170,8 +170,8 @@ onMounted(async () => {
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Colonnes adaptatives */
+    gap: 2rem; /* Espacement entre les projets */
 }
 
 .project-item {
@@ -185,22 +185,6 @@ onMounted(async () => {
     height: auto;
     object-fit: cover;
     border-radius: 4px;
-}
-
-.project-title {
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 300;
-    text-align: center;
-    opacity: 0.9;
-}
-
-.project-desc {
-    font-size: 0.75rem;
-    font-weight: 300;
-    text-align: center;
-    opacity: 0.7;
-    margin-top: 0.3rem;
 }
 
 /* Réseaux sociaux & CV */

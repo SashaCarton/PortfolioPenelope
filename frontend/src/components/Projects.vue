@@ -1,12 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 
-const projects = ref([])
+const projects = ref([]);
 
 onMounted(async () => {
-    const res = await fetch('http://localhost:3000/api/projects')
-    projects.value = await res.json()
-})
+    try {
+        const response = await fetch('http://localhost:3000/api/projects');
+        if (!response.ok) throw new Error('Erreur réseau');
+        projects.value = await response.json(); // Les chemins des images sont déjà corrigés dans le backend
+    } catch (error) {
+        console.error('Impossible de charger les projets :', error);
+    }
+});
 </script>
 
 <template>
@@ -16,6 +21,7 @@ onMounted(async () => {
             <li v-for="project in projects" :key="project.id">
                 <h3>{{ project.title }}</h3>
                 <p>{{ project.description }}</p>
+                <img :src="project.image" :alt="project.title" v-if="project.image" />
             </li>
         </ul>
     </section>

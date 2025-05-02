@@ -4,7 +4,7 @@
       <ul>
         <li><router-link to="/">Accueil</router-link></li>
         <li><router-link to="/about">À propos</router-link></li>
-        <li><router-link to="/projects">Projets</router-link></li>
+        <li><router-link to="/projects">Projets</router-link></li> <!-- Lien corrigé -->
         <li><router-link to="/contact">Contact</router-link></li>
         <li><router-link to="/admin">Admin</router-link></li>
       </ul>
@@ -55,10 +55,19 @@ import router from './router'
 }
 
 footer {
-  background: #333;
+  background: #6a4b8a; /* même couleur que les liens nav */
   color: #fff;
   text-align: center;
-  padding: 1rem;
+  padding: 1.5rem 0;
   font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  border-top: 3px solid #4b306a; /* rappel du hover */
+  text-transform: uppercase;
 }
+
+footer p {
+  margin: 0;
+}
+
 </style>

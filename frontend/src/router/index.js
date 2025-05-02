@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import About from '../views/About.vue'
-import Projects from '../views/Projects.vue'
+import Projects from '../components/Projects.vue' // Assurez-vous que le chemin est correct
 import Contact from '../views/Contact.vue'
 
 const routes = [
@@ -12,7 +12,7 @@ const routes = [
     {
         path: '/projects',
         name: 'projects',
-        component: Projects,  // Page des projets
+        component: Projects, // Associe le composant Projects à la route /projects
     },
     {
         path: '/contact',
