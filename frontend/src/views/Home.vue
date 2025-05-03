@@ -56,20 +56,18 @@ onMounted(async () => {
         const rawProjects = payload.data; // array of project objects
         
         projects.value = rawProjects.map(proj => {
-            // Cover object at root
-            const cov = proj.Cover;
-            // Choose medium format if exists
-            const fmt = cov.formats?.medium?.url;
-            const urlSegment = fmt || cov.url;
-            const fullUrl = urlSegment.startsWith('http')
+          const cov = proj.Cover;
+          const fmt = cov?.formats?.medium?.url; // Vérifiez si formats et medium existent
+          const urlSegment = fmt || cov?.url; // Utilisez l'URL par défaut si medium est absent
+          const fullUrl = urlSegment?.startsWith('http')
             ? urlSegment
             : `http://localhost:1337${urlSegment}`;
-            
-            return {
-                id: proj.id,
-                title: proj.Titre,
-                cover: fullUrl,
-            };
+  
+          return {
+            id: proj.id,
+            title: proj.Titre,
+            cover: fullUrl || '/images/default-cover.jpg', // Image par défaut si aucune n'est disponible
+          };
         });
     } catch (e) {
         console.error('Erreur chargement projets :', e);
@@ -249,59 +247,4 @@ function goToProjectDetails(id) {
     color: #fff;
 }
 
-@media (max-width: 768px) {
-  .carousel-container {
-    margin-bottom: 30px;
-  }
-
-  .carousel {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .carousel-item {
-    min-width: 100%;
-  }
-
-  .carousel-item img {
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-  }
-
-  .home__text {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .home__text .text {
-    width: 100%;
-    padding: 0;
-  }
-
-  .home__text .picture img {
-    width: 80%;
-  }
-}
-
-@media (max-width: 480px) {
-  .carousel {
-    grid-template-columns: 1fr;
-  }
-
-  .carousel-item {
-    min-width: 100%;
-  }
-
-  .carousel-item img {
-    width: 100%;
-  }
-
-  .home__text .text h1 {
-    font-size: 2rem;
-  }
-
-  .home__text .text p {
-    font-size: 0.9rem;
-  }
-}
 </style>
