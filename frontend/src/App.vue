@@ -32,14 +32,15 @@
     </main>
 
     <footer class="footer">
-      <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
       <ul class="footer-links">
         <li><a href="/about">À propos</a></li>
         <li><a href="/projects">Projets</a></li>
         <li><a href="/contact">Contact</a></li>
         <li><a href="https://www.linkedin.com" target="_blank">LinkedIn</a></li>
         <li><a href="https://github.com" target="_blank">GitHub</a></li>
+        <a href="/assets/Cv.pdf" download class="download-cv-button">Télécharger mon CV</a>
       </ul>
+      <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
     </footer>
   </div>
 </template>
@@ -208,35 +209,48 @@ footer {
   color: #666;
 }
 .footer {
-  text-align: center;
-  padding: 1rem 0;
-  background: #000000;
-  border-top: 1px solid #ddd;
-  margin-top: 2rem;
+  background: #000;
   color: #fff;
+  padding: 2rem 0;
+  text-align: center;
+  align-items: center;
 }
-
 .footer-links {
   list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
 }
-
 .footer-links li {
-  display: inline;
+  margin: 0;
 }
-
 .footer-links a {
+  color: #fff;
   text-decoration: none;
-  color: #6a4b8a;
   font-weight: 500;
+  font-size: 0.95rem;
+  transition: opacity 0.3s ease;
 }
-
 .footer-links a:hover {
-  text-decoration: underline;
+  opacity: 0.7;
+}
+.download-cv-button {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  align-self: center;
+  justify-content: center;
+}
+.download-cv-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.footer-copy {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 1rem;
 }
 
 /* Animation pour l'ouverture et la fermeture du menu */
@@ -252,5 +266,43 @@ footer {
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
+}
+
+@media (max-width: 768px) {
+  .menu-burger {
+    display: block;
+  }
+
+  .menu-overlay {
+    padding: 1rem;
+  }
+
+  .menu-list li {
+    margin: 1.5rem 0;
+  }
+
+  .menu-list li a {
+    font-size: 2rem;
+    width: 50%;
+  }
+
+  .close-button {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-list li a {
+    font-size: 1.5rem;
+    width: 100%;
+  }
+
+  .menu-overlay {
+    padding: 0.5rem;
+  }
+
+  .close-button {
+    font-size: 1rem;
+  }
 }
 </style>

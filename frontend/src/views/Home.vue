@@ -1,190 +1,307 @@
 <template>
-    <section class="home">
-        <div ref="grid" class="grid-container">
-            <div
-            v-for="media in medias"
-            :key="media.id"
-            class="grid-item"
-            >
-            <img :src="media.url" :alt="media.alt" />
+    <section class="home-banner">
+        <!-- Banner Carousel showing project covers 4 per view -->
+        <div class="carousel-container">
+            <button class="carousel-control prev" @click="prevSlide" aria-label="Diapositive précédente">‹</button>
+            <div class="carousel-window">
+                <div class="carousel-track" :style="trackStyle">
+                    <div
+                    v-for="project in projects"
+                    :key="project.id"
+                    class="carousel-item"
+                    @click="goToProjectDetails(project.id)"
+                    >
+                    <img :src="project.cover" :alt="project.title" />
+                    <div class="item-overlay">
+                        <h2>{{ project.title }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control next" @click="nextSlide" aria-label="Diapositive suivante">›</button>
+        <button class="projects-button" @click="router.push({ name: 'Projects' })">Voir tous les projets</button>
+    </div>
+    
+    <!-- Intro Text Below Banner -->
+    <div class="home__text">
+        <div class="picture">
+            <img src="/images/60F38FC4-A2B0-4AC5-87B4-33657F70F795_edi.avif" alt="Pénélope Letienne" />
+        </div>
+        <div class="text">
+            <h1>Pénélope Letienne</h1>
+            <p>Étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre, je suis actuellement à la recherche d'un stage dans le monde des nouvelles technologies combinées aux techniques créatives et au savoir-faire.</p>
+            <p>Formée aux beaux-arts pendant 9 ans à l'école des arts plastiques de Lens depuis 2012, j'ai ensuite rejoint l'école ESAAT de Roubaix afin d'obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, les expériences immersives...</p>
+            <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus</button>
         </div>
     </div>
 </section>
-<div class="home__text">
-    <div class="picture">
-        <img src="/images/60F38FC4-A2B0-4AC5-87B4-33657F70F795_edi.avif" alt="Pénélope Letienne" />
-    </div>
-    <div class="text">
-        <h1>Pénélope Letienne</h1>
-        <p>Étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre, je suis actuellement à la recherche d'un stage dans le monde des nouvelles technologies combinées aux techniques créatives et au savoir-faire.</p>
-        <p>Formée aux beaux-arts pendant 9 ans à l'école des arts plastiques de Lens depuis 2012, j'ai ensuite rejoint l'école ESAAT de Roubaix afin d'obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, les expériences immersives...</p>
-    </div>
-</div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-const medias = ref([]);
-const grid = ref(null);
+const projects = ref([]);
+const currentIndex = ref(0);
+const router = useRouter();
+
+// Number of slides to show at once
+const itemsPerSlide = 4;
 
 onMounted(async () => {
     try {
-        // 1. Récupère les projets avec leurs médias
-        const res = await fetch('http://localhost:1337/api/projets?populate[0]=Media');
-        const { data: projets } = await res.json();
+        const res = await fetch('http://localhost:1337/api/projets?populate=Cover');
+        if (!res.ok) throw new Error('Erreur récupération projets');
+        const payload = await res.json();
+        const rawProjects = payload.data; // array of project objects
         
-        // 2. Aplatit tous les médias et limite à 32 images
-        const allMedias = projets.flatMap(p =>
-        (p.Media || []).map(m => {
-            const src = m.url || m.formats?.small?.url || '';
-            const fullUrl = src.startsWith('http')
-            ? src
-            : `http://localhost:1337${src}`;
+        projects.value = rawProjects.map(proj => {
+            // Cover object at root
+            const cov = proj.Cover;
+            // Choose medium format if exists
+            const fmt = cov.formats?.medium?.url;
+            const urlSegment = fmt || cov.url;
+            const fullUrl = urlSegment.startsWith('http')
+            ? urlSegment
+            : `http://localhost:1337${urlSegment}`;
+            
             return {
-                id: `${p.id}-${m.id}`,
-                url: fullUrl,
-                alt: m.alternativeText || p.Titre || '',
+                id: proj.id,
+                title: proj.Titre,
+                cover: fullUrl,
             };
-        })
-        ).slice(0, 32);
-        medias.value = allMedias;
-        
-        // 3. Attendre le rendu puis ajuster chaque grid-item
-        await nextTick();
-        const container = grid.value;
-        const items = container.querySelectorAll('.grid-item');
-        
-        const setSpan = item => {
-            const rowH = parseInt(getComputedStyle(container).getPropertyValue('grid-auto-rows'));
-            const rowGap = parseInt(getComputedStyle(container).getPropertyValue('grid-row-gap'));
-            const imgH = item.querySelector('img').getBoundingClientRect().height;
-            const span = Math.ceil((imgH + rowGap) / (rowH + rowGap));
-            item.style.gridRowEnd = `span ${span}`;
-        };
-        
-        items.forEach(item => {
-            const img = item.querySelector('img');
-            // si déjà chargé
-            if (img.complete) {
-                setSpan(item);
-            } else {
-                img.addEventListener('load', () => setSpan(item));
-            }
         });
-    } catch (err) {
-        console.error('Erreur chargement médias :', err);
+    } catch (e) {
+        console.error('Erreur chargement projets :', e);
     }
 });
+
+// Total number of slides
+const slideCount = computed(() => Math.ceil(projects.value.length / itemsPerSlide));
+
+// Compute transform style: each slide is 100% of window
+const trackStyle = computed(() => ({
+    transform: `translateX(-${currentIndex.value * 100}%)`,
+}));
+
+function nextSlide() {
+    if (!projects.value.length) return;
+    currentIndex.value = (currentIndex.value + 1) % slideCount.value;
+}
+
+function prevSlide() {
+    if (!projects.value.length) return;
+    currentIndex.value = (currentIndex.value - 1 + slideCount.value) % slideCount.value;
+}
+
+function goToProjectDetails(id) {
+    router.push({ name: 'ProjectDetails', params: { id } });
+}
 </script>
 
 <style scoped>
-.home__text {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 50px;
-    padding: 0 2.5vw;
-}
-.home__text .text {
-    width: 50%;
-    padding: 0 2.5vw;
-}
-.home__text .text p {
-    width: 50%;
-    padding: 0 1.5vw;
-    text-align: justify;
-    line-height: 1.6;
-    font-size: 1rem;
-    color: #555;
-    justify-self: center;
-}
-.home__text .text h1 {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 10rem;
-    font-weight: 400;   
-}
-.home__text .picture img {
-    width: 60%;
-    height: auto;
-    border-radius: 4px;
-}.home__text .picture  {
-    width: 50%;
-    height: auto;
-}
-.home {
-    background-color:#000;
-    margin-top:-100px;
-    padding: 100px 0 100px 0;
-}
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    color: #333;
-}
-
-.grid-container {
-    margin-top: 50px;
-    display: grid;
-    /* on définit une hauteur de ligne de base très petite */
-    grid-auto-rows: 8px;
-    grid-gap: 8px;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-}
-
-@media (min-width: 1024px) {
-    .grid-container {
-        grid-template-columns: repeat(6, 1fr);
-    }
-}
-
-.grid-item {
-    overflow: hidden;
-    border-radius: 4px;
+.home-banner {
     position: relative;
+    background-color: #000;
 }
 
-.grid-item img {
-    width: 100px;
-    height: 100px;
-    display: block;
-    object-fit: cover;
-    align-self: center;
-    justify-self: center;
-    /* pour un effet léger de zoom au survol */
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    height: 60vh;
+    margin: 0 auto;
+    padding-top:50px;
+    margin-top:-50px;
+    padding-bottom: 75px;
+}
+
+.carousel-window {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.6s ease;
+}
+
+.carousel-item {
+    /* show 4 items per view */
+    min-width: calc(100% / 4);
+    height: 60vh;
+    position: relative;
+    cursor: pointer;
+    gap: 1rem;
+    transition: transform 0.3s ease;
+}
+.carousel-item:hover {
+    transform: scale(1.05);
     transition: transform 0.3s ease;
 }
 
-.overlay {
+.carousel-item img {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+}
+
+.item-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 20px;
+    left: 20px;
     background: rgba(0, 0, 0, 0.5);
+    padding: 1rem 2rem;
+    border-radius: 4px;
+}
+
+.item-overlay h2 {
+    margin: 0;
     color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.carousel-control.prev { left: 2rem; }
+.carousel-control.next { right: 2rem; }
+
+.carousel-control:hover { background: rgba(0,0,0,0.8); }
+
+.home__text {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row-reverse;
+    justify-content: space-around;
     align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    padding: 4rem 2.5vw;
+    background: #f2eee9;
+    color: #000;
 }
 
-.grid-item:hover .overlay {
-    opacity: 1;
+.home__text .picture img {
+    width: 100%;
+    border-radius: 8px;
 }
 
-.overlay h3 {
-    font-size: 1.2rem;
+.home__text .text {
+    width: 45%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.home__text h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.home__text p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.home__text .btn-secondary {
+    background: #222222;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+.home__text .btn-secondary:hover {
+    background: #f2eee9;
+    color: #000;
+}
+.projects-button {
+    background: #f2eee9;
+    color: #222222;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+.projects-button:hover {
+    background: #000;
+    color: #fff;
+}
+.projects-button:active {
+    background: #6a4b8a;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+  .carousel-container {
+    margin-bottom: 30px;
+  }
+
+  .carousel {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .carousel-item {
+    min-width: 100%;
+  }
+
+  .carousel-item img {
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .home__text {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+  }
+
+  .home__text .text {
+    width: 100%;
+    padding: 0;
+  }
+
+  .home__text .picture img {
+    width: 80%;
+  }
 }
 
-.overlay p {
+@media (max-width: 480px) {
+  .carousel {
+    grid-template-columns: 1fr;
+  }
+
+  .carousel-item {
+    min-width: 100%;
+  }
+
+  .carousel-item img {
+    width: 100%;
+  }
+
+  .home__text .text h1 {
+    font-size: 2rem;
+  }
+
+  .home__text .text p {
     font-size: 0.9rem;
-    text-align: center;
-    margin-top: 0.5rem;
+  }
 }
 </style>
