@@ -1,313 +1,190 @@
 <template>
     <section class="home">
-        <!-- Skip link pour l'accessibilité -->
-        <a href="#main-content" class="skip-link">Passer au contenu principal</a>
-
-        <!-- Contenu principal -->
-        <main id="main-content" class="home__main">
-            <h1 class="home__title">
-                Pénélope<br>
-                <span class="home__lastname">Letienne</span>
-            </h1>
-            <p class="home__subtitle">Étudiante en design numérique</p>
-
-            <div class="home__arrow">↓</div>
-
-            <div class="home__text">
-                <p>
-                    Actuellement étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre,
-                    je suis à la recherche d'un stage dans le monde des nouvelles technologies
-                    combinées à des techniques créatives et des connaissances.
-                </p>
-                <p>
-                    Formée aux beaux-arts pendant 9 ans à l'école d'arts plastiques de Lens depuis 2012,
-                    j'ai ensuite rejoint l'école ESAAT de Roubaix afin d'obtenir un BAC STD2A
-                    (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car
-                    je suis passionnée par les technologies, le web, les jeux, les expériences immersives …
-                </p>
-            </div>
-
-            <!-- Section « Derniers projets » -->
-            <section class="home__projects">
-                <h2>Derniers projets</h2>
-                <div class="projects-grid">
-                    <div
-                        v-for="project in latestProjects"
-                        :key="project.id"
-                        class="project-item"
-                        @click="goToProjectDetails(project.id)"
-                    >
-                        <img :src="`http://localhost:3000${project.image}`" :alt="project.title" />
-                        <p class="project-title">{{ project.title }}</p>
-                        <p class="project-desc">{{ project.description }}</p>
-                    </div>
-                </div>
-                <router-link to="/projects" class="btn-more">Voir plus</router-link>
-            </section>
-
-            <!-- Réseaux & CV -->
-
-            <div class="home__arrow home__arrow--bottom">↓</div>
-        </main>
-    </section>
+        <div ref="grid" class="grid-container">
+            <div
+            v-for="media in medias"
+            :key="media.id"
+            class="grid-item"
+            >
+            <img :src="media.url" :alt="media.alt" />
+        </div>
+    </div>
+</section>
+<div class="home__text">
+    <div class="picture">
+        <img src="/images/60F38FC4-A2B0-4AC5-87B4-33657F70F795_edi.avif" alt="Pénélope Letienne" />
+    </div>
+    <div class="text">
+        <h1>Pénélope Letienne</h1>
+        <p>Étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre, je suis actuellement à la recherche d'un stage dans le monde des nouvelles technologies combinées aux techniques créatives et au savoir-faire.</p>
+        <p>Formée aux beaux-arts pendant 9 ans à l'école des arts plastiques de Lens depuis 2012, j'ai ensuite rejoint l'école ESAAT de Roubaix afin d'obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, les expériences immersives...</p>
+    </div>
+</div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, nextTick } from 'vue';
 
-const projects = ref([]);
-const latestProjects = ref([]);
-const router = useRouter();
+const medias = ref([]);
+const grid = ref(null);
 
 onMounted(async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/projects');
-        if (!response.ok) throw new Error('Erreur réseau');
-        const data = await response.json();
-        projects.value = data;
-        latestProjects.value = data.slice(-3).reverse(); // Récupère les 3 derniers projets
-    } catch (error) {
-        console.error('Impossible de charger les projets :', error);
+        // 1. Récupère les projets avec leurs médias
+        const res = await fetch('http://localhost:1337/api/projets?populate[0]=Media');
+        const { data: projets } = await res.json();
+        
+        // 2. Aplatit tous les médias et limite à 32 images
+        const allMedias = projets.flatMap(p =>
+        (p.Media || []).map(m => {
+            const src = m.url || m.formats?.small?.url || '';
+            const fullUrl = src.startsWith('http')
+            ? src
+            : `http://localhost:1337${src}`;
+            return {
+                id: `${p.id}-${m.id}`,
+                url: fullUrl,
+                alt: m.alternativeText || p.Titre || '',
+            };
+        })
+        ).slice(0, 32);
+        medias.value = allMedias;
+        
+        // 3. Attendre le rendu puis ajuster chaque grid-item
+        await nextTick();
+        const container = grid.value;
+        const items = container.querySelectorAll('.grid-item');
+        
+        const setSpan = item => {
+            const rowH = parseInt(getComputedStyle(container).getPropertyValue('grid-auto-rows'));
+            const rowGap = parseInt(getComputedStyle(container).getPropertyValue('grid-row-gap'));
+            const imgH = item.querySelector('img').getBoundingClientRect().height;
+            const span = Math.ceil((imgH + rowGap) / (rowH + rowGap));
+            item.style.gridRowEnd = `span ${span}`;
+        };
+        
+        items.forEach(item => {
+            const img = item.querySelector('img');
+            // si déjà chargé
+            if (img.complete) {
+                setSpan(item);
+            } else {
+                img.addEventListener('load', () => setSpan(item));
+            }
+        });
+    } catch (err) {
+        console.error('Erreur chargement médias :', err);
     }
 });
-
-onMounted(() => {
-    document.querySelector('.home__arrow').addEventListener('click', () => {
-        document.querySelector('.home__text').scrollIntoView({ behavior: 'smooth' });
-    });
-    document.querySelector('.home__arrow--bottom').addEventListener('click', () => {
-        document.querySelector('.home__projects').scrollIntoView({ behavior: 'smooth' });
-    });
-});
-
-function goToProjectDetails(projectId) {
-    router.push({ name: 'ProjectDetails', params: { id: projectId } });
-}
 </script>
 
 <style scoped>
+.home__text {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+    padding: 0 2.5vw;
+}
+.home__text .text {
+    width: 50%;
+    padding: 0 2.5vw;
+}
+.home__text .text p {
+    width: 50%;
+    padding: 0 1.5vw;
+    text-align: justify;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #555;
+    justify-self: center;
+}
+.home__text .text h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 10rem;
+    font-weight: 400;   
+}
+.home__text .picture img {
+    width: 60%;
+    height: auto;
+    border-radius: 4px;
+}.home__text .picture  {
+    width: 50%;
+    height: auto;
+}
 .home {
-    position: relative;
-    background: #fff;
-    color: #6a4b8a;
-    font-family: "Helvetica Neue", sans-serif;
+    background-color:#000;
+    margin-top:-100px;
+    padding: 100px 0 100px 0;
+}
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #333;
+}
+
+.grid-container {
+    margin-top: 50px;
+    display: grid;
+    /* on définit une hauteur de ligne de base très petite */
+    grid-auto-rows: 8px;
+    grid-gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+@media (min-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.grid-item {
     overflow: hidden;
-    animation: fadeIn 0.8s ease-in-out;
+    border-radius: 4px;
+    position: relative;
 }
 
-/* Skip link invisible sauf au focus */
-.skip-link {
+.grid-item img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    object-fit: cover;
+    align-self: center;
+    justify-self: center;
+    /* pour un effet léger de zoom au survol */
+    transition: transform 0.3s ease;
+}
+
+.overlay {
     position: absolute;
-    top: -40px;
-    left: 1rem;
-    background: #6a4b8a;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     color: #fff;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    z-index: 10;
-    transition: top 0.3s;
-}
-
-.skip-link:focus {
-    top: 1rem;
-}
-
-/* Contenu principal centré */
-.home__main {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 0 2rem 4rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.grid-item:hover .overlay {
+    opacity: 1;
+}
+
+.overlay h3 {
+    font-size: 1.2rem;
     text-align: center;
 }
 
-.home__title {
-    font-size: 4rem;
-    font-weight: 300;
-    margin: 0;
-    line-height: 1;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.home__lastname {
-    font-weight: 700;
-}
-
-.home__subtitle {
-    font-size: 1.125rem;
-    font-weight: 300;
-    margin: 1rem 0 2rem;
-    text-transform: uppercase;
-    opacity: 0.7;
-    letter-spacing: 1px;
-}
-
-/* Flèche */
-.home__arrow {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    opacity: 0.5;
-    animation: bounce 2s infinite;
-    cursor: pointer;
-}
-
-.home__arrow--bottom {
-    margin-top: 2rem;
-    cursor: pointer;
-}
-
-/* Texte d’introduction */
-.home__text {
-    max-width: 600px;
-}
-
-.home__text p {
-    margin: 1rem 0;
-    font-size: 1rem;
-    line-height: 1.6;
-    font-weight: 300;
-}
-
-/* Section projets */
-.home__projects {
-    width: 100%;
-    margin: 3rem 0;
-}
-
-.home__projects h2 {
-    font-size: 1.5rem;
-    font-weight: 300;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.8;
-}
-
-.projects-grid {
-    display: grid;
-    width: 50%;
-    margin: 0 auto; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Colonnes adaptatives */
-    gap: 2rem; /* Espacement entre les projets */
-}
-
-.project-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.project-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.project-item img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-/* Réseaux sociaux & CV */
-.home__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    margin: 2rem 0;
-}
-
-.home__links a {
-    font-size: 0.875rem;
-    font-weight: 300;
-    text-decoration: none;
-    color: #6a4b8a;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.btn-cv {
-    border: 1px solid #6a4b8a;
-    padding: 0.5rem 1rem;
-    transition: background 0.3s, color 0.3s;
-}
-
-.btn-cv:hover {
-    background: #6a4b8a;
-    color: #fff;
-}
-
-/* Bouton Voir plus */
-.btn-more {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    background: #6a4b8a;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    text-transform: uppercase;
-    font-weight: 300;
-    letter-spacing: 1px;
-    transition: background 0.3s ease;
-}
-
-.btn-more:hover {
-    background: #563d6e;
-}
-
-/* Animation simple */
-@keyframes bounce {
-
-    0%,
-    100% {
-        transform: translateY(0)
-    }
-
-    50% {
-        transform: translateY(10px)
-    }
-}
-
-/* Animation d'apparition */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .home__main {
-        padding: 0 1rem 3rem;
-    }
-
-    .home__title {
-        font-size: 3rem;
-    }
-
-    .home__subtitle {
-        font-size: 1rem;
-    }
-
-    .projects-grid {
-        grid-template-columns: 1fr;
-    }
+.overlay p {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 0.5rem;
 }
 </style>

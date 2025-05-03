@@ -1,128 +1,256 @@
 <template>
-  <div>
-    <nav class="home__nav">
-      <ul>
-        <li><router-link to="/">Accueil</router-link></li>
-        <li><router-link to="/about">À propos</router-link></li>
-        <li><router-link to="/projects">Projets</router-link></li> <!-- Lien corrigé -->
-        <li><router-link to="/contact">Contact</router-link></li>
-        <li><router-link to="/admin">Admin</router-link></li>
-      </ul>
-    </nav>
-    
+  <div :class="['app-container', currentPage]">
+    <header class="header" :class="currentPage">
+      <nav class="nav">
+        <div class="menu-burger">
+          <button @click="toggleMenu" class="burger-button">
+            ☰
+          </button>
+          <transition name="menu-fade">
+            <div v-if="menuOpen" class="menu-overlay">
+              <button @click="closeMenu" class="close-button">✖</button>
+              <ul class="menu-list">
+                <li><router-link to="/" @click="closeMenu">Accueil</router-link></li>
+                <li><router-link to="/about" @click="closeMenu">À propos</router-link></li>
+                <li><router-link to="/projects" @click="closeMenu">Projets</router-link></li>
+                <li><router-link to="/contact" @click="closeMenu">Contact</router-link></li>
+              </ul>
+            </div>
+          </transition>
+        </div>
+        <div class="center-title cormorant-garamond-title">
+          <router-link to="/">Pénélope Letienne</router-link>
+        </div>
+        <div class="contact-link">
+          <router-link to="/contact">Contact</router-link>
+        </div>
+      </nav>
+    </header>
+
     <main>
-      <router-view></router-view> <!-- C'est ici que les pages vont s'afficher -->
+      <router-view></router-view>
     </main>
-    
-    <footer>
-      <div class="home__links">
-        <a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="mailto:sashacarton2005@gmail.com" aria-label="Email" rel="noopener noreferrer">Email</a>
-        <a href="https://github.com/Penny0507" aria-label="GitHub" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://www.instagram.com/penelope.ltn" aria-label="Instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="/assets/Cv.pdf" class="btn-cv" download>
-          Télécharger le CV
-        </a>
-      </div>
-      <p>&copy; 2023 Pénélope Letienne. Tous droits réservés.</p>
+
+    <footer class="footer">
+      <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
+      <ul class="footer-links">
+        <li><a href="/about">À propos</a></li>
+        <li><a href="/projects">Projets</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="https://www.linkedin.com" target="_blank">LinkedIn</a></li>
+        <li><a href="https://github.com" target="_blank">GitHub</a></li>
+      </ul>
     </footer>
   </div>
 </template>
 
 <script setup>
-import router from './router'
+import { ref } from 'vue';
+
+const menuOpen = ref(false);
+
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value;
+}
+
+function closeMenu() {
+  menuOpen.value = false;
+}
 </script>
 
 <style scoped>
-/* Mini-menu interne */
-.home__nav {
-  text-align: center;
-  margin: 2rem 0;
-}
-
-.home__nav ul {
-  list-style: none;
-  padding: 0;
-  display: inline-flex;
-  gap: 2rem;
-}
-
-.home__nav a {
-  text-decoration: none;
-  color: #6a4b8a;
-  /* Violet élégant */
-  font-size: 1rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.home__nav a:hover {
-  color: #4b306a;
-  /* Violet plus foncé pour le survol */
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer {
-  color: #6a4b8a;
-  text-align: center;
-  padding: 1.5rem 0;
-  font-size: 0.875rem;
-  font-weight: 300;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  align-items: center;
-}
-
-footer p {
+body {
   margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
 }
 
-.btn-cv {
-  border: 1px solid #6a4b8a;
-  padding: 0.5rem 1rem;
+.header {
+  position: fixed;
+  top: 0;
+  width: 95vw;
+  background: #fff;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2.5vw;
+  background: rgb(0, 0, 0);
+  height:50px;
 }
 
-.btn-cv:hover {
-  background: #6a4b8a;
+.nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.menu-burger {
+  position: relative;
+}
+.menu-burger a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.burger-button {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
   color: #fff;
 }
 
-/* Réseaux sociaux & CV */
-.home__links {
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0);
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  z-index: 2000;
+  padding: 2rem;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  padding-left: 100px;
+}
+
+.menu-list li {
   margin: 2rem 0;
-  align-items: center;
+  width: 20%; 
 }
 
-.home__links a {
-  font-size: 0.875rem;
+.menu-list li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 3rem;
   font-weight: 300;
-  color: #6a4b8a;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  text-decoration: none!important;
-}
-.home__links a:hover {
-  color: #4b306a;
+  display: block;
+  text-align: left;
+  position: relative;
 }
 
-@keyframes slideFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.menu-list li a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: width 0.3s ease-in-out;
+}
+
+.menu-list li a:hover::after {
+  width: 100%;
+}
+
+.center-title {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none!important;
+  color: #fff;
+}
+.center-title a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.contact-link {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.contact-link a {
+  text-decoration: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  transition: all;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
 main {
-  animation: slideFadeIn 1s ease-in-out;
+  padding-top: 80px;
+}
+footer {
+  background: #000000;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666;
+}
+.footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: #000000;
+  border-top: 1px solid #ddd;
+  margin-top: 2rem;
+  color: #fff;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.footer-links li {
+  display: inline;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #6a4b8a;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* Animation pour l'ouverture et la fermeture du menu */
+.menu-fade-enter-active, .menu-fade-leave-active {
+  transition: opacity 0.5s;
+}
+.menu-fade-enter-from, .menu-fade-leave-to {
+  opacity: 0;
+}
+
+.cormorant-garamond-title {
+  font-family: "Cormorant Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 </style>

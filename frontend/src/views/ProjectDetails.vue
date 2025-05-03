@@ -12,7 +12,7 @@
       <a v-if="project.link" :href="project.link" target="_blank" class="project-link">Voir le projet</a>
 
       <!-- Galerie d'images et vidéos associées au projet -->
-      <div class="project-gallery">
+      <div v-if="project.media && project.media.length" class="project-gallery">
         <div v-for="(media, index) in project.media" :key="index" class="media-item">
           <img v-if="media.type === 'image'" :src="`http://localhost:3000/uploads/${media.filename}`" :alt="`Image ${index + 1}`" />
           <video v-else-if="media.type === 'video'" controls>

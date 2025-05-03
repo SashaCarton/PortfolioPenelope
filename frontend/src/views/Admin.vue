@@ -194,6 +194,7 @@ export default {
             formData.append(`media_${index}`, file);
           });
         }
+        console.log('Données envoyées :', this.form);
 
         if (this.isEditing) {
           const { data } = await axios.put(
