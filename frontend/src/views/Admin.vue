@@ -10,7 +10,9 @@
 </template>
 
 <script setup>
-// Pas de logique spécifique nécessaire pour cette vue
+onMounted(() => {
+  window.location.href = "https://api.penelopeletienne.ovh/admin";
+});
 </script>
 
 <style scoped>
