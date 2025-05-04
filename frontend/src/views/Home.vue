@@ -50,7 +50,7 @@ const itemsPerSlide = 4;
 
 onMounted(async () => {
     try {
-        const res = await fetch('http://localhost:1337/api/projets?populate=Cover');
+        const res = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=Cover');
         if (!res.ok) throw new Error('Erreur récupération projets');
         const payload = await res.json();
         const rawProjects = payload.data; // array of project objects
