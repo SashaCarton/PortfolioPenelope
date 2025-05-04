@@ -6,12 +6,7 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'frame-ancestors': [
-            "'self'",
-            'https://api.penelopeletienne.ovh',
-            'https://penelopeletienne.ovh',
-            'http://localhost:5173',
-          ],
+          'frame-ancestors': ["*"], // Autorise toutes les origines
         },
       },
     },
@@ -19,11 +14,7 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      origin: [
-        'https://api.penelopeletienne.ovh',
-        'https://penelopeletienne.ovh',
-        'http://localhost:5173',
-      ],
+      origin: '*', // Autorise toutes les origines
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       headers: '*',
       credentials: true,
