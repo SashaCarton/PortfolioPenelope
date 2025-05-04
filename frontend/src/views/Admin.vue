@@ -1,7 +1,7 @@
 <template>
   <section class="admin">
     <iframe 
-      src="http://localhost:1337/admin" 
+      src="https://api.penelopeletienne.ovh/admin" 
       title="Admin Interface"
       class="admin-iframe"
       frameborder="0">
