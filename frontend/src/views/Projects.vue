@@ -40,7 +40,7 @@ const router = useRouter();
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:1337/api/projets?populate=Cover');
+    const response = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=Cover');
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
 
     const { data } = await response.json();
@@ -51,9 +51,9 @@ onMounted(async () => {
       favorite: project.Favorite || false,
       createdAt: project.createdAt,
       cover: project.Cover?.formats?.medium?.url 
-        ? `http://localhost:1337${project.Cover.formats.medium.url}` 
+        ? `https://api.penelopeletienne.ovh${project.Cover.formats.medium.url}` 
         : project.Cover?.url 
-        ? `http://localhost:1337${project.Cover.url}` 
+        ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
         : null,
     }));
   } catch (error) {
