@@ -26,6 +26,6 @@ jobs:
             sshpass -p '${{ secrets.SAEZFRI_PASSWORD }}' ssh -o StrictHostKeyChecking=no saezfri@100.100.87.90 '
               cd /Agence/Web/Penelope/ &&
               chmod +x ./deploy.sh &&
-              ./deploy.sh
+              sudo ./deploy.sh
             '
           "
