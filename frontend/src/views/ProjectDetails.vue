@@ -182,7 +182,7 @@ h1 {
   text-align: left;
 }
 .project-media video {
-  width: 200px;
+  width: auto;
   height: 200px;
   border-radius: 12px;
 }
