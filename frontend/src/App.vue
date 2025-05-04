@@ -36,7 +36,7 @@
         <li><a href="/about">À propos</a></li>
         <li><a href="/projects">Projets</a></li>
         <li><a href="/contact">Contact</a></li>
-        <li><a href="https://www.linkedin.com" target="_blank">LinkedIn</a></li>
+        <li><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
         <li><a href="https://github.com" target="_blank">GitHub</a></li>
         <a href="/assets/Cv.pdf" download class="download-cv-button">Télécharger mon CV</a>
       </ul>
