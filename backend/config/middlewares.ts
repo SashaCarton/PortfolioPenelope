@@ -20,9 +20,9 @@ module.exports = [
     name: 'strapi::cors',
     config: {
       origin: [
+        'https://api.penelopeletienne.ovh',
         'https://penelopeletienne.ovh',
-        'https://www.penelopeletienne.ovh',
-        'http://localhost:5173'
+        'http://localhost:5173',
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       headers: '*',
