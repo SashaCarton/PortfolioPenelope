@@ -1,6 +1,5 @@
 module.exports = [
   'strapi::errors',
-  'strapi::security',
   {
     name: 'strapi::security',
     config: {
@@ -9,15 +8,27 @@ module.exports = [
         directives: {
           'frame-ancestors': [
             "'self'",
-            'api.penelopeletienne.ovh',
-            'penelopeletienne.ovh',
-            'http://localhost:5173', // Ajout de localhost
+            'https://api.penelopeletienne.ovh',
+            'https://penelopeletienne.ovh',
+            'http://localhost:5173',
           ],
         },
       },
     },
   },
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: {
+      origin: [
+        'https://penelopeletienne.ovh',
+        'https://www.penelopeletienne.ovh',
+        'http://localhost:5173'
+      ],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      headers: '*',
+      credentials: true,
+    },
+  },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
