@@ -10,8 +10,10 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+
 onMounted(() => {
-  window.location.href = "https://api.penelopeletienne.ovh/admin";
+  window.location.replace("https://api.penelopeletienne.ovh/admin");
 });
 </script>
 
