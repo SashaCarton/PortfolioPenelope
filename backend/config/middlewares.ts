@@ -7,7 +7,12 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'frame-ancestors': ["'self'", 'api.penelopeletienne.ovh', 'penelopeletienne.ovh'], // autorise l'iframe sur ton domaine
+          'frame-ancestors': [
+            "'self'",
+            'api.penelopeletienne.ovh',
+            'penelopeletienne.ovh',
+            'http://localhost:5173', // Ajout de localhost
+          ],
         },
       },
     },
