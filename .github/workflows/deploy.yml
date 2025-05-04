@@ -13,10 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2  # Récupère le code source
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3  # Configure l'agent SSH avec la clé privée
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #   - name: Set up SSH
+    #     uses: webfactory/ssh-agent@v0.5.3  # Configure l'agent SSH avec la clé privée
+    #     with:
+    #       ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to internal server via VPS
         run: |
