@@ -183,6 +183,7 @@ h1 {
 }
 .project-media video {
   width: 200px;
+  height: 200px;
   border-radius: 12px;
 }
 
