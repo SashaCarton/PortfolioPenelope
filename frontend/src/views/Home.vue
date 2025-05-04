@@ -61,7 +61,7 @@ onMounted(async () => {
           const urlSegment = fmt || cov?.url; // Utilisez l'URL par défaut si medium est absent
           const fullUrl = urlSegment?.startsWith('http')
             ? urlSegment
-            : `http://localhost:1337${urlSegment}`;
+            : `https://api.penelopeletienne.ovh${urlSegment}`;
   
           return {
             id: proj.id,
