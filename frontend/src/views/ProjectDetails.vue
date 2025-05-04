@@ -11,7 +11,7 @@
         <div v-for="(media, index) in project.media" :key="media.id" class="media-item">
           <template v-if="media.mime.startsWith('image')">
             <img
-              :src="`http://localhost:1337${media.url}`"
+              :src="`https://api.penelopeletienne.ovh${media.url}`"
               :alt="media.name"
               class="media-image"
               @click="openLightbox(index)"
@@ -21,7 +21,7 @@
         <div v-for="video in project.video" :key="video.id" class="media-item">
           <template v-if="video.mime.startsWith('video')">
             <video controls autoplay muted loop class="media-video">
-              <source :src="`http://localhost:1337${video.url}`" :type="video.mime" />
+              <source :src="`https://api.penelopeletienne.ovh${video.url}`" :type="video.mime" />
               Votre navigateur ne supporte pas la vidéo.
             </video>
           </template>
@@ -57,9 +57,9 @@ const lightboxIndex = ref(0);
 onMounted(async () => {
   const projectId = route.params.id;
   try {
-    const responseCover = await fetch(`http://localhost:1337/api/projets?populate=Cover`);
-    const response = await fetch(`http://localhost:1337/api/projets?populate=Media`);
-    const responseVideo = await fetch(`http://localhost:1337/api/projets?populate=Video`);
+    const responseCover = await fetch(`https://api.penelopeletienne.ovh/api/projets?populate=Cover`);
+    const response = await fetch(`https://api.penelopeletienne.ovh/api/projets?populate=Media`);
+    const responseVideo = await fetch(`https://api.penelopeletienne.ovh/api/projets?populate=Video`);
 
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
 
@@ -82,9 +82,9 @@ onMounted(async () => {
       description: projectData.Description || 'Pas de description',
       createdAt: projectData.createdAt,
       cover: projectData.Cover?.formats?.medium?.url
-        ? `http://localhost:1337${projectData.Cover.formats.medium.url}`
+        ? `https://api.penelopeletienne.ovh${projectData.Cover.formats.medium.url}`
         : projectData.Cover?.url
-        ? `http://localhost:1337${projectData.Cover.url}`
+        ? `https://api.penelopeletienne.ovh${projectData.Cover.url}`
         : null,
       media: projectData.Media || [],
     };
@@ -98,7 +98,7 @@ onMounted(async () => {
     // Préparer les images pour le visualiseur
     lightboxImages.value = project.value.media
       .filter((media) => media.mime.startsWith('image'))
-      .map((media) => `http://localhost:1337${media.url}`);
+      .map((media) => `https://api.penelopeletienne.ovh${media.url}`);
   } catch (error) {
     console.error('Erreur :', error);
   }
