@@ -3,7 +3,16 @@
         <!-- Banner Carousel showing project covers 4 per view -->
         <div class="carousel-container">
             <button class="carousel-control prev" @click="prevSlide" aria-label="Diapositive précédente">‹</button>
-            <div class="carousel-window">
+            <div 
+                class="carousel-window"
+                @mousedown="startDrag"
+                @mousemove="drag"
+                @mouseup="endDrag"
+                @mouseleave="endDrag"
+                @touchstart="startDrag"
+                @touchmove="drag"
+                @touchend="endDrag"
+            >
                 <div class="carousel-track" :style="trackStyle">
                     <div
                     v-for="project in projects"
@@ -38,14 +47,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const projects = ref([]);
 const currentIndex = ref(0);
 const router = useRouter();
 
-// Number of slides to show at once
+// Nombre d'éléments visibles par diapositive
 const itemsPerSlide = 4;
 
 onMounted(async () => {
@@ -74,27 +83,113 @@ onMounted(async () => {
     }
 });
 
-// Total number of slides
-const slideCount = computed(() => Math.ceil(projects.value.length / itemsPerSlide));
+// Calcul du nombre total de diapositives
+const slideCount = computed(() => Math.max(0, projects.value.length - itemsPerSlide + 1));
 
 // Compute transform style: each slide is 100% of window
 const trackStyle = computed(() => ({
-    transform: `translateX(-${currentIndex.value * 100}%)`,
+    transform: `translateX(-${currentIndex.value * (100 / itemsPerSlide)}%)`,
 }));
 
 function nextSlide() {
     if (!projects.value.length) return;
-    currentIndex.value = (currentIndex.value + 1) % slideCount.value;
+    if (currentIndex.value >= projects.value.length - itemsPerSlide) {
+        currentIndex.value = 0; // Retour au début
+    } else {
+        currentIndex.value = Math.min(currentIndex.value + 1, projects.value.length - itemsPerSlide);
+    }
 }
 
 function prevSlide() {
     if (!projects.value.length) return;
-    currentIndex.value = (currentIndex.value - 1 + slideCount.value) % slideCount.value;
+    if (currentIndex.value <= 0) {
+        currentIndex.value = projects.value.length - itemsPerSlide; // Retour à la fin
+    } else {
+        currentIndex.value = Math.max(currentIndex.value - 1, 0);
+    }
 }
 
 function goToProjectDetails(id) {
     router.push({ name: 'ProjectDetails', params: { id } });
 }
+
+let isDragging = false;
+let startX = 0;
+let currentTranslate = 0;
+let prevTranslate = 0;
+
+// Ajout de la gestion du glissement horizontal pour le carrousel
+function startDrag(event) {
+    isDragging = true;
+    startX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
+    prevTranslate = currentIndex.value * (100 / itemsPerSlide);
+}
+
+function drag(event) {
+    if (!isDragging) return;
+    const currentX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX;
+    const deltaX = currentX - startX;
+    currentTranslate = prevTranslate - (deltaX / window.innerWidth) * 100;
+    trackStyle.value.transform = `translateX(-${currentTranslate}%)`;
+}
+
+function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    const movedBy = currentTranslate - prevTranslate;
+
+    if (movedBy > 10 && currentIndex.value > 0) {
+        prevSlide();
+    } else if (movedBy < -10 && currentIndex.value < projects.value.length - itemsPerSlide) {
+        nextSlide();
+    } else {
+        trackStyle.value.transform = `translateX(-${currentIndex.value * (100 / itemsPerSlide)}%)`;
+    }
+}
+
+// Ajout d'un défilement automatique du carrousel après une période d'inactivité
+let autoScrollInterval = null;
+let autoScrollTimeout = null;
+
+function startAutoScroll() {
+    stopAutoScroll(); // Arrête tout défilement automatique en cours
+    if (window.innerWidth > 768) { // Active uniquement sur desktop
+        const autoScrollDelay = 3000; // 3 secondes sur desktop
+        autoScrollTimeout = setTimeout(() => {
+            autoScrollInterval = setInterval(() => {
+                nextSlide();
+            }, autoScrollDelay);
+        }, autoScrollDelay);
+    }
+}
+
+function stopAutoScroll() {
+    clearTimeout(autoScrollTimeout);
+    clearInterval(autoScrollInterval);
+}
+
+// Redémarre le défilement automatique à chaque interaction utilisateur
+function resetAutoScroll() {
+    if (window.innerWidth > 768) {
+        stopAutoScroll();
+        startAutoScroll();
+    } // Ne réinitialise pas sur mobile
+}
+
+// Ajout des événements pour détecter l'interaction utilisateur
+document.addEventListener('mousedown', resetAutoScroll);
+document.addEventListener('touchstart', resetAutoScroll);
+document.addEventListener('mousemove', resetAutoScroll);
+document.addEventListener('touchmove', resetAutoScroll);
+
+// Démarrage initial du défilement automatique
+onMounted(() => {
+    startAutoScroll();
+});
+
+onUnmounted(() => {
+    stopAutoScroll(); // Nettoyage des intervalles et timeouts
+});
 </script>
 
 <style scoped>
@@ -118,6 +213,11 @@ function goToProjectDetails(id) {
     overflow: hidden;
     width: 100%;
     height: 100%;
+    cursor: grab;
+}
+
+.carousel-window:active {
+    cursor: grabbing;
 }
 
 .carousel-track {
@@ -126,7 +226,7 @@ function goToProjectDetails(id) {
 }
 
 .carousel-item {
-    /* show 4 items per view */
+    /* Affiche 4 éléments par vue */
     min-width: calc(100% / 4);
     height: 60vh;
     position: relative;
@@ -247,4 +347,22 @@ function goToProjectDetails(id) {
     color: #fff;
 }
 
+/* Ajustement pour afficher 1 projet par vue sur mobile */
+@media (max-width: 768px) {
+  .carousel-item {
+    min-width: 100%; /* Affiche un seul élément par vue */
+  }
+
+  .carousel-control {
+    display: none; /* Cache les flèches */
+  }
+
+  .carousel-window {
+    cursor: grab; /* Indique que le glissement est possible */
+  }
+
+  .carousel-window:active {
+    cursor: grabbing;
+  }
+}
 </style>
