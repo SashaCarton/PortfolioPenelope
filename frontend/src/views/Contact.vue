@@ -161,7 +161,7 @@ label {
   display: block;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: #6a4b8a;
+  color: #000;
 }
 
 input, textarea {
