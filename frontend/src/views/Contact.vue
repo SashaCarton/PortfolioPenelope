@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const form = ref({
   name: '',
@@ -116,37 +116,46 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 .contact {
   animation: fadeIn 0.8s ease-in-out;
   padding: 2rem;
   max-width: 600px;
+  width: 70%;
   margin: 0 auto;
-  color: #6a4b8a;
+  color: #333;
   text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  margin-bottom: 2rem;
 }
 
-.contact h1 { margin-bottom: 0.5rem; }
-.contact p { margin-bottom: 2rem; }
+.contact h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  color: #2f2f2f;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contact p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
 
 form {
-  background: #fafafa;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-.form-group { margin-bottom: 1.5rem; text-align: left; }
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
 
 label {
   display: block;
@@ -161,10 +170,11 @@ input, textarea {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
 }
 
 button {
-  background: #6a4b8a;
+  background: #000;
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -173,6 +183,8 @@ button {
   font-size: 1rem;
   font-weight: 500;
   transition: background 0.3s;
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #f2eee9;
 }
 
 button:disabled {
@@ -180,6 +192,56 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.success-message { margin-top: 1rem; color: green; }
-.error-message   { margin-top: 1rem; color: red; }
+button:hover:not(:disabled) {
+  background: #fff;
+  color: #000;
+  transition: all 0.3s ease;
+  border: 1px solid #000;
+}
+
+.success-message {
+  margin-top: 1rem;
+  color: green;
+  font-size: 1rem;
+}
+
+.error-message {
+  margin-top: 1rem;
+  color: red;
+  font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+  .contact {
+    padding: 1rem;
+    width: 80%;
+  }
+
+  .contact h1 {
+    font-size: 1.8rem;
+  }
+
+  .contact p {
+    font-size: 0.9rem;
+  }
+
+  form {
+    padding: 1rem;
+  }
+
+  input, textarea {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    width: 90%;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .success-message, .error-message {
+    font-size: 0.9rem;
+  }
+}
 </style>

@@ -6,11 +6,9 @@
             <div 
                 class="carousel-window"
                 @mousedown="startDrag"
-                @mousemove="drag"
                 @mouseup="endDrag"
                 @mouseleave="endDrag"
                 @touchstart="startDrag"
-                @touchmove="drag"
                 @touchend="endDrag"
             >
                 <div class="carousel-track" :style="trackStyle">
@@ -30,6 +28,7 @@
         <button class="carousel-control next" @click="nextSlide" aria-label="Diapositive suivante">›</button>
         <button class="projects-button" @click="router.push({ name: 'Projects' })">Voir tous les projets</button>
     </div>
+    </section>
     
     <!-- Intro Text Below Banner -->
     <div class="home__text">
@@ -43,7 +42,6 @@
             <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus</button>
         </div>
     </div>
-</section>
 </template>
 
 <script setup>
@@ -118,33 +116,17 @@ let startX = 0;
 let currentTranslate = 0;
 let prevTranslate = 0;
 
-// Ajout de la gestion du glissement horizontal pour le carrousel
+// Suppression de la gestion du glissement (drag) pour le carrousel
 function startDrag(event) {
-    isDragging = true;
-    startX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
-    prevTranslate = currentIndex.value * (100 / itemsPerSlide);
+    // Désactivé
 }
 
 function drag(event) {
-    if (!isDragging) return;
-    const currentX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX;
-    const deltaX = currentX - startX;
-    currentTranslate = prevTranslate - (deltaX / window.innerWidth) * 100;
-    trackStyle.value.transform = `translateX(-${currentTranslate}%)`;
+    // Désactivé
 }
 
 function endDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    const movedBy = currentTranslate - prevTranslate;
-
-    if (movedBy > 10 && currentIndex.value > 0) {
-        prevSlide();
-    } else if (movedBy < -10 && currentIndex.value < projects.value.length - itemsPerSlide) {
-        nextSlide();
-    } else {
-        trackStyle.value.transform = `translateX(-${currentIndex.value * (100 / itemsPerSlide)}%)`;
-    }
+    // Désactivé
 }
 
 // Ajout d'un défilement automatique du carrousel après une période d'inactivité
@@ -190,6 +172,7 @@ onMounted(() => {
 onUnmounted(() => {
     stopAutoScroll(); // Nettoyage des intervalles et timeouts
 });
+
 </script>
 
 <style scoped>
@@ -291,6 +274,7 @@ onUnmounted(() => {
     color: #000;
 }
 
+
 .home__text .picture img {
     width: 100%;
     border-radius: 8px;
@@ -349,6 +333,22 @@ onUnmounted(() => {
 
 /* Ajustement pour afficher 1 projet par vue sur mobile */
 @media (max-width: 768px) {
+
+    .item-overlay {
+        left:50%;
+        transform: translateX(-50%);
+        bottom: 60px;
+        padding: 0.5rem 1rem;
+    }
+    .home__text {
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem;
+    }
+    .home__text .text {
+        width: 90%;
+        text-align: center;
+    }
   .carousel-item {
     min-width: 100%; /* Affiche un seul élément par vue */
   }
@@ -363,6 +363,28 @@ onUnmounted(() => {
 
   .carousel-window:active {
     cursor: grabbing;
+  }
+}
+
+/* Ajustement pour afficher 3 projets par vue sur les écrans moyens */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .carousel-item {
+        min-width: calc(100% / 3); /* Affiche 3 éléments par vue */
+    }
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>

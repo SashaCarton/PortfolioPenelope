@@ -79,7 +79,7 @@
   </template>
   
   <script setup>
-  // Pas de logique JS nécessaire
+  // Suppression de la logique de chargement
   </script>
   
   <style scoped>
@@ -186,6 +186,7 @@
     }
     .about {
       padding: 2rem 1rem;
+      background-color: #f2eee9;
     }
     .about h1 {
       font-size: 2.5rem;
@@ -206,4 +207,3 @@
     }
   }
   </style>
-    

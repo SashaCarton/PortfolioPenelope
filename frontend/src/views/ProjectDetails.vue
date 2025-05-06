@@ -27,6 +27,7 @@
           </template>
         </div>
       </div>
+      <button @click="goBackToProjects" class="back-button">Retour à la liste des projets</button>
     </div>
     <div v-else>
       <p>Chargement des détails du projet...</p>
@@ -44,11 +45,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import VueEasyLightbox from 'vue-easy-lightbox';
 
 const project = ref(null);
 const route = useRoute();
+const router = useRouter();
 
 const lightboxVisible = ref(false);
 const lightboxImages = ref([]);
@@ -113,6 +115,10 @@ function openLightbox(index) {
   lightboxIndex.value = index;
   lightboxVisible.value = true;
 }
+
+function goBackToProjects() {
+  router.push('/projects');
+}
 </script>
 
 <style scoped>
@@ -134,6 +140,13 @@ h1 {
   font-size: 2.2rem;
   color: #222;
   margin-bottom: 1rem;
+}
+p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 1rem;
+  text-align: center;
+  justify-self: center;
 }
 
 .project-cover {
@@ -203,33 +216,25 @@ h1 {
   padding: 0.5rem;
 }
 
-
-@media (max-width: 768px) {
-  .project-container {
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  .project-description {
-    font-size: 1rem;
-  }
+.back-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #f2eee9;
 }
 
-@media (max-width: 480px) {
-  .project-details {
-    padding: 1rem 0.5rem;
-  }
+.back-button:hover {
+  background-color: #f2eee9;
+  color: #000;
+  transition: all 0.3s ease;
+  border: 1px solid #000;
 
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  .project-description {
-    font-size: 0.95rem;
-  }
 }
-
 </style>

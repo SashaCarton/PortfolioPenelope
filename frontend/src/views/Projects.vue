@@ -1,5 +1,6 @@
 <template>
   <section class="projects">
+    <h1>Mes réalisations</h1>
     <div v-for="(group, groupIndex) in chunkProjects(projects, 11)" :key="groupIndex">
       <div class="row-container">
         <div
@@ -9,12 +10,11 @@
           @click="goToProjectDetails(project.id)"
         >
           <img :src="project.cover" :alt="project.title" />
-          <div class="trait"></div>
-
           <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
         </div>
       </div>
+      <div class="trait"></div>
       <div class="grid-container">
         <div
           v-for="(project, index) in group.slice(2)"
@@ -78,30 +78,39 @@ function chunkProjects(array, size) {
 .projects {
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1 {
   font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: #6a4b8a;
+  margin-bottom: 3rem;
+  color: #000;
+  text-align: center;
+  font-family:  'Cormorant Garamond', serif;
 }
 
 .row-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .row-item {
   cursor: pointer;
   text-align: center;
-  width: 45%;
+  flex: 1;
+  max-width: 45%;
+  height: 500px;
 }
 
 .row-item img {
-  width: 60%;
-  height: auto;
+  width: auto;
+  height: 70%;
   border-radius: 12px;
   transition: transform 0.3s ease;
 }
@@ -124,18 +133,23 @@ h1 {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .grid-item {
   cursor: pointer;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .grid-item img {
-  width: 40%;
+  width: 100%;
   height: auto;
   border-radius: 8px;
   transition: transform 0.3s ease;
@@ -150,18 +164,42 @@ h1 {
   margin-top: 0.5rem;
   font-size: 1.2rem;
   color: #333;
+  text-align: center;
 }
 
 .grid-item p {
   font-size: 0.9rem;
   color: #666;
   margin-top: 0.5rem;
+  text-align: center;
 }
+
 .trait {
-  width: 50%;
+  width: 100%;
   height: 1px;
   background-color: #000;
   margin: 1rem auto;
+  margin-bottom: 10rem;
+}
+
+@media (max-width: 1024px) {
+  .row-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .row-item {
+    max-width: 100%;
+  }
+  .row-item img {
+    width: 50%!important;
+  }
+
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -172,6 +210,9 @@ h1 {
 
   .row-item {
     width: 100%;
+  }
+  .row-item img {
+    width: 50%!important;
   }
 
   .grid-container {
@@ -184,8 +225,8 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .row-item img, .grid-item img {
-    width: 80%;
+  .row-item img {
+    width: 70%!important;
   }
 
   .row-item h3, .grid-item h3 {
