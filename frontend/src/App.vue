@@ -207,6 +207,7 @@ footer {
   text-align: center;
   font-size: 0.875rem;
   color: #666;
+  font-family: 'Montserrat', sans-serif;
 }
 .footer {
   background: #000;
