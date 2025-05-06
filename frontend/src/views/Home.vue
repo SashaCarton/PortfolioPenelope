@@ -327,7 +327,7 @@ onUnmounted(() => {
     color: #fff;
 }
 .projects-button:active {
-    background: #6a4b8a;
+    background: #222222;
     color: #fff;
 }
 
