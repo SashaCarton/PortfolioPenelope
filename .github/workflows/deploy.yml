@@ -16,6 +16,11 @@ jobs:
       - name: Set execute permissions for deploy script
         run: chmod +x ./deploy.sh  # Ajoute l'exécution des permissions
 
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3  # Configure l'agent SSH avec la clé privée
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy to internal server via VPS
         run: |
           # Connexion SSH au VPS
@@ -27,3 +32,4 @@ jobs:
             '
           "
           
+          name: Deploy Script Trigger
