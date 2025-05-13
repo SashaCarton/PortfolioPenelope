@@ -48,7 +48,7 @@ echo "Building backend..."
 npm run build || { echo "Erreur: npm run build failed"; exit 1; }
 
 echo "Restarting backend with PM2..."
-pm2 stop strapi || echo "Strapi was not running, skipping stop"
-pm2 start npm --name strapi -- run start &
+pm2 stop strapi-penelope || echo "Strapi was not running, skipping stop"
+pm2 start npm --name strapi-penelope -- run start &
 
 echo "Déploiement terminé avec succès !"
