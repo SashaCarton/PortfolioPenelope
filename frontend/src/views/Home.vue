@@ -226,7 +226,7 @@ onUnmounted(() => {
 
 .item-overlay {
     position: relative;
-    bottom: 8px;
+    bottom: 20px;
     left: center;
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
