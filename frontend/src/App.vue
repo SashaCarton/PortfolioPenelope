@@ -1,62 +1,74 @@
 <template>
-  <div :class="['app-container', currentPage]">
-    <header class="header" :class="currentPage">
-      <nav class="nav">
-        <div class="menu-burger">
-          <button @click="toggleMenu" class="burger-button">
-            ☰
-          </button>
-          <transition name="menu-fade">
-            <div v-if="menuOpen" class="menu-overlay">
-              <button @click="closeMenu" class="close-button">✖</button>
-              <ul class="menu-list">
-                <li><router-link to="/" @click="closeMenu">Accueil</router-link></li>
-                <li><router-link to="/about" @click="closeMenu">À propos</router-link></li>
-                <li><router-link to="/projects" @click="closeMenu">Projets</router-link></li>
-                <li><router-link to="/contact" @click="closeMenu">Contact</router-link></li>
-              </ul>
-        </div>
-          </transition>
-        </div>
-        <div class="center-title cormorant-garamond-title">
-          <router-link to="/">PÉNÉLOPE LETIENNE</router-link>
-        </div>
-        <div class="contact-link">
-          <router-link to="/contact">CONTACT</router-link>
-        </div>
-      </nav>
-    </header>
+  <div>
+    <LoadingScreen v-if="isLoading" />
 
-    <main>
-      <router-view></router-view>
-    </main>
+    <div v-else :class="['app-container', currentPage]">
+      <header class="header" :class="currentPage">
+        <nav class="nav">
+          <div class="menu-burger">
+            <button @click="toggleMenu" class="burger-button">☰</button>
+            <transition name="menu-fade">
+              <div v-if="menuOpen" class="menu-overlay">
+                <button @click="closeMenu" class="close-button">✖</button>
+                <ul class="menu-list">
+                  <li><router-link to="/" @click="closeMenu">Accueil</router-link></li>
+                  <li><router-link to="/about" @click="closeMenu">À propos</router-link></li>
+                  <li><router-link to="/projects" @click="closeMenu">Projets</router-link></li>
+                  <li><router-link to="/contact" @click="closeMenu">Contact</router-link></li>
+                </ul>
+              </div>
+            </transition>
+          </div>
 
-    <footer class="footer">
-      <ul class="footer-links">
-        <li><a href="/about">À propos</a></li>
-        <li><a href="/projects">Projets</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
-        <li><a href="https://github.com" target="_blank">GitHub</a></li>
-        <a href="/assets/Cv.pdf" download class="download-cv-button">Télécharger mon CV</a>
-      </ul>
-      <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
-    </footer>
+          <div class="center-title cormorant-garamond-title">
+            <router-link to="/">PÉNÉLOPE LETIENNE</router-link>
+          </div>
+
+          <div class="contact-link">
+            <router-link to="/contact">CONTACT</router-link>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <router-view />
+      </main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li><a href="/about">À propos</a></li>
+          <li><a href="/projects">Projets</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
+          <li><a href="https://github.com" target="_blank">GitHub</a></li>
+          <a href="/assets/Cv.pdf" download class="download-cv-button">Télécharger mon CV</a>
+        </ul>
+        <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
+      </footer>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue'
+import LoadingScreen from './components/LoadingScreen.vue'
 
-const menuOpen = ref(false);
+const isLoading = ref(true)
+const menuOpen = ref(false)
 
 function toggleMenu() {
-  menuOpen.value = !menuOpen.value;
+  menuOpen.value = !menuOpen.value
 }
 
 function closeMenu() {
-  menuOpen.value = false;
+  menuOpen.value = false
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false
+  }, 3000)
+})
 </script>
 
 <style scoped>
