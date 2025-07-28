@@ -167,7 +167,7 @@ label {
 input, textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid #ffffff;
   border-radius: 8px;
   font-size: 1rem;
   font-family: 'Inter', sans-serif;

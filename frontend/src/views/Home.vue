@@ -178,7 +178,7 @@ onUnmounted(() => {
 <style scoped>
 .home-banner {
     position: relative;
-    background-color: #000;
+    background-color: #ffffff;
 }
 
 .carousel-container {
@@ -232,7 +232,7 @@ onUnmounted(() => {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(179, 179, 179, 0.5);
     padding: 1rem 2rem;
     border-radius: 4px;
 }
@@ -248,9 +248,9 @@ onUnmounted(() => {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0,0,0,0.6);
+    background: rgba(255, 255, 255, 0.6);
     border: none;
-    color: #fff;
+    color: #000000;
     font-size: 2rem;
     width: 3rem;
     height: 3rem;
@@ -262,7 +262,7 @@ onUnmounted(() => {
 .carousel-control.prev { left: 2rem; }
 .carousel-control.next { right: 2rem; }
 
-.carousel-control:hover { background: rgba(0,0,0,0.8); }
+.carousel-control:hover { background: rgba(255, 255, 255, 0.8); }
 
 .home__text {
     display: flex;
@@ -297,8 +297,8 @@ onUnmounted(() => {
     margin-bottom: 1rem;
 }
 .home__text .btn-secondary {
-    background: #222222;
-    color: #fff;
+    background: #ffffff;
+    color: #000000;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;

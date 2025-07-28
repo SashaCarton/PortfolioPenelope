@@ -186,7 +186,7 @@
     }
     .about {
       padding: 2rem 1rem;
-      background-color: #f2eee9;
+      background-color: #ffffff;
     }
     .about h1 {
       font-size: 2.5rem;
