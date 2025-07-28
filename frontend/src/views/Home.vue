@@ -227,14 +227,14 @@ onUnmounted(() => {
 .item-overlay {
     position: relative;
     bottom: 75px;
-    left: center;
+    left: 20px;
     width: fit-content;
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
   border: 1.5px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
-    padding: 0.8rem;
-    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    border-radius: 30px;
 }
 
 .item-overlay h2 {
