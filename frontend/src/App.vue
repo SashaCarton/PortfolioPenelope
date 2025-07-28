@@ -60,10 +60,6 @@ function closeMenu() {
 </script>
 
 <style scoped>
-.app-container {
-  transform: translateZ(0);
-}
-
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
@@ -130,7 +126,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background-color: rgba(255, 255, 255, 0.10); /* très léger */
+  background-color: rgba(255, 255, 255, 0.80);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
   z-index: 9999;
