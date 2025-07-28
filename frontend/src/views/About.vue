@@ -1,7 +1,7 @@
 <template>
     <section class="about">
       <h1>Pénélope Letienne</h1>
-      <p class="subtitle">Graphiste &amp; illustratrice indépendante</p>
+      <p class="subtitle">Étudiante en design numérique — approche hybride de l’expérience, de la sensibilité et de la recherche</p>
       <div class="content">
         <!-- À propos de moi -->
         <section class="section-inner">
