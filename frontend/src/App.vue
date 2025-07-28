@@ -19,7 +19,7 @@
           </transition>
         </div>
         <div class="center-title cormorant-garamond-title">
-          <router-link to="/">Pénélope Letienne</router-link>
+          <router-link to="/">PÉNÉLOPE LETIENNE</router-link>
         </div>
         <div class="contact-link">
           <router-link to="/contact">Contact</router-link>
@@ -85,7 +85,9 @@ body {
 .nav {
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  position: relative;
 }
 
 .menu-burger {
@@ -171,13 +173,15 @@ body {
 }
 
 .center-title {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-decoration: none!important;
-  color: #fff;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
 }
+
 .center-title a {
   text-decoration: none;
   color: #fff;
