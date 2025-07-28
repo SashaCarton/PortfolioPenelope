@@ -242,6 +242,7 @@ onUnmounted(() => {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
     font-weight: lighter;
+    text-align: left;
 }
 
 .carousel-control {
