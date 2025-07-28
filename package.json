@@ -13,5 +13,8 @@
     "node-fetch": "^2.7.0",
     "vue-easy-lightbox": "^1.19.0",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "vite": "^7.0.6"
   }
 }
