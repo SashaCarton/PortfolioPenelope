@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: #111111;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -74,7 +74,7 @@ button {
 }
 
 button:hover {
-  background-color: #eee;
+  background-color: #ffffff;
   border-color: #000;
 }
 
@@ -106,7 +106,7 @@ img:hover {
 @media (prefers-color-scheme: light) {
   :root {
     color: #111;
-    background-color: #f7f7f7;
+    background-color: #ffffff;
   }
 
   a:hover {
@@ -114,6 +114,6 @@ img:hover {
   }
 
   button {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
   }
 }
