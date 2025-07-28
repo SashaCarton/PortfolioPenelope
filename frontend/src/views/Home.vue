@@ -248,7 +248,7 @@ onUnmounted(() => {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0);
     border: none;
     color: #000000;
     font-size: 2rem;
@@ -262,7 +262,7 @@ onUnmounted(() => {
 .carousel-control.prev { left: 2rem; }
 .carousel-control.next { right: 2rem; }
 
-.carousel-control:hover { background: rgba(255, 255, 255, 0.8); }
+.carousel-control:hover { background: rgba(255, 255, 255, 0); }
 
 .home__text {
     display: flex;
