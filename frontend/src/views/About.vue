@@ -35,7 +35,7 @@
             alt="Travail étudiant en design numérique"
           />
           <div class="text-block">
-            <h2>À propos de mes études</h2>
+            <h2>MES ÉTUDES</h2>
             <p>
               Issu du graphisme numérique, ce cursus vise à former les étudiants à la
               création-conception et à la production d'environnements numériques, liés à :
