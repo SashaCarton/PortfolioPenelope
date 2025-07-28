@@ -206,7 +206,7 @@ body {
   padding: 0.5rem 1rem;
   transition: all;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-mono);
 }
 
 main {
