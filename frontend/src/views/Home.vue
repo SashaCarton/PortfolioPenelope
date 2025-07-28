@@ -217,14 +217,10 @@ onUnmounted(() => {
     gap: 1rem;
     transition: transform 0.3s ease;
 }
-.carousel-item:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}
 
 .carousel-item img {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -232,15 +228,18 @@ onUnmounted(() => {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background: rgba(179, 179, 179, 0.5);
+    background-color: rgba(255, 255, 255, 0.08); /* très léger */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* pour Safari */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     padding: 1rem 2rem;
     border-radius: 4px;
 }
 
 .item-overlay h2 {
     margin: 0;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
+    color: #000000;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 1.5rem;
 }
 
@@ -248,7 +247,10 @@ onUnmounted(() => {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0);
+    background-color: rgba(255, 255, 255, 0.08); /* très léger */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* pour Safari */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     border: none;
     color: #000000;
     font-size: 2rem;
