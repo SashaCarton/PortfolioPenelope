@@ -117,17 +117,21 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.06); /* semi-transparent */
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+  width: 100vw;
+  height: 100vh;
+  padding: 4rem 2rem;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+
+  background-color: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   z-index: 2000;
-  padding: 2rem;
+
+  transition: all 0.3s ease-in-out;
 }
 
 .close-button {
