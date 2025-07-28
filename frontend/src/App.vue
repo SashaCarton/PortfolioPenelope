@@ -126,9 +126,10 @@ body {
   justify-content: center;
   align-items: center;
 
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.10); /* très léger */
   backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(15px); /* pour Safari */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
   z-index: 2000;
 
   transition: all 0.3s ease-in-out;
