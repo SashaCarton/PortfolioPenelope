@@ -226,14 +226,15 @@ onUnmounted(() => {
 
 .item-overlay {
     position: relative;
-    bottom: 90px;
+    bottom: 75px;
     left: center;
+    width: fit-content;
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
   border: 1.5px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
-    padding: 0.5rem 0.5rem;
-    border-radius: 4px;
+    padding: 0.8rem;
+    border-radius: 20px;
 }
 
 .item-overlay h2 {
@@ -242,7 +243,8 @@ onUnmounted(() => {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
     font-weight: lighter;
-    text-align: left;
+    width: 150px;
+    text-align: center;
 }
 
 .carousel-control {
