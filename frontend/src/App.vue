@@ -126,7 +126,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   z-index: 2000;
