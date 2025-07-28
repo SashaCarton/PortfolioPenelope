@@ -312,7 +312,7 @@ onUnmounted(() => {
     color: #000;
 }
 .projects-button {
-    background: #f2eee9;
+    backgroundrgb(255, 255, 255)2eee9;
     color: #222222;
     padding: 0.5rem 1rem;
     border: none;
