@@ -187,7 +187,7 @@ onUnmounted(() => {
     width: 100vw;
     height: 60vh;
     margin: 0 auto;
-    padding-top:50px;
+    padding-top:10px;
     margin-top:-50px;
     padding-bottom: 75px;
 }
@@ -254,8 +254,7 @@ onUnmounted(() => {
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
-  border: 2px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
-    border: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     color: #000000;
     font-size: 2rem;
     width: 3rem;
@@ -317,10 +316,11 @@ onUnmounted(() => {
 }
 .projects-button {
     background:rgb(255, 255, 255);
+    margin-top: 20px;
     color: #222222;
     padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
+    border: 1.5px solid rgba(0, 0, 0,);
+    border-radius: 30px;
     cursor: pointer;
     font-size: 1rem;
     transition: background 0.3s ease;
