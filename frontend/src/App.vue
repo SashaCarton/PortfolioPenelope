@@ -65,7 +65,7 @@ body {
   font-family: 'Inter', sans-serif;
   font-size: 16px;
   color: #111111;
-  background-color: #f9f9f9;
+  background-color: #fff;
 }
 
 .header {
@@ -78,7 +78,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 2.5vw;
-  background: rgb(0, 0, 0);
+  background: #323232;
   height:50px;
 }
 
@@ -111,7 +111,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgb(0, 0, 0);
+  background: #323232;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -202,7 +202,7 @@ main {
   padding-top: 80px;
 }
 footer {
-  background: #000000;
+  background: #323232;
   padding: 1rem 0;
   text-align: center;
   font-size: 0.875rem;
@@ -210,7 +210,7 @@ footer {
   font-family: 'Inter', sans-serif;
 }
 .footer {
-  background: #000;
+  background: #323232;
   color: #fff;
   padding: 2rem 0;
   text-align: center;
