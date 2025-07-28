@@ -81,7 +81,6 @@ function chunkProjects(array, size) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgb(255, 255, 255);
 }
 
 h1 {
