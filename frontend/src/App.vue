@@ -118,26 +118,34 @@ body {
 
 .menu-overlay {
   position: fixed;
-  inset: 0;
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
 }
 
 .menu-glass {
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   z-index: 1;
 }
 
 .menu-content {
   position: relative;
   z-index: 2;
-  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .close-button {
