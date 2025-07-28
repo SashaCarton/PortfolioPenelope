@@ -22,7 +22,7 @@
           <router-link to="/">PÉNÉLOPE LETIENNE</router-link>
         </div>
         <div class="contact-link">
-          <router-link to="/contact">Contact</router-link>
+          <router-link to="/contact">CONTACT</router-link>
         </div>
       </nav>
     </header>
@@ -86,9 +86,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 2rem;
+  width: 100%;
   position: relative;
+  height: 100%;
 }
+
 
 .menu-burger {
   position: relative;
@@ -179,13 +181,16 @@ body {
   font-family: var(--font-mono);
   font-size: 1rem;
   letter-spacing: 0.04em;
-  color: var(--text-color);
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
 }
 
 .center-title a {
   text-decoration: none;
-  color: #fff;
-  font-size: 1.5rem;
+  color: inherit;
+  font-size: 1.1rem;
 }
 
 .contact-link {
