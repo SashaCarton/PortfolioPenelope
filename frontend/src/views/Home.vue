@@ -270,7 +270,7 @@ onUnmounted(() => {
     justify-content: space-around;
     align-items: center;
     padding: 4rem 2.5vw;
-    background: #f2eee9;
+    background: #ffffff;
     color: #000;
 }
 
@@ -308,11 +308,11 @@ onUnmounted(() => {
     font-family: 'Inter', sans-serif;
 }
 .home__text .btn-secondary:hover {
-    background: #f2eee9;
+    background: #ffffff;
     color: #000;
 }
 .projects-button {
-    backgroundrgb(255, 255, 255)2eee9;
+    background:rgb(255, 255, 255);
     color: #222222;
     padding: 0.5rem 1rem;
     border: none;
