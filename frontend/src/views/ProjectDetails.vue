@@ -227,11 +227,11 @@ p {
   transition: background-color 0.3s;
   margin-top: 2rem;
   font-family: 'Inter', sans-serif;
-  border: 1px solid #f2eee9;
+  border: 1px solid #ffffff;
 }
 
 .back-button:hover {
-  background-color: #f2eee9;
+  background-color: #ffffff;
   color: #000;
   transition: all 0.3s ease;
   border: 1px solid #000;
