@@ -86,6 +86,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-family: var(--font-mono);
   width: 100%;
   position: relative;
   height: 100%;
@@ -137,6 +138,7 @@ body {
 
 .menu-list {
   list-style: none;
+  font-family: var(--font-mono);
   padding: 0;
   margin: 0;
   width: 100%;
