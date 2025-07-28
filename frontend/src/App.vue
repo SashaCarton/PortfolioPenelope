@@ -62,9 +62,9 @@ function closeMenu() {
 <style scoped>
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
-  color: #333;
+  color: #111111;
   background-color: #f9f9f9;
 }
 
@@ -195,7 +195,7 @@ body {
   padding: 0.5rem 1rem;
   transition: all;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 main {
@@ -207,7 +207,7 @@ footer {
   text-align: center;
   font-size: 0.875rem;
   color: #666;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 .footer {
   background: #000;
@@ -263,7 +263,7 @@ footer {
 }
 
 .cormorant-garamond-title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: 'JetBrains Mono', monospace;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
