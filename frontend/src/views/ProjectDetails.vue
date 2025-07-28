@@ -127,6 +127,7 @@ function goBackToProjects() {
   display: flex;
   justify-content: center;
   min-height: 100vh;
+  background-color: #ffffff;
 }
 
 .project-container {
