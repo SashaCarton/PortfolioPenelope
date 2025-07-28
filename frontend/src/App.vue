@@ -71,7 +71,7 @@ body {
 .header {
   position: fixed;
   top: 0;
-  width: 100%;
+  width: 95vw;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
@@ -190,8 +190,6 @@ body {
   letter-spacing: 0.04em;
   color: #000000;
   white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
 }
 
 .center-title a {
