@@ -71,15 +71,18 @@ body {
 .header {
   position: fixed;
   top: 0;
-  width: 95vw;
-  background: #fff;
+  width: 100%;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 2.5vw;
-  background: #c8c8c8;
-  height:50px;
+  height: 60px;
+
+  background-color: rgba(255, 255, 255, 0.08); /* très léger */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* pour Safari */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
 }
 
 .nav {
@@ -98,7 +101,7 @@ body {
 }
 .menu-burger a {
   text-decoration: none;
-  color: #fff;
+  color: #000000;
   font-size: 1.5rem;
 }
 
@@ -107,7 +110,7 @@ body {
   border: none;
   font-size: 1.6rem;
   cursor: pointer;
-  color: #fff;
+  color: #000000;
 }
 
 .menu-overlay {
@@ -116,7 +119,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #c8c8c8;
+  background-color: rgba(255, 255, 255, 0.06); /* semi-transparent */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -132,7 +137,7 @@ body {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #fff;
+  color: #000000;
   cursor: pointer;
 }
 
@@ -152,7 +157,7 @@ body {
 
 .menu-list li a {
   text-decoration: none;
-  color: #fff;
+  color: #000000;
   font-size: 3rem;
   font-weight: 300;
   text-transform: uppercase;
@@ -183,7 +188,7 @@ body {
   font-family: var(--font-mono);
   font-size: 1rem;
   letter-spacing: 0.04em;
-  color: #fff;
+  color: #000000;
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
@@ -202,7 +207,7 @@ body {
 
 .contact-link a {
   text-decoration: none;
-  color: #fff;
+  color: #000000;
   padding: 0.5rem 1rem;
   transition: all;
   cursor: pointer;
@@ -222,7 +227,7 @@ footer {
 }
 .footer {
   background: #c8c8c8;
-  color: #fff;
+  color: #000000;
   padding: 2rem 0;
   text-align: center;
   align-items: center;
@@ -240,7 +245,7 @@ footer {
   margin: 0;
 }
 .footer-links a {
-  color: #fff;
+  color: #000000;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -250,7 +255,7 @@ footer {
   opacity: 0.7;
 }
 .download-cv-button {
-  border: 1px solid #fff;
+  border: 1px solid #000000;
   border-radius: 4px;
   padding: 0.5rem 1rem;
   align-self: center;
