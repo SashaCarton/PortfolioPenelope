@@ -8,6 +8,8 @@
           </button>
           <transition name="menu-fade">
             <div v-if="menuOpen" class="menu-overlay">
+              <div class="menu-glass"></div>
+              <div class="menu-content">
               <button @click="closeMenu" class="close-button">✖</button>
               <ul class="menu-list">
                 <li><router-link to="/" @click="closeMenu">Accueil</router-link></li>
@@ -16,6 +18,7 @@
                 <li><router-link to="/contact" @click="closeMenu">Contact</router-link></li>
               </ul>
             </div>
+        </div>
           </transition>
         </div>
         <div class="center-title cormorant-garamond-title">
@@ -115,24 +118,26 @@ body {
 
 .menu-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  padding: 4rem 2rem;
-
+  inset: 0;
+  z-index: 1000;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
 
-  background-color: rgba(255, 255, 255, 0.10); /* très léger */
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(15px); /* pour Safari */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
-  z-index: 2000;
+.menu-glass {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.15);
+  z-index: 1;
+}
 
-  transition: all 0.3s ease-in-out;
+.menu-content {
+  position: relative;
+  z-index: 2;
+  color: #111;
 }
 
 .close-button {
