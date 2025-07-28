@@ -125,7 +125,7 @@ const handleSubmit = async () => {
   margin: 0 auto;
   color: #333;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   background: #fff;
@@ -133,7 +133,7 @@ const handleSubmit = async () => {
 }
 
 .contact h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 2.5rem;
   color: #2f2f2f;
   margin-bottom: 1rem;
@@ -170,7 +170,7 @@ input, textarea {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 button {
@@ -183,7 +183,7 @@ button {
   font-size: 1rem;
   font-weight: 500;
   transition: background 0.3s;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   border: 1px solid #f2eee9;
 }
 

@@ -240,7 +240,7 @@ onUnmounted(() => {
 .item-overlay h2 {
     margin: 0;
     color: #fff;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1.5rem;
 }
 
@@ -282,11 +282,11 @@ onUnmounted(() => {
 
 .home__text .text {
     width: 45%;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .home__text h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 3rem;
     margin-bottom: 1rem;
 }
@@ -305,7 +305,7 @@ onUnmounted(() => {
     cursor: pointer;
     font-size: 1rem;
     transition: background 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 .home__text .btn-secondary:hover {
     background: #f2eee9;
@@ -320,7 +320,7 @@ onUnmounted(() => {
     cursor: pointer;
     font-size: 1rem;
     transition: background 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 .projects-button:hover {
     background: #000;

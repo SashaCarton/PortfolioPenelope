@@ -88,7 +88,7 @@ h1 {
   margin-bottom: 3rem;
   color: #000;
   text-align: center;
-  font-family:  'Cormorant Garamond', serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .row-container {

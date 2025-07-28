@@ -226,7 +226,7 @@ p {
   cursor: pointer;
   transition: background-color 0.3s;
   margin-top: 2rem;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   border: 1px solid #f2eee9;
 }
 

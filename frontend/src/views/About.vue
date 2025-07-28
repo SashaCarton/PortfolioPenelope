@@ -89,12 +89,12 @@
     padding: 4rem 2rem;
     background: #fff;
     color: #333;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     animation: fadeIn 0.8s ease-in-out;
   }
   
   .about h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 3rem;
     font-weight: 400;
     text-align: center;
@@ -141,7 +141,7 @@
   }
   
   .text-block h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 1.8rem;
     color: #2f2f2f;
     margin-bottom: 1rem;
