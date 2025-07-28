@@ -225,13 +225,13 @@ onUnmounted(() => {
 }
 
 .item-overlay {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
+    position: relative;
+    bottom: 8px;
+    left: center;
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
+  border: 2px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     padding: 1rem 2rem;
     border-radius: 4px;
 }
@@ -240,7 +240,7 @@ onUnmounted(() => {
     margin: 0;
     color: #000000;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
 }
 
 .carousel-control {
@@ -250,7 +250,7 @@ onUnmounted(() => {
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
+  border: 2px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     border: none;
     color: #000000;
     font-size: 2rem;
@@ -263,8 +263,6 @@ onUnmounted(() => {
 
 .carousel-control.prev { left: 2rem; }
 .carousel-control.next { right: 2rem; }
-
-.carousel-control:hover { background: rgba(255, 255, 255, 0); }
 
 .home__text {
     display: flex;
