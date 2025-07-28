@@ -20,7 +20,7 @@
                     >
                     <img :src="project.cover" :alt="project.title" />
                     <div class="item-overlay">
-                        <h3>{{ project.title }}</h3>
+                        <h2>{{ project.title }}</h2>
                     </div>
                 </div>
             </div>
@@ -241,6 +241,7 @@ onUnmounted(() => {
     color: #000000;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
+    font-weight: lighter;
 }
 
 .carousel-control {
