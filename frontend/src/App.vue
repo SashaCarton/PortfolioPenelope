@@ -138,7 +138,7 @@ body {
 
 .menu-list {
   list-style: none;
-  font-family: var(--font-mono);
+  font-family: 'JetBrains Mono', monospace;
   padding: 0;
   margin: 0;
   width: 100%;
@@ -218,7 +218,7 @@ footer {
   text-align: center;
   font-size: 0.875rem;
   color: #666;
-  font-family: 'Inter', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
 }
 .footer {
   background: #c8c8c8;
