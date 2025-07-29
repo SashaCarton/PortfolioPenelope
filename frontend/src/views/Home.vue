@@ -33,7 +33,7 @@
     <!-- Intro Text Below Banner -->
     <div class="home__text">
         <div class="picture">
-            <img src="\images\ASCII-woman.gif" alt="Spinning ASCII art" />
+            <img src="\images\ASCII woman.gif" alt="Spinning ASCII art" />
         </div>
         <div class="text">
             <h1>Étudiante en design numérique — approche hybride de l’expérience, de la sensibilité et de la recherche</h1>
