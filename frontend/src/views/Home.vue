@@ -290,13 +290,17 @@ onUnmounted(() => {
 
 .home__text h1 {
     font-family: 'Inter', sans-serif;
-    font-size: 3rem;
+    font-size: 2rem;
+    width: 500px;
     margin-bottom: 1rem;
+    text-align: left;
 }
 
 .home__text p {
     font-size: 1rem;
     line-height: 1.6;
+    text-align: left;
+    width: 500px;
     margin-bottom: 1rem;
 }
 .home__text .btn-secondary {
