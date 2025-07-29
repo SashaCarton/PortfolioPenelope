@@ -33,7 +33,7 @@
     <!-- Intro Text Below Banner -->
     <div class="home__text">
         <div class="picture">
-            <img src="/images/60F38FC4-A2B0-4AC5-87B4-33657F70F795_edi.avif" alt="Pénélope Letienne" />
+            <img src="\images\ASCII-woman.gif" alt="Spinning ASCII art" />
         </div>
         <div class="text">
             <h1>Étudiante en design numérique — approche hybride de l’expérience, de la sensibilité et de la recherche</h1>
