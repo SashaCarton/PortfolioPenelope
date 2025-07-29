@@ -1,3 +1,11 @@
+<template>
+  <div v-if="isLoading" class="loading-screen">
+    <div class="terminal-box">
+      <pre class="typing-text">{{ displayedText }}<span class="cursor">▉</span></pre>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from 'vue';
 
