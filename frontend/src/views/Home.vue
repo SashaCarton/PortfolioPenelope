@@ -26,7 +26,7 @@
             </div>
         </div>
         <button class="carousel-control next" @click="nextSlide" aria-label="Diapositive suivante">›</button>
-        <button class="projects-button" @click="router.push({ name: 'Projects' })">Voir tous les projets</button>
+        <button class="projects-button" @click="router.push({ name: 'Projects' })">Voir tous les projets →</button>
     </div>
     </section>
     
@@ -39,7 +39,7 @@
             <h1>Étudiante en design numérique — approche hybride de l’expérience, de la sensibilité et de la recherche</h1>
             <p>Après neuf années de formation en beaux-arts, j’ai par la suite obtenu un bac STD2A (arts appliqués) qui m’a naturellement conduite vers le design et l’expérience utilisateur.</p>
             <p>Je suis passionnée par l’architecture de l’information, les micro-interactions et la dimension émotionnelle des interfaces. Actuellement, je poursuis ma formation à l’ENSAAMA, école parisienne de design et de métiers d’art.</p>
-            <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus</button>
+            <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus →</button>
         </div>
     </div>
 </template>
@@ -291,7 +291,6 @@ onUnmounted(() => {
 .home__text h1 {
     font-family: 'Inter', sans-serif;
     font-size: 2rem;
-    width: 500px;
     margin-bottom: 1rem;
     text-align: left;
 }
@@ -300,23 +299,24 @@ onUnmounted(() => {
     font-size: 1rem;
     line-height: 1.6;
     text-align: left;
-    width: 500px;
     margin-bottom: 1rem;
 }
 .home__text .btn-secondary {
-    background: #ffffff;
-    color: #000000;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
+    background: #fff;
+    margin-top: 20px;
+    color: #222;
+    padding: .5rem 1rem;
+    border: 1.5px solid rgba(0,0,0,);
+    border-radius: 30px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background 0.3s ease;
-    font-family: 'Inter', sans-serif;
+    transition: background .3s ease;
+    font-family: Inter, sans-serif;
+    display: flex;
 }
 .home__text .btn-secondary:hover {
-    background: #ffffff;
-    color: #000;
+    background: #000;
+    color: #fff;
 }
 .projects-button {
     background:rgb(255, 255, 255);
