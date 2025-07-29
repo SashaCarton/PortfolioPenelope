@@ -36,9 +36,9 @@
             <img src="/images/60F38FC4-A2B0-4AC5-87B4-33657F70F795_edi.avif" alt="Pénélope Letienne" />
         </div>
         <div class="text">
-            <h1>Pénélope Letienne</h1>
-            <p>Étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre, je suis actuellement à la recherche d'un stage dans le monde des nouvelles technologies combinées aux techniques créatives et au savoir-faire.</p>
-            <p>Formée aux beaux-arts pendant 9 ans à l'école des arts plastiques de Lens depuis 2012, j'ai ensuite rejoint l'école ESAAT de Roubaix afin d'obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, les expériences immersives...</p>
+            <h1>Étudiante en design numérique — approche hybride de l’expérience, de la sensibilité et de la recherche</h1>
+            <p>Après neuf années de formation en beaux-arts, j’ai par la suite obtenu un bac STD2A (arts appliqués) qui m’a naturellement conduite vers le design et l’expérience utilisateur.</p>
+            <p>Je suis passionnée par l’architecture de l’information, les micro-interactions et la dimension émotionnelle des interfaces. Actuellement, je poursuis ma formation à l’ENSAAMA, école parisienne de design et de métiers d’art.</p>
             <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus</button>
         </div>
     </div>
@@ -187,7 +187,7 @@ onUnmounted(() => {
     width: 100vw;
     height: 60vh;
     margin: 0 auto;
-    padding-top:10px;
+    padding-top:20px;
     margin-top:-50px;
     padding-bottom: 75px;
 }
@@ -240,7 +240,7 @@ onUnmounted(() => {
 .item-overlay h2 {
     margin: 0;
     color: #000000;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.8rem;
     font-weight: lighter;
     width: 150px;
@@ -254,9 +254,9 @@ onUnmounted(() => {
     background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
-  border: 1.5px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     color: #000000;
-    font-size: 2rem;
+    font-size: 1.2rem;
     width: 3rem;
     height: 3rem;
     cursor: pointer;
