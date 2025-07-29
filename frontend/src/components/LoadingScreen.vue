@@ -60,12 +60,18 @@ onMounted(() => {
   font-size: 1.5rem;
   color: #ffffff;
   border-radius: 8px;
+  min-width: 22ch; /* empêche le rétrécissement */
 }
+
 
 .typing-text {
   margin: 0;
   white-space: pre;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  width: 18ch; /* fixe la largeur à 18 caractères pour PENELOPE LETIENNE */
 }
+
 
 .cursor {
   animation: blink 1s infinite;
