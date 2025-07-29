@@ -60,7 +60,6 @@ onMounted(() => {
   font-size: 1.5rem;
   color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 0 30px rgba(209, 209, 209, 0.2);
 }
 
 .typing-text {
