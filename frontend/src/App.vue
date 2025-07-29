@@ -263,10 +263,10 @@ footer {
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
-  transition: opacity 0.3s ease;
+  transition: color 0.3s ease;
 }
 .footer-links a:hover {
-  opacity: 0.7;
+  color: #ffffff;
 }
 .download-cv-button {
   border: 1px solid #000000;
@@ -276,7 +276,7 @@ footer {
   justify-content: center;
 }
 .download-cv-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(0, 0, 0);
 }
 .footer-copy {
   font-size: 0.85rem;

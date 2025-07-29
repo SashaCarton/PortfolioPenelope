@@ -320,7 +320,7 @@ onUnmounted(() => {
 }
 .projects-button {
     background:rgb(255, 255, 255);
-    margin-top: 20px;
+    margin-top: 30px;
     color: #222222;
     padding: 0.5rem 1rem;
     border: 1.5px solid rgba(0, 0, 0,);
