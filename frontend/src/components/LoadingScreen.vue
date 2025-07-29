@@ -54,13 +54,12 @@ onMounted(() => {
 }
 
 .terminal-box {
-  background: rgba(20, 20, 20, 0.95);
+  background: rgba(0, 0, 0, 0.95);
   padding: 2rem 3rem;
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.5rem;
   color: #ffffff;
   border-radius: 8px;
-  min-width: 22ch; /* empêche le rétrécissement */
 }
 
 
