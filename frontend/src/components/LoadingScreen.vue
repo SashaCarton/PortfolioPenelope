@@ -1,11 +1,3 @@
-<template>
-  <div v-if="isLoading" class="loading-screen">
-    <div class="terminal-box">
-      <pre class="typing-text">{{ displayedText }}<span class="cursor">▉</span></pre>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
 
@@ -13,31 +5,37 @@ const isLoading = ref(true);
 const fullText = 'PENELOPE LETIENNE';
 const displayedText = ref('');
 let index = 0;
+let hasFinishedFirstLoop = false;
 
-// Fonction pour simuler la frappe
 const typeWriter = () => {
   if (index < fullText.length) {
     displayedText.value += fullText[index];
     index++;
     setTimeout(typeWriter, 100);
   } else {
-    setTimeout(() => {
-      displayedText.value = '';
-      index = 0;
-      typeWriter(); // recommence la boucle
-    }, 1200);
+    if (!hasFinishedFirstLoop) {
+      hasFinishedFirstLoop = true;
+      setTimeout(() => {
+        isLoading.value = false; // ✅ On cache l’écran seulement maintenant
+      }, 500); // petite pause élégante avant disparition
+    } else {
+      // recommencer l'animation en boucle (optionnel)
+      setTimeout(() => {
+        displayedText.value = '';
+        index = 0;
+        typeWriter();
+      }, 1200);
+    }
   }
 };
 
 onMounted(() => {
-  typeWriter();
   window.addEventListener('load', () => {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 1200); // optionnel : délai après le chargement
+    typeWriter(); // on ne commence qu’une fois que tout est prêt
   });
 });
 </script>
+
 
 <style scoped>
 .loading-screen {
