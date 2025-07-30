@@ -270,7 +270,7 @@ onUnmounted(() => {
 .home__text {
     display: flex;
     flex-direction: row-reverse;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     padding: 4rem 2.5vw;
     background: #ffffff;
