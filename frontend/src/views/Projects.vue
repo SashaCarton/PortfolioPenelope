@@ -111,7 +111,6 @@ h1 {
 .row-item img {
   width: auto;
   height: 70%;
-  border-radius: 12px;
   transition: transform 0.3s ease;
 }
 
