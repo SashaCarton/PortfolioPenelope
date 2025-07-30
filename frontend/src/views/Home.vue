@@ -257,7 +257,7 @@ onUnmounted(() => {
   border: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
     color: #000000;
     font-size: 1.2rem;
-    width: 3rem;
+    width: 3.1rem;
     height: 3rem;
     cursor: pointer;
     border-radius: 50%;
