@@ -1,31 +1,16 @@
 <template>
   <section class="projects">
     <h1>Mes réalisations</h1>
-    <div v-for="(group, groupIndex) in chunkProjects(projects, 11)" :key="groupIndex">
-      <div class="row-container">
-        <div
-          v-for="(project, index) in group.slice(0, 2)"
-          :key="project.id"
-          class="row-item"
-          @click="goToProjectDetails(project.id)"
-        >
-          <img :src="project.cover" :alt="project.title" />
-          <h3>{{ project.title }}</h3>
-          <p>{{ project.description }}</p>
-        </div>
-      </div>
-      <div class="trait"></div>
-      <div class="grid-container">
-        <div
-          v-for="(project, index) in group.slice(2)"
-          :key="project.id"
-          class="grid-item"
-          @click="goToProjectDetails(project.id)"
-        >
-          <img :src="project.cover" :alt="project.title" />
-          <h3>{{ project.title }}</h3>
-          <p>{{ project.description }}</p>
-        </div>
+    <div class="projects-container">
+      <div
+        v-for="(project, index) in projects"
+        :key="project.id"
+        class="project-item"
+        @click="goToProjectDetails(project.id)"
+      >
+        <img :src="project.cover" :alt="project.title" />
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description }}</p>
       </div>
     </div>
   </section>
@@ -64,14 +49,6 @@ onMounted(async () => {
 function goToProjectDetails(projectId) {
   router.push({ name: 'ProjectDetails', params: { id: projectId } });
 }
-
-function chunkProjects(array, size) {
-  const result = [];
-  for (let i = 0; i < array.length; i += size) {
-    result.push(array.slice(i, i + size));
-  }
-  return result;
-}
 </script>
 
 <style scoped>
@@ -91,150 +68,63 @@ h1 {
   font-family: 'Inter', sans-serif;
 }
 
-.row-container {
+.projects-container {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
-  margin-bottom: 2rem;
-  width: 100%;
-  max-width: 1200px;
+  width: 80%;
 }
 
-.row-item {
+.project-item {
   cursor: pointer;
   text-align: center;
-  flex: 1;
-  max-width: 45%;
-  height: 500px;
+  flex: 1 1 calc(33.333% - 1rem);
+  max-width: calc(33.333% - 1rem);
+  box-sizing: border-box;
+  height: 350px; /* Hauteur fixe pour uniformiser les cartes */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
 }
 
-.row-item img {
+.project-item img {
   width: auto;
-  height: 70%;
+  max-height: 70%; /* Limite la hauteur de l'image pour s'adapter à la carte */
   border-radius: 12px;
   transition: transform 0.3s ease;
 }
 
-.row-item:hover img {
+.project-item:hover img {
   transform: scale(1.02);
 }
 
-.row-item h3 {
-  margin-top: 0.5rem;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.row-item p {
-  font-size: 1rem;
-  color: #666;
-  margin-top: 0.5rem;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.grid-item {
-  cursor: pointer;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.grid-item img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-  align-self: center;
-}
-
-.grid-item:hover img {
-  transform: scale(1.02);
-}
-
-.grid-item h3 {
+.project-item h3 {
   margin-top: 0.5rem;
   font-size: 1.2rem;
   color: #333;
-  text-align: center;
 }
 
-.grid-item p {
+.project-item p {
   font-size: 0.9rem;
   color: #666;
   margin-top: 0.5rem;
   text-align: center;
 }
 
-.trait {
-  width: 100%;
-  height: 1px;
-  background-color: #000;
-  margin: 1rem auto;
-  margin-bottom: 10rem;
-}
-
 @media (max-width: 1024px) {
-  .row-container {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .row-item {
-    max-width: 100%;
-  }
-  .row-item img {
-    width: 50%!important;
-  }
-
-  .grid-container {
-    grid-template-columns: repeat(3, 1fr);
+  .project-item {
+    flex: 1 1 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
   }
 }
 
 @media (max-width: 768px) {
-  .row-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .row-item {
-    width: 100%;
-  }
-  .row-item img {
-    width: 50%!important;
-  }
-
-  .grid-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
-
-  .row-item img {
-    width: 70%!important;
-  }
-
-  .row-item h3, .grid-item h3 {
-    font-size: 1.2rem;
-  }
-
-  .row-item p, .grid-item p {
-    font-size: 0.9rem;
+  .project-item {
+    flex: 1 1 calc(100% - 1rem);
+    max-width: calc(100% - 1rem);
   }
 }
 </style>
