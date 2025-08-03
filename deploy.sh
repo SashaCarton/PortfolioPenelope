@@ -14,7 +14,7 @@ if ! ps aux | grep -v grep | grep "autossh"; then
 fi
 
 # Se placer dans le répertoire principal du projet
-PROJECT_DIR="/Agence/Web/Portfolio/PortfolioVite"
+PROJECT_DIR="/Agence/Web/Penelope"
 FRONTEND_DIR="$PROJECT_DIR/frontend"
 BACKEND_DIR="$PROJECT_DIR/backend"
 
@@ -48,7 +48,7 @@ echo "Building backend..."
 npm run build || { echo "Erreur: npm run build failed"; exit 1; }
 
 echo "Restarting backend with PM2..."
-pm2 stop strapi-sasha || echo "Strapi was not running, skipping stop"
-pm2 start npm --name strapi-sasha -- run start &
+pm2 stop strapi-penelope || echo "Strapi was not running, skipping stop"
+pm2 start npm --name strapi-penelope -- run start &
 
 echo "Déploiement terminé avec succès !"
