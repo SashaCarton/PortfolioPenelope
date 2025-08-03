@@ -254,6 +254,7 @@ footer {
   gap: 1.5rem;
   margin-bottom: 1.5rem;
   align-items: center;
+  padding-inline-start: 0px;
 }
 .footer-links li {
   margin: 0;
