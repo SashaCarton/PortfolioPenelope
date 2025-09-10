@@ -1,7 +1,7 @@
 <template>
   <div>
     <LoadingScreen v-if="isLoading" />
-
+    
     <div v-else :class="['app-container', currentPage]">
       <header class="header" :class="currentPage">
         <nav class="nav">
@@ -11,29 +11,25 @@
               <div v-if="menuOpen" class="menu-overlay">
                 <button @click="closeMenu" class="close-button">✖</button>
                 <ul class="menu-list">
-                    <li><div><router-link to="/" @click="closeMenu">Accueil</router-link></div></li>
-                    <li><div><router-link to="/about" @click="closeMenu">À propos</router-link></div></li>
-                    <li><div><router-link to="/projects" @click="closeMenu">Projets</router-link></div></li>
-                    <li><div><router-link to="/contact" @click="closeMenu">Contact</router-link></div></li>
+                  <li><div><router-link to="/" @click="closeMenu">Accueil</router-link></div></li>
+                  <li><div><router-link to="/about" @click="closeMenu">À propos</router-link></div></li>
+                  <li><div><router-link to="/projects" @click="closeMenu">Projets</router-link></div></li>
+                  <li><div><router-link to="/contact" @click="closeMenu">Contact</router-link></div></li>
                 </ul>
               </div>
             </transition>
           </div>
-
           <div class="center-title cormorant-garamond-title">
             <router-link to="/">PÉNÉLOPE LETIENNE</router-link>
           </div>
-
           <div class="contact-link">
             <router-link to="/contact">CONTACT</router-link>
           </div>
         </nav>
       </header>
-
       <main>
         <router-view />
       </main>
-
       <footer class="footer">
         <ul class="footer-links">
           <li><a href="/about">À propos</a></li>
@@ -90,7 +86,7 @@ body {
   align-items: center;
   padding: 0 2.5vw;
   height: 60px;
-
+  
   background-color: rgba(255, 255, 255, 0.08); /* très léger */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px); /* pour Safari */
@@ -132,24 +128,25 @@ body {
   width: 100vw;
   height: 100vh;
   padding: 4rem 2rem;
-
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  
   background-color: rgba(255, 255, 255, 0.80);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(15px); /* pour Safari */
   z-index: 9999;
-
+  
   transition: all 0.3s ease-in-out;
 }
 
 .close-button {
   position: absolute;
+  left: 0;
   top: 13.5px;
-  left: 40px;
+  padding: 0 3vw;
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -162,13 +159,15 @@ body {
   font-family: 'JetBrains Mono', monospace;
   padding: 0;
   margin: 0;
-  width: 100%;
-  padding-left: 100px;
+  left: 10%;
+  top: 20%;
+  position: absolute;
+  text-align: left;
 }
 
 .menu-list li {
   margin: 2rem 0;
-  width: 20%; 
+  /* width: 20%;  supprimé pour que la largeur s'adapte au texte */
 }
 
 .menu-list li a {
@@ -177,7 +176,7 @@ body {
   font-size: 3rem;
   font-weight: 300;
   text-transform: uppercase;
-  display: block;
+  display: inline-block;
   text-align: left;
   position: relative;
 }
@@ -194,7 +193,7 @@ body {
 }
 
 .menu-list li a:hover::after {
-  width: 65%;
+  width: 100%;
 }
 
 .center-title {
@@ -303,20 +302,20 @@ footer {
   .menu-burger {
     display: block;
   }
-
+  
   .menu-overlay {
     padding: 1rem;
   }
-
+  
   .menu-list li {
     margin: 1.5rem 0;
   }
-
+  
   .menu-list li a {
     font-size: 2rem;
     width: 50%;
   }
-
+  
   .close-button {
     font-size: 1.2rem;
   }
@@ -327,11 +326,11 @@ footer {
     font-size: 1.5rem;
     width: 100%;
   }
-
+  
   .menu-overlay {
     padding: 0.5rem;
   }
-
+  
   .close-button {
     font-size: 1rem;
   }
