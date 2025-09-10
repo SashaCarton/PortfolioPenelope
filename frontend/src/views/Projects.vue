@@ -11,6 +11,7 @@
         <img :src="project.cover" :alt="project.title" />
         <h3>{{ project.title }}</h3>
         <p>{{ project.description }}</p>
+      <div class = "fade"></div>
       </div>
     </div>
   </section>
@@ -82,12 +83,23 @@ h1 {
   flex: 1 1 calc(33.333% - 1rem);
   max-width: calc(33.333% - 1rem);
   box-sizing: border-box;
-  height: 350px; /* Hauteur fixe pour uniformiser les cartes */
+  height: 400px; /* Hauteur fixe pour uniformiser les cartes */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding-top: 1rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.fade {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
 }
 
 .project-item img {
