@@ -11,10 +11,10 @@
               <div v-if="menuOpen" class="menu-overlay">
                 <button @click="closeMenu" class="close-button">✖</button>
                 <ul class="menu-list">
-                  <li><router-link to="/" @click="closeMenu">Accueil</router-link></li>
-                  <li><router-link to="/about" @click="closeMenu">À propos</router-link></li>
-                  <li><router-link to="/projects" @click="closeMenu">Projets</router-link></li>
-                  <li><router-link to="/contact" @click="closeMenu">Contact</router-link></li>
+                    <li><div><router-link to="/" @click="closeMenu">Accueil</router-link></div></li>
+                    <li><div><router-link to="/about" @click="closeMenu">À propos</router-link></div></li>
+                    <li><div><router-link to="/projects" @click="closeMenu">Projets</router-link></div></li>
+                    <li><div><router-link to="/contact" @click="closeMenu">Contact</router-link></div></li>
                 </ul>
               </div>
             </transition>
@@ -148,8 +148,8 @@ body {
 
 .close-button {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 13.5px;
+  left: 40px;
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -188,13 +188,13 @@ body {
   bottom: -5px;
   left: 0;
   width: 0;
-  height: 2px;
-  background: #fff;
+  height: 3px;
+  background: #000000;
   transition: width 0.3s ease-in-out;
 }
 
 .menu-list li a:hover::after {
-  width: 100%;
+  width: 65%;
 }
 
 .center-title {
