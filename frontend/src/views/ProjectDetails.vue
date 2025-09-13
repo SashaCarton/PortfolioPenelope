@@ -162,8 +162,7 @@ p {
   line-height: 1.6;
   color: #444;
   margin-bottom: 2rem;
-  text-align: left;
-  width: 50%;
+  text-align: center;
 }
 
 .project-meta {
