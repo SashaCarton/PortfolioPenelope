@@ -1,9 +1,11 @@
 <template>
-  <div v-if="isLoading" class="loading-screen">
-    <div class="terminal-box">
-      <pre class="typing-text">{{ displayedText }}<span class="cursor">▉</span></pre>
+  <Transition name="fade">
+    <div v-if="isLoading" class="loading-screen">
+      <div class="terminal-box">
+        <pre class="typing-text">{{ displayedText }}<span class="cursor">▉</span></pre>
+      </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup>
@@ -85,5 +87,32 @@ onMounted(() => {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* Animation d'apparition */
+.fade-enter-active {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.fade-leave-active {
+  animation: fadeOut 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 </style>

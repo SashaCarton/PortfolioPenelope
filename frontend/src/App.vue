@@ -1,8 +1,7 @@
 <template>
   <div>
     <LoadingScreen v-if="isLoading" />
-    
-    <div v-else :class="['app-container', currentPage]">
+    <div :class="['app-container', currentPage]">
       <header class="header" :class="currentPage">
         <nav class="nav">
           <div class="menu-burger">
@@ -46,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import LoadingScreen from './components/LoadingScreen.vue'
 
 const isLoading = ref(true)
@@ -60,11 +59,7 @@ function closeMenu() {
   menuOpen.value = false
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    isLoading.value = false
-  }, 3000)
-})
+
 </script>
 
 <style scoped>

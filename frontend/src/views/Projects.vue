@@ -2,7 +2,22 @@
   <section class="projects">
     <h1>Mes réalisations</h1>
     <div class="projects-container">
+      <!-- Skeleton loading -->
       <div
+        v-if="isLoading"
+        v-for="n in 6"
+        :key="'skeleton-'+n"
+        class="project-item skeleton"
+      >
+        <div class="skeleton-image"></div>
+        <div class="skeleton-title"></div>
+        <div class="skeleton-text"></div>
+        <div class="fade"></div>
+      </div>
+
+      <!-- Actual projects -->
+      <div
+        v-else
         v-for="(project, index) in projects"
         :key="project.id"
         class="project-item"
@@ -11,7 +26,7 @@
         <img :src="project.cover" :alt="project.title" />
         <h3>{{ project.title }}</h3>
         <p>{{ project.description }}</p>
-      <div class = "fade"></div>
+        <div class="fade"></div>
       </div>
     </div>
   </section>
@@ -22,14 +37,16 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const projects = ref([]);
+const isLoading = ref(true);
 const router = useRouter();
 
 onMounted(async () => {
+  isLoading.value = true;
   try {
-    const response = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=Cover');
+    const response = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=Cover');    
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
-
     const { data } = await response.json();
+    
     projects.value = data.map(project => ({
       id: project.id,
       title: project.Titre || 'Sans titre',
@@ -42,8 +59,11 @@ onMounted(async () => {
         ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
         : null,
     }));
+    
+    isLoading.value = false;
   } catch (error) {
-    console.error('Erreur :', error);
+    console.error('Erreur :', error);
+    isLoading.value = false;
   }
 });
 
@@ -83,7 +103,7 @@ h1 {
   flex: 1 1 calc(33.333% - 1rem);
   max-width: calc(33.333% - 1rem);
   box-sizing: border-box;
-  height: 400px; /* Hauteur fixe pour uniformiser les cartes */
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -104,8 +124,8 @@ h1 {
 
 .project-item img {
   width: auto;
-  max-height: 70%; /* Limite la hauteur de l'image pour s'adapter à la carte */
-  border-radius: 12px;
+  max-height: 70%;
+  border-radius: 5px;
   transition: transform 0.3s ease;
 }
 
@@ -126,6 +146,64 @@ h1 {
   text-align: center;
 }
 
+/* Skeleton Loading Styles */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 70%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 24px;
+  margin: 0.5rem auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+  width: 80%;
+  height: 16px;
+  margin: 0.5rem auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.project-item:not(.skeleton) {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 1024px) {
   .project-item {
     flex: 1 1 calc(50% - 1rem);

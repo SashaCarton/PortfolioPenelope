@@ -50,7 +50,79 @@
       </p>
     </form>
   </section>
+  <div class="social-links">
+    <a href="https://www.linkedin.com/in/penelopeletienne/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\linkedin.svg" alt="LinkedIn" />
+    </a>
+    <a href="https://github.com/Penny0507" target="_blank" rel="noopener" aria-label="GitHub">
+      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\github.svg" alt="GitHub" />
+    </a>
+    <a href="https://www.instagram.com/penny_things/" target="_blank" rel="noopener" aria-label="Instagram">
+      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\insta.png" alt="Insta" />
+    </a>
+    <a href="mailto:penelope.letienne@ensaama.net" target="_blank" rel="noopener" aria-label="Email">
+      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\email.svg" alt="Email" />
+    </a>
+  </div>
 </template>
+
+<style scoped>
+/* ...existing styles... */
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: background 0.2s, transform 0.2s;
+  border: 1px solid #e0e0e0;
+}
+
+.social-links a:hover {
+  background: #e0e0e0;
+  transform: translateY(-4px) scale(1.08);
+}
+
+.social-links img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: grayscale(0.2) brightness(0.95);
+  transition: filter 0.2s;
+}
+
+.social-links a:hover img {
+  filter: grayscale(0) brightness(1.1);
+}
+
+@media (max-width: 480px) {
+  .social-links {
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .social-links a {
+    width: 38px;
+    height: 38px;
+  }
+  .social-links img {
+    width: 20px;
+    height: 20px;
+  }
+}
+</style>
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -119,7 +191,7 @@ const handleSubmit = async () => {
 
 .contact {
   animation: fadeIn 0.8s ease-in-out;
-  padding: 2rem;
+  padding: 1px 32px;
   max-width: 600px;
   width: 70%;
   margin: 0 auto;
@@ -127,7 +199,7 @@ const handleSubmit = async () => {
   text-align: center;
   font-family: 'Inter', sans-serif;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
   background: #fff;
   margin-bottom: 2rem;
 }
