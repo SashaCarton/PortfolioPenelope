@@ -52,16 +52,16 @@
   </section>
   <div class="social-links">
     <a href="https://www.linkedin.com/in/penelopeletienne/" target="_blank" rel="noopener" aria-label="LinkedIn">
-      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\linkedin.svg" alt="LinkedIn" />
+      <img src="/assets/linkedin.svg" alt="LinkedIn" />
     </a>
     <a href="https://github.com/Penny0507" target="_blank" rel="noopener" aria-label="GitHub">
-      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\github.svg" alt="GitHub" />
+      <img src="/assets/github.svg" alt="GitHub" />
     </a>
     <a href="https://www.instagram.com/penny_things/" target="_blank" rel="noopener" aria-label="Instagram">
-      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\insta.png" alt="Insta" />
+      <img src="/assets/insta.png" alt="Insta" />
     </a>
     <a href="mailto:penelope.letienne@ensaama.net" target="_blank" rel="noopener" aria-label="Email">
-      <img src="C:\Users\letie\OneDrive\Documents\GitHub\PortfolioPenelope\frontend\public\assets\email.svg" alt="Email" />
+      <img src="/assets/email.svg" alt="Email" />
     </a>
   </div>
 </template>
