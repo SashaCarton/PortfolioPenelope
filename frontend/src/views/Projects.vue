@@ -82,8 +82,9 @@ function goToProjectDetails(projectId) {
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 3rem;
+  margin-top: 80px;
   color: #000;
   text-align: center;
   font-family: 'Inter', sans-serif;
@@ -216,5 +217,14 @@ h1 {
     flex: 1 1 calc(100% - 1rem);
     max-width: calc(100% - 1rem);
   }
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 3rem;
+  margin-top: 30px;
+  color: #000;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
 }
 </style>

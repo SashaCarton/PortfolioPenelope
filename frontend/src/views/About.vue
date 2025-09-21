@@ -90,11 +90,12 @@
     color: #333;
     font-family: 'Inter', sans-serif;
     animation: fadeIn 0.8s ease-in-out;
+    margin-top: 60px;
   }
   
   .about h1 {
     font-family: 'Inter', sans-serif;
-    font-size: 3rem;
+    font-size: 1.8rem;
     font-weight: 400;
     text-align: center;
     color: #2f2f2f;
@@ -185,10 +186,11 @@
     }
     .about {
       padding: 2rem 1rem;
+      margin-top: 30px;
       background-color: #ffffff;
     }
     .about h1 {
-      font-size: 2.5rem;
+      font-size: 1rem;
     }
     .text-block h2 {
       font-size: 1.5rem;

@@ -194,7 +194,7 @@ const handleSubmit = async () => {
   padding: 1px 32px;
   max-width: 600px;
   width: 70%;
-  margin: 0 auto;
+  margin: auto;
   color: #333;
   text-align: center;
   font-family: 'Inter', sans-serif;
@@ -202,6 +202,7 @@ const handleSubmit = async () => {
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
   background: #fff;
   margin-bottom: 2rem;
+  margin-top: 90px;
 }
 
 .contact h1 {
