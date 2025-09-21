@@ -1,6 +1,5 @@
 <template>
   <div>
-    <LoadingScreen v-if="isLoading" />
     <div :class="['app-container', currentPage]">
       <header class="header" :class="currentPage">
         <nav class="nav">
@@ -31,11 +30,11 @@
       </main>
       <footer class="footer">
         <ul class="footer-links">
-          <li><a href="/about">À propos</a></li>
-          <li><a href="/projects">Projets</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
-          <li><a href="https://github.com" target="_blank">GitHub</a></li>
+          <li class="desktop-only"><a href="/about">À propos</a></li>
+          <li class="desktop-only"><a href="/projects">Projets</a></li>
+          <li class="desktop-only"><a href="/contact">Contact</a></li>
+          <li class="desktop-only"><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
+          <li class="desktop-only"><a href="https://github.com" target="_blank">GitHub</a></li>
           <a href="/assets/Cv.pdf" download class="download-cv-button">Télécharger mon CV</a>
         </ul>
         <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
@@ -46,9 +45,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import LoadingScreen from './components/LoadingScreen.vue'
 
-const isLoading = ref(true)
 const menuOpen = ref(false)
 
 function toggleMenu() {
@@ -58,8 +55,6 @@ function toggleMenu() {
 function closeMenu() {
   menuOpen.value = false
 }
-
-
 </script>
 
 <style scoped>
@@ -81,11 +76,10 @@ body {
   align-items: center;
   padding: 0 2.5vw;
   height: 60px;
-  
-  background-color: rgba(255, 255, 255, 0.08); /* très léger */
+  background-color: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px); /* pour Safari */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* fine ligne élégante */
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .nav {
@@ -98,10 +92,10 @@ body {
   height: 100%;
 }
 
-
 .menu-burger {
   position: relative;
 }
+
 .menu-burger a {
   text-decoration: none;
   color: #000000;
@@ -123,17 +117,14 @@ body {
   width: 100vw;
   height: 100vh;
   padding: 4rem 2rem;
-  
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
   background-color: rgba(255, 255, 255, 0.80);
   backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(15px); /* pour Safari */
+  -webkit-backdrop-filter: blur(15px);
   z-index: 9999;
-  
   transition: all 0.3s ease-in-out;
 }
 
@@ -162,7 +153,6 @@ body {
 
 .menu-list li {
   margin: 2rem 0;
-  /* width: 20%;  supprimé pour que la largeur s'adapte au texte */
 }
 
 .menu-list li a {
@@ -225,21 +215,15 @@ body {
 main {
   padding-top: 80px;
 }
-footer {
-  background: #c8c8c8;
-  padding: 1rem 0;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #666;
-  font-family: 'JetBrains Mono', monospace;
-}
+
 .footer {
   background: #c8c8c8;
   color: #000000;
-  padding: 2rem 0;
+  padding: 1rem 0;
   text-align: center;
-  align-items: center;
+  font-size: 0.800rem;
 }
+
 .footer-links {
   list-style: none;
   display: flex;
@@ -248,20 +232,25 @@ footer {
   gap: 1.5rem;
   margin-bottom: 1.5rem;
   align-items: center;
+  padding: 0;
 }
+
 .footer-links li {
   margin: 0;
 }
+
 .footer-links a {
   color: #000000;
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   transition: color 0.3s ease;
 }
+
 .footer-links a:hover {
   color: #ffffff;
 }
+
 .download-cv-button {
   border: 1px solid #000000;
   border-radius: 4px;
@@ -269,31 +258,29 @@ footer {
   align-self: center;
   justify-content: center;
 }
+
 .download-cv-button:hover {
   background: rgb(0, 0, 0);
-}
-.footer-copy {
-  font-size: 0.85rem;
-  color: #888;
-  margin-top: 1rem;
-}
-
-/* Animation pour l'ouverture et la fermeture du menu */
-.menu-fade-enter-active, .menu-fade-leave-active {
-  transition: opacity 0.5s;
-}
-.menu-fade-enter-from, .menu-fade-leave-to {
-  opacity: 0;
-}
-
-.cormorant-garamond-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {
+  .contact-link {
+    display: none;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+
+  .download-cv-button {
+    margin: 0 auto;
+  }
+
   .menu-burger {
     display: block;
   }
@@ -329,5 +316,22 @@ footer {
   .close-button {
     font-size: 1rem;
   }
+}
+
+.menu-fade-enter-active,
+.menu-fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.menu-fade-enter-from,
+.menu-fade-leave-to {
+  opacity: 0;
+}
+
+.cormorant-garamond-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 </style>

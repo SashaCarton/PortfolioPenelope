@@ -203,7 +203,7 @@ onUnmounted(() => {
     width: 100vw;
     height: 60vh;
     margin: 0 auto;
-    padding-top: 20px;
+    padding-top: 0px;
     padding-bottom: 75px;
 }
 
