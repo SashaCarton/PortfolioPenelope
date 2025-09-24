@@ -131,17 +131,19 @@ h1 {
 }
 
 .project-item:hover img {
-  transform: scale(1.02);
+  transform: scale(1.10);
 }
 
 .project-item h3 {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
   font-size: 1.2rem;
   color: #333;
 }
 
 .project-item p {
   font-size: 0.9rem;
+  height: 1.5rem;
   color: #666;
   margin-top: 0.5rem;
   text-align: center;

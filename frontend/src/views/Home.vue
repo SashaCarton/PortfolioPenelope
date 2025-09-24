@@ -33,7 +33,9 @@
                         class="carousel-item"
                         @click="goToProjectDetails(project.id)"
                     >
-                        <img :src="project.cover" :alt="project.title" />
+                        <div class="image-container">
+                            <img :src="project.cover" :alt="project.title" />
+                        </div>
                         <div class="item-overlay">
                             <h2>{{ project.title }}</h2>
                         </div>
@@ -229,13 +231,31 @@ onUnmounted(() => {
     position: relative;
     cursor: pointer;
     gap: 1rem;
-    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.carousel-item .image-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 .carousel-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item:hover img {
+    transform: scale(1.10);
+}
+
+.carousel-item:hover .item-overlay h2::after {
+  content: " →";
+  opacity: 1;
+  margin-left: 6px;
+  transition: all 0.3s ease;
 }
 
 .item-overlay {
@@ -246,7 +266,7 @@ onUnmounted(() => {
     background-color: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border: 1.5px solid rgba(0, 0, 0, 0.2);
     padding: 0.6rem 1rem;
     border-radius: 30px;
 }
@@ -261,6 +281,11 @@ onUnmounted(() => {
     text-align: center;
 }
 
+.item-overlay:hover h2::after {
+    content: ' →';
+    transition: all 0.3s ease;
+}
+
 .carousel-control {
     position: absolute;
     top: 50%;
@@ -268,7 +293,7 @@ onUnmounted(() => {
     background-color: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     color: #000000;
     font-size: 1.2rem;
     width: 3.1rem;
