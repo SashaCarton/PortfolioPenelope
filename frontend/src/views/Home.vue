@@ -8,8 +8,9 @@
                 @mousedown="startDrag"
                 @mouseup="endDrag"
                 @mouseleave="endDrag"
-                @touchstart="startDrag"
-                @touchend="endDrag"
+                @touchstart="handleTouchStart"
+                @touchmove="handleTouchMove"
+                @touchend="handleTouchEnd"
             >
                 <div class="carousel-track" :style="trackStyle">
                     <!-- Skeleton loading -->
@@ -79,6 +80,11 @@ const projects = ref([]);
 const isLoading = ref(true);
 const currentIndex = ref(0);
 const router = useRouter();
+
+// Variables pour le swipe
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+const isDragging = ref(false);
 
 // Nombre d'éléments visibles par diapositive
 const itemsPerSlide = 4;
@@ -184,6 +190,40 @@ document.addEventListener('touchmove', resetAutoScroll);
 onMounted(() => {
     startAutoScroll();
 });
+
+// Gestion du swipe sur mobile
+function handleTouchStart(e) {
+    if (window.innerWidth <= 768) {
+        touchStartX.value = e.touches[0].clientX;
+        isDragging.value = true;
+        stopAutoScroll(); // Arrête le défilement automatique pendant le swipe
+    }
+}
+
+function handleTouchMove(e) {
+    if (isDragging.value && window.innerWidth <= 768) {
+        e.preventDefault(); // Empêche le scroll de la page pendant le swipe
+        touchEndX.value = e.touches[0].clientX;
+    }
+}
+
+function handleTouchEnd() {
+    if (isDragging.value && window.innerWidth <= 768) {
+        const swipeThreshold = 50; // Distance minimale pour déclencher un swipe
+        const difference = touchStartX.value - touchEndX.value;
+
+        if (Math.abs(difference) > swipeThreshold) {
+            if (difference > 0) {
+                nextSlide(); // Swipe vers la gauche
+            } else {
+                prevSlide(); // Swipe vers la droite
+            }
+        }
+
+        isDragging.value = false;
+        startAutoScroll(); // Reprend le défilement automatique après le swipe
+    }
+}
 
 onUnmounted(() => {
     stopAutoScroll();
@@ -412,6 +452,14 @@ onUnmounted(() => {
 
     .carousel-control {
         display: none;
+    }
+
+    .carousel-window {
+        touch-action: pan-y pinch-zoom; /* Améliore le comportement tactile */
+    }
+
+    .carousel-track {
+        transition: transform 0.3s ease-out; /* Transition plus rapide sur mobile */
     }
 }
 
