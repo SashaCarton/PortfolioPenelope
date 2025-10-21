@@ -44,30 +44,38 @@ const currentFrameSrc = computed(() => {
 
 const visibleBlocks = ref([]);
 
+// Fonction pour vérifier si un élément est visible dans la viewport
+function isElementInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+  return rect.top <= windowHeight * 0.75;
+}
+
 function onScroll() {
   const scrollTop = window.scrollY;
   const maxScroll = document.body.scrollHeight - window.innerHeight;
   const scrollFraction = scrollTop / maxScroll;
 
-  // Réinitialise visibleBlocks à chaque scroll
+  // Mise à jour des blocks visibles basée sur leur position dans la viewport
+  const textRefs = document.querySelectorAll('.text-block');
   visibleBlocks.value = [];
-
-  const thresholds = [0.1, 0.4, 0.7];
-  thresholds.forEach((threshold, index) => {
-    if (scrollFraction >= threshold) {
+  textRefs.forEach((el, index) => {
+    if (isElementInViewport(el)) {
       visibleBlocks.value.push(index);
     }
   });
 
-  // Logique pour les frames ASCII
+  // Logique pour les frames ASCII avec une animation plus fluide
   currentFrame.value = Math.min(
     totalFrames,
-    Math.max(1, totalFrames - Math.floor(scrollFraction * totalFrames) + 1)
+    Math.max(1, Math.round(totalFrames - (scrollFraction * totalFrames)) + 1)
   );
 }
 
 onMounted(() => {
   window.addEventListener("scroll", onScroll);
+  // Force scroll to top on mount
+  window.scrollTo(0, 0);
 });
 
 onUnmounted(() => {
@@ -153,21 +161,56 @@ const textBlocks = [
 
 /* Responsiveness */
 @media (max-width: 1024px) {
+  .content {
+    flex-direction: column;
+  }
+
   .ascii-container {
-    position: relative; /* redevient normal sur tablette */
+    position: relative;
     width: 100%;
-    height: 1200px;
+    height: auto;
+    max-height: 800px;
+  }
+
+  .ascii-container img {
+    height: auto;
+    max-width: 100%;
   }
 
   .text-container {
     margin-left: 0;
+    padding-left: 0;
     width: 100%;
+  }
+
+  .text-block {
+    margin-bottom: 15vh;
+    min-height: 20vh;
   }
 }
 
 @media (max-width: 768px) {
   .ascii-container {
-    height: 800px; /* mobile */
+    display: none; /* Cache la vidéo sur mobile */
+  }
+
+  .about-scroll {
+    padding: 2rem 1rem;
+    padding-top: 5rem;
+  }
+
+  .text-block {
+    margin-bottom: 10vh;
+    min-height: 15vh;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
   }
 }
 </style>
