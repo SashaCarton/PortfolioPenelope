@@ -81,12 +81,11 @@ const isLoading = ref(true);
 const currentIndex = ref(0);
 const router = useRouter();
 
-// Variables pour le swipe
-const touchStartX = ref(0);
-const touchEndX = ref(0);
+// Variables pour le swipe mobile
+const startX = ref(0);
+const currentX = ref(0);
 const isDragging = ref(false);
-const dragOffset = ref(0);
-const initialOffset = ref(0);
+const isMobile = ref(window.innerWidth <= 768);
 
 // Nombre d'éléments visibles par diapositive
 const itemsPerSlide = 4;
@@ -131,29 +130,58 @@ const slideCount = computed(() => Math.max(0, projects.value.length - itemsPerSl
 
 // Style de transformation pour le défilement
 const trackStyle = computed(() => {
-    const baseTransform = currentIndex.value * (100 / itemsPerSlide);
-    const dragTransform = isDragging.value ? (dragOffset.value / window.innerWidth) * 100 : 0;
-    return {
-        transform: `translateX(-${baseTransform - dragTransform}%)`,
-        transition: isDragging.value ? 'none' : 'transform 0.3s ease-out'
-    };
+    if (window.innerWidth <= 768) {
+        // Style mobile avec swipe
+        const baseTransform = -(currentIndex.value * 100);
+        const dragTransform = isDragging.value ? ((currentX.value - startX.value) / window.innerWidth) * 100 : 0;
+        return {
+            transform: `translateX(${baseTransform + dragTransform}%)`,
+            transition: isDragging.value ? 'none' : 'transform 0.3s ease-out'
+        };
+    } else {
+        // Style desktop original
+        return {
+            transform: `translateX(-${currentIndex.value * (100 / itemsPerSlide)}%)`,
+            transition: 'transform 0.3s ease-out'
+        };
+    }
 });
 
 function nextSlide() {
     if (!projects.value.length) return;
-    if (currentIndex.value >= projects.value.length - itemsPerSlide) {
-        currentIndex.value = 0;
+    if (window.innerWidth <= 768) {
+        // Navigation mobile
+        if (currentIndex.value >= projects.value.length - 1) {
+            currentIndex.value = 0;
+        } else {
+            currentIndex.value++;
+        }
     } else {
-        currentIndex.value = Math.min(currentIndex.value + 1, projects.value.length - itemsPerSlide);
+        // Navigation desktop
+        if (currentIndex.value >= projects.value.length - itemsPerSlide) {
+            currentIndex.value = 0;
+        } else {
+            currentIndex.value = Math.min(currentIndex.value + 1, projects.value.length - itemsPerSlide);
+        }
     }
 }
 
 function prevSlide() {
     if (!projects.value.length) return;
-    if (currentIndex.value <= 0) {
-        currentIndex.value = projects.value.length - itemsPerSlide;
+    if (window.innerWidth <= 768) {
+        // Navigation mobile
+        if (currentIndex.value <= 0) {
+            currentIndex.value = projects.value.length - 1;
+        } else {
+            currentIndex.value--;
+        }
     } else {
-        currentIndex.value = Math.max(currentIndex.value - 1, 0);
+        // Navigation desktop
+        if (currentIndex.value <= 0) {
+            currentIndex.value = projects.value.length - itemsPerSlide;
+        } else {
+            currentIndex.value = Math.max(currentIndex.value - 1, 0);
+        }
     }
 }
 
@@ -201,42 +229,51 @@ onMounted(() => {
 // Gestion du swipe sur mobile
 function handleTouchStart(e) {
     if (window.innerWidth <= 768) {
-        touchStartX.value = e.touches[0].clientX;
+        startX.value = e.touches[0].clientX;
+        currentX.value = e.touches[0].clientX;
         isDragging.value = true;
-        initialOffset.value = dragOffset.value;
-        stopAutoScroll(); // Arrête le défilement automatique pendant le swipe
+        stopAutoScroll();
     }
 }
 
 function handleTouchMove(e) {
     if (isDragging.value && window.innerWidth <= 768) {
-        e.preventDefault(); // Empêche le scroll de la page pendant le swipe
-        const currentX = e.touches[0].clientX;
-        const difference = currentX - touchStartX.value;
-        dragOffset.value = initialOffset.value + difference;
+        e.preventDefault();
+        currentX.value = e.touches[0].clientX;
     }
 }
 
 function handleTouchEnd() {
     if (isDragging.value && window.innerWidth <= 768) {
-        const swipeThreshold = window.innerWidth * 0.2; // 20% de la largeur de l'écran
-        const difference = dragOffset.value - initialOffset.value;
+        const diff = currentX.value - startX.value;
+        const threshold = window.innerWidth * 0.2;
 
-        if (Math.abs(difference) > swipeThreshold) {
-            if (difference < 0) {
-                nextSlide(); // Swipe vers la gauche
-            } else {
-                prevSlide(); // Swipe vers la droite
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0 && currentIndex.value > 0) {
+                currentIndex.value--;
+            } else if (diff < 0 && currentIndex.value < projects.value.length - 1) {
+                currentIndex.value++;
             }
         }
 
-        // Reset des valeurs
         isDragging.value = false;
-        dragOffset.value = 0;
-        initialOffset.value = 0;
-        startAutoScroll(); // Reprend le défilement automatique après le swipe
+        startAutoScroll();
     }
 }
+
+// Écouter les changements de taille d'écran
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        isMobile.value = window.innerWidth <= 768;
+        // Réinitialiser l'index si nécessaire lors du changement de mode
+        if (isMobile.value && currentIndex.value >= projects.value.length - 1) {
+            currentIndex.value = projects.value.length - 1;
+        } else if (!isMobile.value && currentIndex.value >= projects.value.length - itemsPerSlide) {
+            currentIndex.value = projects.value.length - itemsPerSlide;
+        }
+        startAutoScroll();
+    });
+});
 
 onUnmounted(() => {
     stopAutoScroll();
@@ -441,11 +478,25 @@ onUnmounted(() => {
         margin-top: 40px;
     }
 
+    .carousel-container {
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .carousel-track {
+        will-change: transform;
+    }
+
+    .carousel-item {
+        min-width: 100%;
+        pointer-events: none;  /* Évite les problèmes de touch sur les images */
+    }
+
     .item-overlay {
         left: 50%;
         transform: translateX(-50%);
         bottom: 60px;
         padding: 0.5rem 1rem;
+        pointer-events: auto;  /* Réactive les événements pour le titre */
     }
 
     .home__text {
@@ -457,10 +508,6 @@ onUnmounted(() => {
     .home__text .text {
         width: 90%;
         text-align: center;
-    }
-
-    .carousel-item {
-        min-width: 100%;
     }
 
     .carousel-control {
