@@ -85,6 +85,8 @@ const router = useRouter();
 const touchStartX = ref(0);
 const touchEndX = ref(0);
 const isDragging = ref(false);
+const dragOffset = ref(0);
+const initialOffset = ref(0);
 
 // Nombre d'éléments visibles par diapositive
 const itemsPerSlide = 4;
@@ -128,9 +130,14 @@ onMounted(async () => {
 const slideCount = computed(() => Math.max(0, projects.value.length - itemsPerSlide + 1));
 
 // Style de transformation pour le défilement
-const trackStyle = computed(() => ({
-    transform: `translateX(-${currentIndex.value * (100 / itemsPerSlide)}%)`,
-}));
+const trackStyle = computed(() => {
+    const baseTransform = currentIndex.value * (100 / itemsPerSlide);
+    const dragTransform = isDragging.value ? (dragOffset.value / window.innerWidth) * 100 : 0;
+    return {
+        transform: `translateX(-${baseTransform - dragTransform}%)`,
+        transition: isDragging.value ? 'none' : 'transform 0.3s ease-out'
+    };
+});
 
 function nextSlide() {
     if (!projects.value.length) return;
@@ -196,6 +203,7 @@ function handleTouchStart(e) {
     if (window.innerWidth <= 768) {
         touchStartX.value = e.touches[0].clientX;
         isDragging.value = true;
+        initialOffset.value = dragOffset.value;
         stopAutoScroll(); // Arrête le défilement automatique pendant le swipe
     }
 }
@@ -203,24 +211,29 @@ function handleTouchStart(e) {
 function handleTouchMove(e) {
     if (isDragging.value && window.innerWidth <= 768) {
         e.preventDefault(); // Empêche le scroll de la page pendant le swipe
-        touchEndX.value = e.touches[0].clientX;
+        const currentX = e.touches[0].clientX;
+        const difference = currentX - touchStartX.value;
+        dragOffset.value = initialOffset.value + difference;
     }
 }
 
 function handleTouchEnd() {
     if (isDragging.value && window.innerWidth <= 768) {
-        const swipeThreshold = 50; // Distance minimale pour déclencher un swipe
-        const difference = touchStartX.value - touchEndX.value;
+        const swipeThreshold = window.innerWidth * 0.2; // 20% de la largeur de l'écran
+        const difference = dragOffset.value - initialOffset.value;
 
         if (Math.abs(difference) > swipeThreshold) {
-            if (difference > 0) {
+            if (difference < 0) {
                 nextSlide(); // Swipe vers la gauche
             } else {
                 prevSlide(); // Swipe vers la droite
             }
         }
 
+        // Reset des valeurs
         isDragging.value = false;
+        dragOffset.value = 0;
+        initialOffset.value = 0;
         startAutoScroll(); // Reprend le défilement automatique après le swipe
     }
 }
@@ -459,7 +472,9 @@ onUnmounted(() => {
     }
 
     .carousel-track {
-        transition: transform 0.3s ease-out; /* Transition plus rapide sur mobile */
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+        touch-action: pan-x;
     }
 }
 
