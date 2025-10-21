@@ -80,6 +80,7 @@ const projects = ref([]);
 const isLoading = ref(true);
 const currentIndex = ref(0);
 const router = useRouter();
+const isInitialLoad = ref(true);
 
 // Variables pour le swipe mobile
 const startX = ref(0);
@@ -94,14 +95,15 @@ const itemsPerSlide = 4;
 const skeletonProjects = Array(8).fill(null).map((_, i) => ({ id: `skeleton-${i}` }));
 
 onMounted(async () => {
+    currentIndex.value = 0; // Réinitialise l'index au montage
     isLoading.value = true;
+    isInitialLoad.value = true;
+
     try {
         const res = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=Cover');
         if (!res.ok) throw new Error('Erreur récupération projets');
         const payload = await res.json();
         const rawProjects = payload.data;
-        
-        // Simuler un petit délai pour montrer le skeleton (optionnel)
         
         projects.value = rawProjects.map(proj => {
             const cov = proj.Cover;
@@ -119,9 +121,14 @@ onMounted(async () => {
         });
         
         isLoading.value = false;
+        // Désactive l'état de chargement initial après un court délai
+        setTimeout(() => {
+            isInitialLoad.value = false;
+        }, 50);
     } catch (e) {
         console.error('Erreur chargement projets :', e);
         isLoading.value = false;
+        isInitialLoad.value = false;
     }
 });
 
@@ -130,19 +137,26 @@ const slideCount = computed(() => Math.max(0, projects.value.length - itemsPerSl
 
 // Style de transformation pour le défilement
 const trackStyle = computed(() => {
+    if (isLoading.value) {
+        return {
+            transform: 'translateX(0%)',
+            transition: 'none'
+        };
+    }
+
     if (window.innerWidth <= 768) {
         // Style mobile avec swipe
         const baseTransform = -(currentIndex.value * 100);
         const dragTransform = isDragging.value ? ((currentX.value - startX.value) / window.innerWidth) * 100 : 0;
         return {
             transform: `translateX(${baseTransform + dragTransform}%)`,
-            transition: isDragging.value ? 'none' : 'transform 0.3s ease-out'
+            transition: isInitialLoad.value || isDragging.value ? 'none' : 'transform 0.3s ease-out'
         };
     } else {
         // Style desktop original
         return {
             transform: `translateX(-${currentIndex.value * (100 / itemsPerSlide)}%)`,
-            transition: 'transform 0.3s ease-out'
+            transition: isInitialLoad.value ? 'none' : 'transform 0.3s ease-out'
         };
     }
 });
