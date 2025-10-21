@@ -195,22 +195,31 @@ const textBlocks = [
   }
 
   .about-scroll {
-    padding: 2rem 1rem;
+    padding: 2rem 1.5rem;
     padding-top: 5rem;
   }
 
   .text-block {
     margin-bottom: 10vh;
     min-height: 15vh;
+    padding: 0 0.5rem;
+  }
+
+  .text-block h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .text-block p {
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
   }
 
   h1 {
     font-size: 1.5rem;
     margin-bottom: 2rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
+    padding: 0 0.5rem;
+    line-height: 1.4;
   }
 }
 </style>
