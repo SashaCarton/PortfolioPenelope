@@ -238,7 +238,7 @@ p {
 }
 
 .project-cover {
-  width: 70%;
+  width: 50%;
   height: auto;
   border-radius: 12px;
   object-fit: cover;
@@ -265,17 +265,20 @@ p {
 
 .project-media {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  width: 100%;
 }
+
 .project-media img {
   width: 200px;
   height: 200px;
   border-radius: 12px;
   object-fit: cover;
-  margin-bottom: 1rem;
 }
+
 .project-media video {
   width: auto;
   height: 200px;
@@ -283,10 +286,33 @@ p {
 }
 
 .media-item {
-  margin-bottom: 1.5rem;
+  margin: 0;
   border-radius: 12px;
   overflow: hidden;
   padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .project-media {
+    padding: 0;
+    gap: 0.5rem;
+  }
+  
+  .media-item {
+    width: 100%;
+    padding: 0.25rem;
+    margin: 0;
+  }
+
+  .project-media img,
+  .project-media video {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
 }
 
 .back-button {
