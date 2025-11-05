@@ -1,6 +1,5 @@
 <template>
   <section class="projects">
-    <h1>Mes réalisations</h1>
     <div class="projects-container">
       <!-- Skeleton loading -->
       <div
