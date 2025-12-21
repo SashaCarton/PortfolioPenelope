@@ -94,8 +94,10 @@ lcov.info
 pids
 logs
 results
-node_modules
+node_modules/
+**/node_modules/
 .node_history
+package-lock.json
 
 ############################
 # Package managers
@@ -122,10 +124,15 @@ coverage
 ############################
 
 .env
+.env.local
+.env.*.local
 license.txt
 exports
 .strapi
+.strapi-cloud
 dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+.cache
+src/admin/
