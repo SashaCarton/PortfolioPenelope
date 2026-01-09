@@ -1,0 +1,13 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "4173:4173"
+    restart: unless-stopped
+# Uncomment to define a dedicated network if you add backend later
+# networks:
+#   appnet:
+#     driver: bridge
