@@ -5,10 +5,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   server: {
-    host: true,
-    allowedHosts: ['penelopeletienne.ovh'],
+    host: true,           // accepte toutes les IP
+    allowedHosts: true,   // accepte tous les noms de domaine
     proxy: {
-      // redirige toutes les requêtes /api/* vers http://localhost:3000/api/*
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
@@ -16,4 +15,7 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    host: true            // obligatoire si tu fais vite preview dans Docker
+  }
 })
