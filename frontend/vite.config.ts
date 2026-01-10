@@ -5,6 +5,8 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   server: {
+    host: true,
+    allowedHosts: ['penelopeletienne.ovh'],
     proxy: {
       // redirige toutes les requêtes /api/* vers http://localhost:3000/api/*
       '/api': {
