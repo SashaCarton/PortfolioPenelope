@@ -18,9 +18,9 @@ cd "$FRONTEND_DIR" || { echo "Erreur: répertoire front-end introuvable"; exit 1
 pwd
 
 echo "Installing frontend dependencies..."
-npm install || { echo "Erreur: npm install failed"; exit 1; }
+sudo npm install || { echo "Erreur: npm install failed"; exit 1; }
 
 echo "Building frontend..."
-npm run build || { echo "Erreur: npm run build failed"; exit 1; }
+sudo npm run build || { echo "Erreur: npm run build failed"; exit 1; }
 
 echo "Déploiement terminé avec succès !"
