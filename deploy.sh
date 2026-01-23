@@ -1,7 +1,7 @@
 
 
 # Se placer dans le répertoire principal du projet
-PROJECT_DIR="/var/web/PortfolioPenelope"
+PROJECT_DIR="/var/www/PortfolioPenelope"
 FRONTEND_DIR="$PROJECT_DIR/frontend"
 
 echo "Navigating to project directory: $PROJECT_DIR"
