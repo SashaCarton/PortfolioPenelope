@@ -24,10 +24,8 @@ jobs:
       - name: Deploy to internal server via VPS
         run: |
           # Connexion SSH au VPS
-          sshpass -p "${{ secrets.SAEZFRI_PASSWORD }}" ssh -o StrictHostKeyChecking=no ubuntu@54.36.209.81 "
-            # Connexion au serveur interne
-            sshpass -p '${{ secrets.SAEZFRI_PASSWORD }}' ssh -o StrictHostKeyChecking=no saezfri@100.100.87.90 '
-              cd /Agence/Web/Penelope/ &&
+          sshpass -p "${{ secrets.SAEZFRI_PASSWORD }}" ssh -o StrictHostKeyChecking=no debian@151.80.147.239 "
+              cd /var/web/PortfolioPenelope &&
                 ./deploy.sh
             '
           "
