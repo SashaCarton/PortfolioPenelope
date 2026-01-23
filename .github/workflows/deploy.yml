@@ -3,30 +3,25 @@ name: Deploy Script Trigger
 on:
   push:
     branches:
-      - main  # Remplacez par la branche que vous utilisez
+      - main # Remplacez par la branche que vous utilisez
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # GitHub Actions exécute ce travail sur Ubuntu
+    runs-on: ubuntu-latest # GitHub Actions exécute ce travail sur Ubuntu
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # Récupère le code source
+        uses: actions/checkout@v2 # Récupère le code source
 
       - name: Set execute permissions for deploy script
-        run: chmod +x ./deploy.sh  # Ajoute l'exécution des permissions
+        run: chmod +x ./deploy.sh # Ajoute l'exécution des permissions
 
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3  # Configure l'agent SSH avec la clé privée
+        uses: webfactory/ssh-agent@v0.5.3 # Configure l'agent SSH avec la clé privée
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to internal server via VPS
         run: |
           # Connexion SSH au VPS
-          sshpass -p "${{ secrets.SAEZFRI_PASSWORD }}" ssh -o StrictHostKeyChecking=no debian@151.80.147.239 "
-              cd /var/www/PortfolioPenelope &&
-                ./deploy.sh
-            '
-          "
-          
+          sshpass -p "${{ secrets.SAEZFRI_PASSWORD }}" ssh -o StrictHostKeyChecking=no debian@151.80.147.239 "cd /var/www/PortfolioPenelope && ./deploy.sh"
