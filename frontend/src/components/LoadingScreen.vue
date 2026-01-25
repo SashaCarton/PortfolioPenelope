@@ -1,6 +1,9 @@
 <template>
   <Transition name="fade">
-    <div v-if="isLoading" class="loading-screen">
+    <!-- Le parent contrôle l'affichage via v-if ; ici on affiche toujours le contenu
+         Le comportement plein écran est activable via la prop `fullScreen` -->
+    <div :class="['loading-screen', { full: fullScreen }]">
+      <button v-if="dismissible" class="dismiss-btn" @click="$emit('dismiss')" aria-label="Fermer le loader">✕</button>
       <div class="terminal-box">
         <pre class="typing-text">{{ displayedText }}<span class="cursor">▉</span></pre>
       </div>
@@ -9,9 +12,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps, defineEmits } from 'vue';
 
-const isLoading = ref(true);
+const props = defineProps({ fullScreen: { type: Boolean, default: false }, dismissible: { type: Boolean, default: false } });
+const emit = defineEmits(['dismiss']);
+
 const fullText = 'PENELOPE LETIENNE';
 const displayedText = ref('');
 let index = 0;
@@ -21,43 +26,50 @@ const typeWriter = () => {
   if (index < fullText.length) {
     displayedText.value += fullText[index];
     index++;
-    setTimeout(typeWriter, 100);
+    setTimeout(typeWriter, 80);
   } else {
     if (!hasFinishedFirstLoop) {
       hasFinishedFirstLoop = true;
       setTimeout(() => {
-        isLoading.value = false; // ✅ On cache l’écran seulement maintenant
-      }, 500); // petite pause élégante avant disparition
+        // on garde l'animation en arrière-plan : le parent décide quand cacher le composant
+      }, 300);
     } else {
-      // recommencer l'animation en boucle (optionnel)
       setTimeout(() => {
         displayedText.value = '';
         index = 0;
         typeWriter();
-      }, 1200);
+      }, 1000);
     }
   }
 };
 
 onMounted(() => {
-  window.addEventListener('load', () => {
-    typeWriter(); // on ne commence qu’une fois que tout est prêt
-  });
+  // démarre l'animation immédiatement (le parent montrera/cachera le composant)
+  typeWriter();
 });
 </script>
 
 
 <style scoped>
 .loading-screen {
+  /* overlay inline par défaut (confiné au parent si parent est position: relative) */
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.35);
+  z-index: 999;
+}
+
+/* mode plein écran explicitement activé */
+.loading-screen.full {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: rgba(0,0,0,0.95);
   z-index: 9999;
 }
 
@@ -115,4 +127,18 @@ onMounted(() => {
     opacity: 0;
   }
 }
+
+.dismiss-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.dismiss-btn:hover { background: rgba(255,255,255,0.12); }
 </style>

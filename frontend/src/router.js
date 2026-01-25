@@ -36,6 +36,11 @@ const routes = [
         name: 'Login',
         component: () => import('./views/Login.vue'),
     },
+    // Redirect old gallery route to Projects
+    {
+        path: '/models',
+        redirect: '/projects'
+    },
 ];
 const router = createRouter({
     history: createWebHistory(),

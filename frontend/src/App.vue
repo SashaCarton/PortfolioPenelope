@@ -12,6 +12,7 @@
                   <li><div><router-link to="/" @click="closeMenu">Accueil</router-link></div></li>
                   <li><div><router-link to="/about" @click="closeMenu">À propos</router-link></div></li>
                   <li><div><router-link to="/projects" @click="closeMenu">Projets</router-link></div></li>
+
                   <li><div><router-link to="/contact" @click="closeMenu">Contact</router-link></div></li>
                 </ul>
               </div>
@@ -32,6 +33,7 @@
         <ul class="footer-links">
           <li class="desktop-only"><router-link to="/about">À propos</router-link></li>
           <li class="desktop-only"><router-link to="/projects">Projets</router-link></li>
+
           <li class="desktop-only"><router-link to="/contact">Contact</router-link></li>
           <li class="desktop-only"><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
           <li class="desktop-only"><a href="https://github.com" target="_blank">GitHub</a></li>
