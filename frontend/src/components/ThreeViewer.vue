@@ -2,6 +2,14 @@
   <div ref="container" class="three-viewer">
     <LoadingScreen v-if="loading" :dismissible="true" @dismiss="loading = false" />
     <div v-if="loading" class="loading-debug" :aria-hidden="!loading">Chargement...</div>
+
+    <div v-if="loadingError" class="error-overlay" role="alert" aria-live="assertive">
+      <p><strong>Erreur :</strong> {{ loadingError }}</p>
+      <div class="error-actions">
+        <button class="btn-retry" @click="retryLoad">Réessayer</button>
+      </div>
+    </div>
+
     <div class="controls" role="toolbar" aria-label="Contrôles scène">
       <button
         class="control-btn"
@@ -33,6 +41,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import LoadingScreen from './LoadingScreen.vue';
 
@@ -48,10 +57,16 @@ let camera: THREE.PerspectiveCamera | null = null;
 let renderer: THREE.WebGLRenderer | null = null;
 let controls: any = null;
 let currentModel: THREE.Group | null = null;
+let dracoLoader: any = null;
 
 const loading = ref(true);
+const loadingError = ref<string | null>(null);
 let loadingTimeout: number | null = null;
 const autoRotate = ref(!!props.autoRotate);
+
+function retryLoad() {
+  if (props.modelUrl) loadModel(props.modelUrl);
+} 
 
 function clearLoadingTimeout() {
   if (loadingTimeout !== null) {
@@ -88,9 +103,19 @@ function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
+  // Préparer DRACO loader pour les GLB compressés
+  try {
+    dracoLoader = new DRACOLoader();
+    // CDN de décoders. Si vous préférez servir localement, changez ce chemin.
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+  } catch (err) {
+    // si l'import échoue, on continue sans DRACO (loadModel gérera l'erreur)
+    dracoLoader = null;
+  }
+
   animate();
   window.addEventListener('resize', onWindowResize);
-}
+} 
 
 function onWindowResize() {
   if (!container.value || !camera || !renderer) return;
@@ -120,10 +145,19 @@ function loadModel(url: string) {
   }, 12000);
 
   const loader = new GLTFLoader();
+  // si DRACO est disponible, attacher pour décompresser les maillages
+  if (dracoLoader) {
+    loader.setDRACOLoader(dracoLoader);
+  }
+
+  // reset error state
+  loadingError.value = null;
+
   loader.load(
     url,
     (gltf: any) => {
       clearLoadingTimeout();
+      loadingError.value = null;
       if (currentModel && scene) {
         scene.remove(currentModel);
         disposeModel(currentModel);
@@ -139,13 +173,37 @@ function loadModel(url: string) {
         return;
       }
       const box = new THREE.Box3().setFromObject(currentModel);
-      const size = box.getSize(new THREE.Vector3()).length();
+      const sizeVec = box.getSize(new THREE.Vector3());
+      const size = Math.max(sizeVec.x, sizeVec.y, sizeVec.z) || 1;
       const center = box.getCenter(new THREE.Vector3());
-      currentModel.position.x += (currentModel.position.x - center.x);
-      currentModel.position.y += (currentModel.position.y - center.y);
-      currentModel.position.z += (currentModel.position.z - center.z);
+
+      // recentrer au centre d'inertie
+      currentModel.position.x -= center.x;
+      currentModel.position.y -= center.y;
+      currentModel.position.z -= center.z;
+
+      // mise à l'échelle uniforme pour tenir dans la vue
       const scale = 1.5 / size;
       currentModel.scale.setScalar(scale);
+
+      // recompute bbox après mise à l'échelle et positionner le bas du modèle à y=0
+      const boxScaled = new THREE.Box3().setFromObject(currentModel);
+      const minY = boxScaled.min.y || 0;
+      currentModel.position.y -= minY; // place la base sur y=0
+
+      // ajuster la cible des controls et la caméra pour cadrer le modèle
+      const frameCenter = boxScaled.getCenter(new THREE.Vector3());
+      if (controls) {
+        controls.target.copy(frameCenter);
+        controls.update();
+      }
+
+      if (camera) {
+        const maxDim = Math.max(sizeVec.x, sizeVec.y, sizeVec.z) * scale;
+        // positionner la caméra légèrement au-dessus et en retrait pour voir le modèle
+        camera.position.set(0, Math.max(1.5, maxDim * 0.6), Math.max(2.5, maxDim * 1.2));
+        camera.lookAt(frameCenter);
+      }
 
       scene.add(currentModel);
       // petit délai pour éviter un flash : on garde le loader 120ms
@@ -157,6 +215,8 @@ function loadModel(url: string) {
     },
     (err: any) => {
       clearLoadingTimeout();
+      const message = err?.message || (err && err.statusText) || 'Erreur lors du chargement du modèle';
+      loadingError.value = String(message);
       console.error('[ThreeViewer] Error loading model', err);
       loading.value = false;
     }
@@ -304,4 +364,25 @@ onUnmounted(() => {
   .controls { right: 1rem; left: auto; top: 1rem; gap: 0.4rem; }
   .control-btn .btn-text, .control-toggle .btn-text { display: none; }
 }
+
+/* overlay d'erreur */
+.error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  z-index: 30;
+  padding: 1.2rem;
+  text-align: center;
+}
+.error-overlay p { margin: 0; }
+.error-actions { display:flex; gap:0.6rem; margin-top:0.4rem; }
+.btn-retry { background:#fff; color:#000; border:none; padding:0.5rem 0.8rem; border-radius:6px; cursor:pointer; }
+.btn-retry:hover { transform:translateY(-2px); }
+
 </style>
