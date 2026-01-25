@@ -23,6 +23,7 @@
         class="project-item"
         @click="goToProjectDetails(project.id)"
       >
+        <span v-if="project.has3D" class="three-badge">3D</span>
         <img :src="project.cover" :alt="project.title" />
         <h3>{{ project.title }}</h3>
         <p>{{ project.description }}</p>
@@ -47,18 +48,32 @@ onMounted(async () => {
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
     const { data } = await response.json();
     
-    projects.value = data.map(project => ({
-      id: project.id,
-      title: project.Titre || 'Sans titre',
-      description: project.Description || 'Pas de description',
-      favorite: project.Favorite || false,
-      createdAt: project.createdAt,
-      cover: project.Cover?.formats?.medium?.url 
-        ? `https://api.penelopeletienne.ovh${project.Cover.formats.medium.url}` 
-        : project.Cover?.url 
-        ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
-        : null,
-    }));
+    projects.value = data.map(project => {
+      // Détection d'une URL de modèle (si le backend fournit un champ media ou url)
+      let candidateModelUrl = null;
+      if (project.model?.data?.attributes?.url) {
+        candidateModelUrl = `https://api.penelopeletienne.ovh${project.model.data.attributes.url}`;
+      } else if (project.Model?.data?.attributes?.url) {
+        candidateModelUrl = `https://api.penelopeletienne.ovh${project.Model.data.attributes.url}`;
+      } else if (project.modelUrl) {
+        candidateModelUrl = project.modelUrl;
+      }
+
+      return {
+        id: project.id,
+        title: project.Titre || 'Sans titre',
+        description: project.Description || 'Pas de description',
+        favorite: project.Favorite || false,
+        createdAt: project.createdAt,
+        cover: project.Cover?.formats?.medium?.url 
+          ? `https://api.penelopeletienne.ovh${project.Cover.formats.medium.url}` 
+          : project.Cover?.url 
+          ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
+          : null,
+        has3D: !!candidateModelUrl,
+        modelUrl: candidateModelUrl,
+      };
+    });
     
     isLoading.value = false;
   } catch (error) {
@@ -228,5 +243,20 @@ h1 {
   text-align: center;
   font-family: 'Inter', sans-serif;
 }
+}
+
+/* Badge 3D */
+.three-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ffffff;
+  color: #111;
+  padding: 0.28rem 0.45rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 </style>

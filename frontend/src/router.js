@@ -32,6 +32,11 @@ const routes = [
         props: true,
     },
     {
+        path: '/models',
+        name: 'ModelsGallery',
+        component: () => import('./views/ModelsGallery.vue'),
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import('./views/Login.vue'),

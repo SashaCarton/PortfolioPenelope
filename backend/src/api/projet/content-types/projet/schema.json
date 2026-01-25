@@ -51,6 +51,16 @@
       ],
       "type": "media",
       "multiple": true
+    },
+    "has3D": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    },
+    "modelUrl": {
+      "type": "string",
+      "required": false,
+      "default": null
     }
   }
 }

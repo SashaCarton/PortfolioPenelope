@@ -32,8 +32,10 @@
         </div>
       </div>
 
-      <!-- Scène 3D seulement pour ID = 125 -->
-      <div v-if="project.id === 125" ref="threeContainer" class="three-scene"></div>
+      <!-- Scène 3D si présent -->
+      <div v-if="project.has3D && project.modelUrl" class="three-scene">
+        <ThreeViewer :modelUrl="project.modelUrl" />
+      </div>
 
       <button @click="goBackToProjects" class="back-button">Retour à la liste des projets</button>
     </div>
@@ -51,13 +53,13 @@
   </section>
 </template>
 
-<script setup>
-import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import VueEasyLightbox from 'vue-easy-lightbox';
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+// Lazy-load le viewer pour alléger le bundle
+const ThreeViewer = defineAsyncComponent(() => import('../components/ThreeViewer.vue'));
 
 const project = ref(null);
 const route = useRoute();
@@ -66,21 +68,33 @@ const router = useRouter();
 const lightboxVisible = ref(false);
 const lightboxImages = ref([]);
 const lightboxIndex = ref(0);
-const threeContainer = ref(null);
-
-let renderer, camera, scene, controls, animationId;
 
 onMounted(async () => {
-  const projectId = route.params.id;
+  const projectId = Number(route.params.id);
   try {
     const response = await fetch(`https://api.penelopeletienne.ovh/api/projets?populate=*`);
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
 
     const { data } = await response.json();
-    const projectData = data.find((proj) => proj.id === parseInt(projectId));
+    const projectData = data.find((proj) => proj.id === projectId);
 
     if (!projectData) throw new Error('Projet non trouvé');
 
+    // Détection robuste de l'URL du modèle (par différents schémas possibles)
+    let candidateModelUrl: string | null = null;
+
+    // cas : media field (Strapi v4 relation format)
+    if (projectData.model?.data?.attributes?.url) {
+      candidateModelUrl = `https://api.penelopeletienne.ovh${projectData.model.data.attributes.url}`;
+    } else if (projectData.Model?.data?.attributes?.url) {
+      candidateModelUrl = `https://api.penelopeletienne.ovh${projectData.Model.data.attributes.url}`;
+    } else if (projectData.modelUrl) {
+      candidateModelUrl = projectData.modelUrl; // peut être URL absolue (ex: Supabase)
+    } else if (projectData.Model && typeof projectData.Model === 'string') {
+      candidateModelUrl = projectData.Model;
+    }
+
+    // Définit le projet côté frontend
     project.value = {
       id: projectData.id,
       title: projectData.Titre || 'Sans titre',
@@ -88,15 +102,14 @@ onMounted(async () => {
       createdAt: projectData.createdAt,
       cover: projectData.Cover?.formats?.medium?.url
         ? `https://api.penelopeletienne.ovh${projectData.Cover.formats.medium.url}`
+        : projectData.Cover?.url
+        ? `https://api.penelopeletienne.ovh${projectData.Cover.url}`
         : null,
       media: projectData.Media || [],
       video: projectData.Video || [],
+      has3D: !!candidateModelUrl,
+      modelUrl: candidateModelUrl || null,
     };
-
-    if (project.value.id === 125) {
-      await nextTick();
-      initThreeScene();
-    }
 
     lightboxImages.value = project.value.media
       .filter((media) => media.mime.startsWith('image'))
@@ -107,10 +120,7 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  if (animationId) cancelAnimationFrame(animationId);
-  if (renderer) {
-    renderer.dispose();
-  }
+  // Rien de spécial à nettoyer ici — ThreeViewer gère sa propre scène
 });
 
 function formatDate(dateString) {
@@ -126,87 +136,6 @@ function openLightbox(index) {
 function goBackToProjects() {
   router.push('/projects');
 }
-
-// Scène THREE.js avec import d'un objet et OrbitControls
-function initThreeScene() {
-  const container = threeContainer.value;
-  if (!container) return;
-
-  // Scène
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
-
-  // Caméra
-  camera = new THREE.PerspectiveCamera(
-    75,
-    container.clientWidth / container.clientHeight,
-    0.1,
-    1000
-  );
-  camera.position.set(0, 1, 3);
-
-  // Renderer
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  container.appendChild(renderer.domElement);
-
-  // Lumières
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(2, 2, 5);
-  scene.add(light);
-  
-  const ambient = new THREE.AmbientLight(0x404040, 1.5);
-  scene.add(ambient);
-
-  // OrbitControls
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true; // mouvement plus smooth
-  controls.dampingFactor = 0.05;
-  controls.enablePan = true;
-  controls.enableZoom = true;
-
-  // Charger un modèle GLB/GLTF
-  const loader = new GLTFLoader();
-  loader.load(
-    '../assets/house.glb', // 👉 mets ton chemin correct ici
-    (gltf) => {
-      const model = gltf.scene;
-      model.scale.set(1, 1, 1);
-      model.position.set(0, 0, 0);
-      scene.add(model);
-    },
-    undefined,
-    (error) => {
-      console.error('Erreur de chargement du modèle :', error);
-    }
-  );
-
-  // Resize responsive
-  window.addEventListener('resize', onWindowResize);
-
-  // Animation
-  function animate() {
-    animationId = requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
-}
-
-function onWindowResize() {
-  if (!renderer || !camera || !threeContainer.value) return;
-  const container = threeContainer.value;
-  camera.aspect = container.clientWidth / container.clientHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(container.clientWidth, container.clientHeight);
-}
-function render(time) {
-  time *= 0.001;  // convert time to seconds
-  renderer.render(scene, camera);
- 
-  requestAnimationFrame(render);
-}
-requestAnimationFrame(render);
 </script>
 
 <style scoped>
