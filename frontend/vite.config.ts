@@ -6,13 +6,16 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     host: true,           // accepte toutes les IP
-    allowedHosts: true,   // accepte tous les noms de domaine
+    // autoriser explicitement l'hôte API
+    allowedHosts: ['api.penelopeletienne.ovh'],
+    // optionnel mais pratique : proxy /api → API (évite CORS en dev)
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://api.penelopeletienne.ovh',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api(\/|$)/, '/'),
-      },
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     },
   },
   preview: {
