@@ -2,7 +2,7 @@
   <section class="project-details">
     <div v-if="project" class="project-container">
       <h1>{{ project.title }}</h1>
-      <img :src="project.cover" :alt="project.title" class="project-cover" />
+      <img :src="project.cover || ''" :alt="project.title" class="project-cover" />
       <p class="project-description">{{ project.description }}</p>
       <div class="project-meta">
         <p><strong>Date de création :</strong> {{ formatDate(project.createdAt) }}</p>
@@ -79,17 +79,32 @@ import VueEasyLightbox from 'vue-easy-lightbox';
 // Lazy-load le viewer pour alléger le bundle
 const ThreeViewer = defineAsyncComponent(() => import('../components/ThreeViewer.vue'));
 
-const project = ref(null);
+// Types for project and media to satisfy TypeScript in the template
+type MediaItem = { id: number | string; mime: string; url: string; name?: string };
+type VideoItem = { id: number | string; mime: string; url: string; name?: string };
+type ProjectType = {
+  id: number;
+  title: string;
+  description: string;
+  createdAt?: string;
+  cover?: string | null;
+  media: MediaItem[];
+  video: VideoItem[];
+  has3D?: boolean;
+  modelUrls?: string[];
+};
+
+const project = ref<ProjectType | null>(null);
 const route = useRoute();
 const router = useRouter();
 
 const lightboxVisible = ref(false);
-const lightboxImages = ref([]);
+const lightboxImages = ref<string[]>([]);
 const lightboxIndex = ref(0);
 
 // gestion des modèles 3D (index sélectionné + contrôles)
 const selectedModelIndex = ref(-1);
-function selectModel(i) {
+function selectModel(i: number) {
   if (!project.value?.modelUrls) return;
   selectedModelIndex.value = Math.max(0, Math.min(i, project.value.modelUrls.length - 1));
 }
@@ -102,6 +117,19 @@ function prevModel() {
   selectModel((selectedModelIndex.value - 1 + project.value.modelUrls.length) % project.value.modelUrls.length);
 }
 
+function onKeydown(e: KeyboardEvent) {
+  // navigation clavier ← / →
+  if (!project.value?.modelUrls || selectedModelIndex.value < 0) return;
+  const key = e.key;
+  if (key === 'ArrowLeft') {
+    e.preventDefault?.();
+    prevModel();
+  } else if (key === 'ArrowRight') {
+    e.preventDefault?.();
+    nextModel();
+  }
+}
+
 onMounted(async () => {
   const projectId = Number(route.params.id);
   try {
@@ -109,7 +137,7 @@ onMounted(async () => {
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
 
     const { data } = await response.json();
-    const projectData = data.find((proj) => proj.id === projectId);
+    const projectData = data.find((proj: any) => proj.id === projectId) as any;
 
     if (!projectData) throw new Error('Projet non trouvé');
 
@@ -131,7 +159,7 @@ onMounted(async () => {
     // Collecte toutes les URLs de modèles disponibles
     const modelUrls = [];
     if (projectData.URL_SUPABASE && Array.isArray(projectData.URL_SUPABASE)) {
-      projectData.URL_SUPABASE.forEach((m) => { if (m?.url) modelUrls.push(m.url); });
+      projectData.URL_SUPABASE.forEach((m: any) => { if (m?.url) modelUrls.push(m.url); });
     }
     if (projectData.model?.data?.attributes?.url) {
       modelUrls.push(`https://api.penelopeletienne.ovh${projectData.model.data.attributes.url}`);
@@ -161,9 +189,21 @@ onMounted(async () => {
       modelUrls: uniqueModelUrls,
     };
 
-    lightboxImages.value = project.value.media
-      .filter((media) => media.mime.startsWith('image'))
-      .map((media) => `https://api.penelopeletienne.ovh${media.url}`);
+    // Construire la liste d'images pour la lightbox — robustifier selon la forme des media reçus
+    const rawMedia = ((project.value.media as any[]) || []);
+    const imageMedia = rawMedia.filter((m: any) => {
+      if (!m) return false;
+      if (typeof m === 'string') return true; // supposer que c'est déjà une URL valide
+      return typeof m.mime === 'string' && m.mime.startsWith('image') && !!m.url;
+    });
+
+    lightboxImages.value = imageMedia
+      .map((m: any) => {
+        if (typeof m === 'string') return m;
+        const url = m.url || '';
+        return url.startsWith('http') ? url : `https://api.penelopeletienne.ovh${url}`;
+      })
+      .filter(Boolean);
 
     // sélection par défaut du premier modèle (si présent)
     if (project.value.modelUrls && project.value.modelUrls.length) {
@@ -188,12 +228,13 @@ onBeforeUnmount(() => {
   // Rien de spécial à nettoyer ici — ThreeViewer gère sa propre scène
 });
 
-function formatDate(dateString) {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+function formatDate(dateString?: string) {
+  if (!dateString) return '';
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
 
-function openLightbox(index) {
+function openLightbox(index: number) {
   lightboxIndex.value = index;
   lightboxVisible.value = true;
 }

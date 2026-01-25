@@ -32,15 +32,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('./views/ProjectDetails.vue'),
         props: true,
     },
-    {
-        path: '/models',
-        name: 'ModelsGallery',
-        component: () => import('./views/ModelsGallery.vue'),
-    },
+
     {
         path: '/login',
         name: 'Login',
         component: () => import('./views/Login.vue'),
+    },
+    // Redirect old gallery route to Projects
+    {
+        path: '/models',
+        redirect: '/projects'
     },
 ];
 

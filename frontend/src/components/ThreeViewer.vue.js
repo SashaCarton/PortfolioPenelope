@@ -11,12 +11,26 @@ let renderer = null;
 let controls = null;
 let currentModel = null;
 const loading = ref(true);
+let loadingTimeout = null;
 const autoRotate = ref(!!props.autoRotate);
+function clearLoadingTimeout() {
+    if (loadingTimeout !== null) {
+        clearTimeout(loadingTimeout);
+        loadingTimeout = null;
+    }
+}
 function init() {
     if (!container.value)
         return;
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(props.background || 0x222222);
+    // si une couleur de fond est passée en prop, on l'utilise. Sinon on laisse le canvas transparent
+    if (props.background) {
+        scene.background = new THREE.Color(props.background);
+    }
+    else {
+        // couleur sombre par défaut (transparent attendu auparavant)
+        scene.background = new THREE.Color(0x222222);
+    }
     camera = new THREE.PerspectiveCamera(45, container.value.clientWidth / container.value.clientHeight, 0.1, 100);
     camera.position.set(0, 1.5, 3);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -54,9 +68,16 @@ function animate() {
 function loadModel(url) {
     if (!scene)
         return;
+    clearLoadingTimeout();
     loading.value = true;
+    // fallback: si le loader ne répond pas, on retire le loader après 12s
+    loadingTimeout = window.setTimeout(() => {
+        loading.value = false;
+        loadingTimeout = null;
+    }, 12000);
     const loader = new GLTFLoader();
     loader.load(url, (gltf) => {
+        clearLoadingTimeout();
         if (currentModel && scene) {
             scene.remove(currentModel);
             disposeModel(currentModel);
@@ -80,9 +101,14 @@ function loadModel(url) {
         const scale = 1.5 / size;
         currentModel.scale.setScalar(scale);
         scene.add(currentModel);
-        loading.value = false;
-    }, undefined, (err) => {
-        console.error('Error loading model', err);
+        // petit délai pour éviter un flash : on garde le loader 120ms
+        setTimeout(() => { loading.value = false; }, 120);
+    }, (xhr) => {
+        // progress callback (optionnel)
+        // console.log('[ThreeViewer] progress', xhr.loaded, xhr.total);
+    }, (err) => {
+        clearLoadingTimeout();
+        console.error('[ThreeViewer] Error loading model', err);
         loading.value = false;
     });
 }
@@ -100,6 +126,9 @@ function disposeModel(obj) {
             }
         }
     });
+}
+function toggleAutoRotate() {
+    autoRotate.value = !autoRotate.value;
 }
 function resetView() {
     if (!currentModel)
@@ -128,11 +157,36 @@ onUnmounted(() => {
         scene.remove(currentModel);
     }
     renderer?.dispose();
+    // nettoyer timeout éventuel
+    clearLoadingTimeout();
+    loading.value = false;
 });
 debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
+/** @type {__VLS_StyleScopedClasses['three-viewer']} */ ;
+/** @type {__VLS_StyleScopedClasses['loading-debug']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-btn']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-btn']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['active']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['active']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-btn']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-btn']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['btn-text']} */ ;
+/** @type {__VLS_StyleScopedClasses['controls']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-btn']} */ ;
+/** @type {__VLS_StyleScopedClasses['btn-text']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['btn-text']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
@@ -143,22 +197,80 @@ __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.d
 if (__VLS_ctx.loading) {
     /** @type {[typeof LoadingScreen, ]} */ ;
     // @ts-ignore
-    const __VLS_0 = __VLS_asFunctionalComponent(LoadingScreen, new LoadingScreen({}));
-    const __VLS_1 = __VLS_0({}, ...__VLS_functionalComponentArgsRest(__VLS_0));
+    const __VLS_0 = __VLS_asFunctionalComponent(LoadingScreen, new LoadingScreen({
+        ...{ 'onDismiss': {} },
+        dismissible: (true),
+    }));
+    const __VLS_1 = __VLS_0({
+        ...{ 'onDismiss': {} },
+        dismissible: (true),
+    }, ...__VLS_functionalComponentArgsRest(__VLS_0));
+    let __VLS_3;
+    let __VLS_4;
+    let __VLS_5;
+    const __VLS_6 = {
+        onDismiss: (...[$event]) => {
+            if (!(__VLS_ctx.loading))
+                return;
+            __VLS_ctx.loading = false;
+        }
+    };
+    var __VLS_2;
+}
+if (__VLS_ctx.loading) {
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+        ...{ class: "loading-debug" },
+        'aria-hidden': (!__VLS_ctx.loading),
+    });
 }
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "controls" },
+    role: "toolbar",
+    'aria-label': "Contrôles scène",
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
     ...{ onClick: (__VLS_ctx.resetView) },
+    ...{ class: "control-btn" },
+    disabled: (__VLS_ctx.loading),
+    title: "Reset view",
+    'aria-label': "Reset view",
 });
-__VLS_asFunctionalElement(__VLS_intrinsicElements.label, __VLS_intrinsicElements.label)({});
-__VLS_asFunctionalElement(__VLS_intrinsicElements.input)({
-    type: "checkbox",
+__VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
+    viewBox: "0 0 24 24",
+    'aria-hidden': "true",
 });
-(__VLS_ctx.autoRotate);
+__VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
+    d: "M12 6V3L8 7l4 4V8c2.8 0 5 2.2 5 5 0 1.1-.3 2.1-.9 3l1.5 1.5C20.2 16.1 21 14.1 21 12c0-4.97-4.03-9-9-9z",
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
+    ...{ class: "btn-text" },
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
+    ...{ onClick: (__VLS_ctx.toggleAutoRotate) },
+    ...{ class: (['control-toggle', { active: __VLS_ctx.autoRotate }]) },
+    'aria-pressed': (__VLS_ctx.autoRotate),
+    disabled: (__VLS_ctx.loading),
+    title: "Auto-rotate",
+    'aria-label': "Auto-rotate",
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.svg, __VLS_intrinsicElements.svg)({
+    viewBox: "0 0 24 24",
+    'aria-hidden': "true",
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.path)({
+    d: "M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6a6 6 0 11-6-6z",
+});
+__VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
+    ...{ class: "btn-text" },
+});
 /** @type {__VLS_StyleScopedClasses['three-viewer']} */ ;
+/** @type {__VLS_StyleScopedClasses['loading-debug']} */ ;
 /** @type {__VLS_StyleScopedClasses['controls']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-btn']} */ ;
+/** @type {__VLS_StyleScopedClasses['btn-text']} */ ;
+/** @type {__VLS_StyleScopedClasses['active']} */ ;
+/** @type {__VLS_StyleScopedClasses['control-toggle']} */ ;
+/** @type {__VLS_StyleScopedClasses['btn-text']} */ ;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
     setup() {
@@ -167,6 +279,7 @@ const __VLS_self = (await import('vue')).defineComponent({
             container: container,
             loading: loading,
             autoRotate: autoRotate,
+            toggleAutoRotate: toggleAutoRotate,
             resetView: resetView,
         };
     },

@@ -67,7 +67,8 @@ function init() {
   if (props.background) {
     scene.background = new THREE.Color(props.background as any);
   } else {
-    scene.background = new THREE.Color(0x2222222);
+    // couleur sombre par défaut (transparent attendu auparavant)
+    scene.background = new THREE.Color(0x222222);
   }
 
   camera = new THREE.PerspectiveCamera(45, container.value.clientWidth / container.value.clientHeight, 0.1, 100);
@@ -110,12 +111,10 @@ function animate() {
 
 function loadModel(url: string) {
   if (!scene) return;
-  console.log('[ThreeViewer] loadModel start:', url);
   clearLoadingTimeout();
   loading.value = true;
   // fallback: si le loader ne répond pas, on retire le loader après 12s
   loadingTimeout = window.setTimeout(() => {
-    console.warn('Model loading timeout — hiding loader');
     loading.value = false;
     loadingTimeout = null;
   }, 12000);
@@ -124,7 +123,6 @@ function loadModel(url: string) {
   loader.load(
     url,
     (gltf: any) => {
-      console.log('[ThreeViewer] model loaded successfully');
       clearLoadingTimeout();
       if (currentModel && scene) {
         scene.remove(currentModel);
