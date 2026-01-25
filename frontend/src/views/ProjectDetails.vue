@@ -32,9 +32,27 @@
         </div>
       </div>
 
-      <!-- Scène 3D si présent -->
-      <div v-if="project.has3D && project.modelUrl" class="three-scene">
-        <ThreeViewer :modelUrl="project.modelUrl" />
+      <!-- Scène 3D si présent et index choisi -->
+      <div v-if="project.has3D && project.modelUrls?.length && selectedModelIndex >= 0" class="three-scene">
+        <ThreeViewer :modelUrl="project.modelUrls[selectedModelIndex]" />
+
+        <!-- Contrôles de modèle si plusieurs -->
+        <div class="model-controls" v-if="project.modelUrls && project.modelUrls.length > 1">
+          <button @click="prevModel" aria-label="Précédent">◀</button>
+          <button @click="nextModel" aria-label="Suivant">▶</button>
+        </div>
+
+        <!-- Liste des modèles pour sélection directe -->
+        <div class="model-list" v-if="project.modelUrls && project.modelUrls.length">
+          <button
+            v-for="(m, i) in project.modelUrls"
+            :key="i"
+            :class="['model-btn', { active: i === selectedModelIndex } ]"
+            @click="selectModel(i)"
+          >
+            {{ (m.split('/').pop()) || ('model-' + (i+1)) }}
+          </button>
+        </div>
       </div>
 
       <button @click="goBackToProjects" class="back-button">Retour à la liste des projets</button>
@@ -69,6 +87,21 @@ const lightboxVisible = ref(false);
 const lightboxImages = ref([]);
 const lightboxIndex = ref(0);
 
+// gestion des modèles 3D (index sélectionné + contrôles)
+const selectedModelIndex = ref(-1);
+function selectModel(i) {
+  if (!project.value?.modelUrls) return;
+  selectedModelIndex.value = Math.max(0, Math.min(i, project.value.modelUrls.length - 1));
+}
+function nextModel() {
+  if (!project.value?.modelUrls) return;
+  selectModel((selectedModelIndex.value + 1 + project.value.modelUrls.length) % project.value.modelUrls.length);
+}
+function prevModel() {
+  if (!project.value?.modelUrls) return;
+  selectModel((selectedModelIndex.value - 1 + project.value.modelUrls.length) % project.value.modelUrls.length);
+}
+
 onMounted(async () => {
   const projectId = Number(route.params.id);
   try {
@@ -80,11 +113,12 @@ onMounted(async () => {
 
     if (!projectData) throw new Error('Projet non trouvé');
 
-    // Détection robuste de l'URL du modèle (par différents schémas possibles)
+    // Détection robuste de l'URL du modèle (supporte URL_SUPABASE, media local, champs directs)
     let candidateModelUrl: string | null = null;
 
-    // cas : media field (Strapi v4 relation format)
-    if (projectData.model?.data?.attributes?.url) {
+    if (projectData.URL_SUPABASE && Array.isArray(projectData.URL_SUPABASE) && projectData.URL_SUPABASE[0]?.url) {
+      candidateModelUrl = projectData.URL_SUPABASE[0].url;
+    } else if (projectData.model?.data?.attributes?.url) {
       candidateModelUrl = `https://api.penelopeletienne.ovh${projectData.model.data.attributes.url}`;
     } else if (projectData.Model?.data?.attributes?.url) {
       candidateModelUrl = `https://api.penelopeletienne.ovh${projectData.Model.data.attributes.url}`;
@@ -93,6 +127,22 @@ onMounted(async () => {
     } else if (projectData.Model && typeof projectData.Model === 'string') {
       candidateModelUrl = projectData.Model;
     }
+
+    // Collecte toutes les URLs de modèles disponibles
+    const modelUrls = [];
+    if (projectData.URL_SUPABASE && Array.isArray(projectData.URL_SUPABASE)) {
+      projectData.URL_SUPABASE.forEach((m) => { if (m?.url) modelUrls.push(m.url); });
+    }
+    if (projectData.model?.data?.attributes?.url) {
+      modelUrls.push(`https://api.penelopeletienne.ovh${projectData.model.data.attributes.url}`);
+    }
+    if (projectData.Model?.data?.attributes?.url) {
+      modelUrls.push(`https://api.penelopeletienne.ovh${projectData.Model.data.attributes.url}`);
+    }
+    if (projectData.modelUrl) {
+      modelUrls.push(projectData.modelUrl);
+    }
+    const uniqueModelUrls = Array.from(new Set(modelUrls));
 
     // Définit le projet côté frontend
     project.value = {
@@ -107,16 +157,31 @@ onMounted(async () => {
         : null,
       media: projectData.Media || [],
       video: projectData.Video || [],
-      has3D: !!candidateModelUrl,
-      modelUrl: candidateModelUrl || null,
+      has3D: uniqueModelUrls.length > 0,
+      modelUrls: uniqueModelUrls,
     };
 
     lightboxImages.value = project.value.media
       .filter((media) => media.mime.startsWith('image'))
       .map((media) => `https://api.penelopeletienne.ovh${media.url}`);
+
+    // sélection par défaut du premier modèle (si présent)
+    if (project.value.modelUrls && project.value.modelUrls.length) {
+      selectedModelIndex.value = 0;
+    } else {
+      selectedModelIndex.value = -1;
+    }
+
+    // add keyboard navigation listeners
+    window.addEventListener('keydown', onKeydown);
   } catch (error) {
     console.error('Erreur :', error);
   }
+});
+
+onBeforeUnmount(() => {
+  // Rien de spécial à nettoyer ici — ThreeViewer gère sa propre scène
+  window.removeEventListener('keydown', onKeydown);
 });
 
 onBeforeUnmount(() => {
@@ -265,6 +330,7 @@ p {
 }
 
 .three-scene {
+  position: relative; /* contraindre l'overlay au conteneur */
   border: 1px solid #ccc;
   width: 100%;
   height: 500px;
@@ -277,4 +343,61 @@ p {
   width: 100% !important;
   height: 100% !important;
 }
+
+/* Controls for switching models */
+.model-controls {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transform: translateY(-50%);
+  pointer-events: none; /* allow buttons to control when enabled */
+  z-index: 30;
+}
+.model-controls button {
+  pointer-events: auto;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+.model-controls button[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+/* Model list (bottom center) */
+.model-list {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 30;
+}
+.model-list .model-btn {
+  background: rgba(255,255,255,0.06);
+  color: #111;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.model-list .model-btn.active {
+  background: #111;
+  color: #fff;
+  border-color: rgba(0,0,0,0.12);
+}
+/* Small screen adjustments */
+@media (max-width: 520px) {
+  .model-controls button { padding: 0.45rem 0.6rem; font-size: 0.95rem; }
+  .model-list { gap: 0.35rem; bottom: 6px; }
+}
+
 </style>

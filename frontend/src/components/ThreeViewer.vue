@@ -1,6 +1,7 @@
 <template>
   <div ref="container" class="three-viewer">
-    <LoadingScreen v-if="loading" />
+    <LoadingScreen v-if="loading" :dismissible="true" @dismiss="loading = false" />
+    <div v-if="loading" class="loading-debug" :aria-hidden="!loading">Chargement...</div>
     <div class="controls" role="toolbar" aria-label="Contrôles scène">
       <button
         class="control-btn"
@@ -49,12 +50,25 @@ let controls: any = null;
 let currentModel: THREE.Group | null = null;
 
 const loading = ref(true);
+let loadingTimeout: number | null = null;
 const autoRotate = ref(!!props.autoRotate);
+
+function clearLoadingTimeout() {
+  if (loadingTimeout !== null) {
+    clearTimeout(loadingTimeout as any);
+    loadingTimeout = null;
+  }
+}
 
 function init() {
   if (!container.value) return;
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(props.background || 0x222222);
+  // si une couleur de fond est passée en prop, on l'utilise. Sinon on laisse le canvas transparent
+  if (props.background) {
+    scene.background = new THREE.Color(props.background as any);
+  } else {
+    scene.background = new THREE.Color(0x2222222);
+  }
 
   camera = new THREE.PerspectiveCamera(45, container.value.clientWidth / container.value.clientHeight, 0.1, 100);
   camera.position.set(0, 1.5, 3);
@@ -96,11 +110,22 @@ function animate() {
 
 function loadModel(url: string) {
   if (!scene) return;
+  console.log('[ThreeViewer] loadModel start:', url);
+  clearLoadingTimeout();
   loading.value = true;
+  // fallback: si le loader ne répond pas, on retire le loader après 12s
+  loadingTimeout = window.setTimeout(() => {
+    console.warn('Model loading timeout — hiding loader');
+    loading.value = false;
+    loadingTimeout = null;
+  }, 12000);
+
   const loader = new GLTFLoader();
   loader.load(
     url,
     (gltf: any) => {
+      console.log('[ThreeViewer] model loaded successfully');
+      clearLoadingTimeout();
       if (currentModel && scene) {
         scene.remove(currentModel);
         disposeModel(currentModel);
@@ -125,11 +150,16 @@ function loadModel(url: string) {
       currentModel.scale.setScalar(scale);
 
       scene.add(currentModel);
-      loading.value = false;
+      // petit délai pour éviter un flash : on garde le loader 120ms
+      setTimeout(() => { loading.value = false; }, 120);
     },
-    undefined,
+    (xhr: ProgressEvent<EventTarget>) => {
+      // progress callback (optionnel)
+      // console.log('[ThreeViewer] progress', xhr.loaded, xhr.total);
+    },
     (err: any) => {
-      console.error('Error loading model', err);
+      clearLoadingTimeout();
+      console.error('[ThreeViewer] Error loading model', err);
       loading.value = false;
     }
   );
@@ -180,6 +210,9 @@ onUnmounted(() => {
     scene.remove(currentModel);
   }
   renderer?.dispose();
+  // nettoyer timeout éventuel
+  clearLoadingTimeout();
+  loading.value = false;
 });
 </script>
 
@@ -204,7 +237,17 @@ onUnmounted(() => {
   gap: 0.5rem;
   align-items: center;
 }
-
+.loading-debug {
+  position: absolute;
+  inset: 0;
+  display: none; /* affiché uniquement pour debug si nécessaire */
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 0.9rem;
+  z-index: 20;
+}
+.loading-debug[aria-hidden="false"] { display: flex; }
 .control-btn,
 .control-toggle {
   display: inline-flex;

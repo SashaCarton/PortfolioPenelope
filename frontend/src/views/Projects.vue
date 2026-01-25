@@ -44,20 +44,29 @@ const router = useRouter();
 onMounted(async () => {
   isLoading.value = true;
   try {
-    const response = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=Cover');    
+    // demander tous les champs (y compris URL_SUPABASE si présent)
+    const response = await fetch('https://api.penelopeletienne.ovh/api/projets?populate=*');
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
     const { data } = await response.json();
     
     projects.value = data.map(project => {
-      // Détection d'une URL de modèle (si le backend fournit un champ media ou url)
-      let candidateModelUrl = null;
-      if (project.model?.data?.attributes?.url) {
-        candidateModelUrl = `https://api.penelopeletienne.ovh${project.model.data.attributes.url}`;
-      } else if (project.Model?.data?.attributes?.url) {
-        candidateModelUrl = `https://api.penelopeletienne.ovh${project.Model.data.attributes.url}`;
-      } else if (project.modelUrl) {
-        candidateModelUrl = project.modelUrl;
+      // Récupérer toutes les URLs possibles (URL_SUPABASE peut être un tableau)
+      const modelUrls = [];
+      if (project.URL_SUPABASE && Array.isArray(project.URL_SUPABASE)) {
+        project.URL_SUPABASE.forEach((m) => { if (m?.url) modelUrls.push(m.url); });
       }
+      // champs locaux / relations
+      if (project.model?.data?.attributes?.url) {
+        modelUrls.push(`https://api.penelopeletienne.ovh${project.model.data.attributes.url}`);
+      }
+      if (project.Model?.data?.attributes?.url) {
+        modelUrls.push(`https://api.penelopeletienne.ovh${project.Model.data.attributes.url}`);
+      }
+      if (project.modelUrl) {
+        modelUrls.push(project.modelUrl);
+      }
+      // retirer doublons
+      const uniqueModelUrls = Array.from(new Set(modelUrls));
 
       return {
         id: project.id,
@@ -70,8 +79,8 @@ onMounted(async () => {
           : project.Cover?.url 
           ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
           : null,
-        has3D: !!candidateModelUrl,
-        modelUrl: candidateModelUrl,
+        has3D: uniqueModelUrls.length > 0,
+        modelUrls: uniqueModelUrls,
       };
     });
     
