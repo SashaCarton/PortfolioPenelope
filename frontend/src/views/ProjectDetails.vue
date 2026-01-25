@@ -4,10 +4,6 @@
       <h1>{{ project.title }}</h1>
       <img :src="project.cover || ''" :alt="project.title" class="project-cover" />
       <p class="project-description">{{ project.description }}</p>
-      <div class="project-meta">
-        <p><strong>Date de création :</strong> {{ formatDate(project.createdAt) }}</p>
-      </div>
-
       <!-- Images -->
       <div class="project-media">
         <div v-for="(media, index) in project.media" :key="media.id" class="media-item">
