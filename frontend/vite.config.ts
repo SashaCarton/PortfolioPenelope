@@ -6,8 +6,13 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     host: true,           // accepte toutes les IP
-    // autoriser explicitement l'hôte API
-    allowedHosts: ['api.penelopeletienne.ovh'],
+    // autoriser explicitement l'hôte API (inclut variantes avec port et sous-domaine)
+    allowedHosts: [
+      'api.penelopeletienne.ovh',
+      'api.penelopeletienne.ovh:443',
+      'api.penelopeletienne.ovh:80',
+      '.penelopeletienne.ovh'
+    ],
     // optionnel mais pratique : proxy /api → API (évite CORS en dev)
     proxy: {
       '/api': {
