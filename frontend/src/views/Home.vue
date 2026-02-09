@@ -95,6 +95,7 @@
 <script setup>
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { carouselCover } from '../utils/cdn';
 
 const projects = ref([]);
 const isLoading = ref(true);
@@ -138,7 +139,7 @@ onMounted(async () => {
             return {
                 id: proj.id,
                 title: proj.Titre,
-                cover: fullUrl || '/images/default-cover.jpg',
+                cover: carouselCover(fullUrl) || '/images/default-cover.jpg',
                 // normalize favorite to boolean (true only if explicitly true)
                 favorite: proj.Favorite === true
             };

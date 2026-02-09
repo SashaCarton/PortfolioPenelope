@@ -43,6 +43,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { projectThumbnail } from '../utils/cdn';
 
 const projects = ref([]);
 const isLoading = ref(true);
@@ -81,13 +82,15 @@ onMounted(async () => {
         description: project.Description || 'Pas de description',
         favorite: project.Favorite || false,
         createdAt: project.createdAt,
-        cover: project.Cover?.formats?.small?.url 
-          ? `https://api.penelopeletienne.ovh${project.Cover.formats.small.url}` 
-          : project.Cover?.formats?.medium?.url
-          ? `https://api.penelopeletienne.ovh${project.Cover.formats.medium.url}` 
-          : project.Cover?.url 
-          ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
-          : null,
+        cover: projectThumbnail(
+          project.Cover?.formats?.small?.url 
+            ? `https://api.penelopeletienne.ovh${project.Cover.formats.small.url}` 
+            : project.Cover?.formats?.medium?.url
+            ? `https://api.penelopeletienne.ovh${project.Cover.formats.medium.url}` 
+            : project.Cover?.url 
+            ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
+            : null
+        ),
         has3D: uniqueModelUrls.length > 0,
         modelUrls: uniqueModelUrls,
       };
