@@ -49,6 +49,7 @@ const props = defineProps<{
   modelUrl: string;
   autoRotate?: boolean;
   background?: string;
+  groundOffset?: number; // meters to lower the model after aligning to ground (positive lowers)
 }>();
 
 const container = ref<HTMLElement | null>(null);
@@ -189,7 +190,8 @@ function loadModel(url: string) {
       // recompute bbox après mise à l'échelle et positionner le bas du modèle à y=0
       const boxScaled = new THREE.Box3().setFromObject(currentModel);
       const minY = boxScaled.min.y || 0;
-      currentModel.position.y -= minY; // place la base sur y=0
+      const offset = typeof props.groundOffset === 'number' ? props.groundOffset : 1; // default -2cm (lower)
+      currentModel.position.y -= (minY + offset); // place la base sur y=0 puis shift de `offset` (negative -> lower)
 
       // ajuster la cible des controls et la caméra pour cadrer le modèle
       const frameCenter = boxScaled.getCenter(new THREE.Vector3());

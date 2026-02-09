@@ -105,7 +105,8 @@ onMounted(async () => {
         const payload = await res.json();
         const rawProjects = payload.data;
         
-        projects.value = rawProjects.map(proj => {
+        // Map projects and include the "favorite" flag, then sort favorites first
+        const mapped = rawProjects.map(proj => {
             const cov = proj.Cover;
             const fmt = cov?.formats?.medium?.url;
             const urlSegment = fmt || cov?.url;
@@ -117,7 +118,15 @@ onMounted(async () => {
                 id: proj.id,
                 title: proj.Titre,
                 cover: fullUrl || '/images/default-cover.jpg',
+                // normalize favorite to boolean (true only if explicitly true)
+                favorite: proj.Favorite === true
             };
+        });
+
+        // Put favorites first, preserving relative order for the rest
+        projects.value = mapped.sort((a, b) => {
+            if (a.favorite === b.favorite) return 0;
+            return a.favorite ? -1 : 1;
         });
         
         isLoading.value = false;
