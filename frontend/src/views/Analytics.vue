@@ -180,6 +180,56 @@
           </div>
         </div>
 
+        <!-- Pays -->
+        <div class="detail-card" v-if="stats.parPays && stats.parPays.length">
+          <h2>🌍 Pays</h2>
+          <div class="ranking-list">
+            <div
+              v-for="(item, i) in stats.parPays.slice(0, 10)"
+              :key="item[0]"
+              class="ranking-item"
+            >
+              <span class="rank">#{{ i + 1 }}</span>
+              <span class="ranking-name">{{ countryFlag(item[0]) }} {{ item[0] }}</span>
+              <div class="ranking-bar-container">
+                <div
+                  class="ranking-bar country-bar"
+                  :style="{
+                    width: rankPercent(item[1], stats.totalVisites) + '%',
+                    background: colors[i % colors.length]
+                  }"
+                ></div>
+              </div>
+              <span class="ranking-count">{{ item[1] }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Villes -->
+        <div class="detail-card" v-if="stats.parVille && stats.parVille.length">
+          <h2>🏙️ Villes</h2>
+          <div class="ranking-list">
+            <div
+              v-for="(item, i) in stats.parVille.slice(0, 10)"
+              :key="item[0]"
+              class="ranking-item"
+            >
+              <span class="rank">#{{ i + 1 }}</span>
+              <span class="ranking-name">{{ item[0] }}</span>
+              <div class="ranking-bar-container">
+                <div
+                  class="ranking-bar city-bar"
+                  :style="{
+                    width: rankPercent(item[1], stats.totalVisites) + '%',
+                    background: colors[(i + 3) % colors.length]
+                  }"
+                ></div>
+              </div>
+              <span class="ranking-count">{{ item[1] }}</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Web Vitals -->
         <div class="detail-card">
           <h2>⚡ Web Vitals</h2>
@@ -348,6 +398,14 @@ function rankPercent(count, total) {
 function deviceLabel(d) {
   const map = { desktop: '🖥️ Desktop', mobile: '📱 Mobile', tablet: '📋 Tablet', unknown: '❓ Inconnu' };
   return map[d] || d;
+
+}
+
+/** Convertit un code ISO pays (ex: "FR") en emoji drapeau */
+function countryFlag(code) {
+  if (!code || code === 'Inconnu' || code.length !== 2) return '🌐';
+  const offset = 127397;
+  return String.fromCodePoint(...[...code.toUpperCase()].map(c => c.charCodeAt(0) + offset));
 }
 
 const lcpColor = computed(() => {

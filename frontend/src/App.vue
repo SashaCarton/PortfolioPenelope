@@ -42,11 +42,14 @@
         <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
       </footer>
     </div>
+    <!-- Cookie Consent Banner -->
+    <CookieBanner @consent="onCookieConsent" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import CookieBanner from './components/CookieBanner.vue'
 
 const menuOpen = ref(false)
 
@@ -56,6 +59,13 @@ function toggleMenu() {
 
 function closeMenu() {
   menuOpen.value = false
+}
+
+function onCookieConsent(accepted) {
+  // Stocke l'état dans une variable globale accessible par le tracker
+  window.__cookieConsent = accepted
+  // Dispatch un événement custom pour que le tracker puisse réagir
+  window.dispatchEvent(new CustomEvent('cookie-consent', { detail: { accepted } }))
 }
 </script>
 

@@ -3,6 +3,7 @@
  * et endpoint protégé pour lire les stats.
  */
 import { factories } from '@strapi/strapi';
+import geoip from 'geoip-lite';
 
 // @ts-expect-error — types will be generated after first `strapi build`
 export default factories.createCoreController('api::visite.visite', ({ strapi }) => ({
@@ -15,10 +16,16 @@ export default factories.createCoreController('api::visite.visite', ({ strapi })
       return ctx.badRequest('Le champ "page" est requis');
     }
 
-    // Extraire l'IP pour la géolocalisation (optionnel, via headers proxy)
-    const ip = ctx.request.headers['x-forwarded-for']
+    // Extraire l'IP pour la géolocalisation (via headers proxy)
+    const forwarded = ctx.request.headers['x-forwarded-for'];
+    const clientIp = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '')
       || ctx.request.headers['x-real-ip']
       || ctx.request.ip;
+
+    // Géolocalisation IP → pays / ville
+    const geo = geoip.lookup(clientIp as string);
+    const country = geo?.country || '';
+    const city = geo?.city || '';
 
     // Détecter device/browser/os côté serveur à partir du User-Agent
     const ua = body.userAgent || ctx.request.headers['user-agent'] || '';
@@ -35,6 +42,8 @@ export default factories.createCoreController('api::visite.visite', ({ strapi })
         language: body.language || '',
         screenWidth: body.screenWidth || null,
         screenHeight: body.screenHeight || null,
+        country,
+        city,
         device,
         browser,
         os,
@@ -118,6 +127,20 @@ export default factories.createCoreController('api::visite.visite', ({ strapi })
       parReferrer[ref] = (parReferrer[ref] || 0) + 1;
     });
 
+    // Pays
+    const parPays: Record<string, number> = {};
+    visites.forEach(v => {
+      const p = v.country || 'Inconnu';
+      parPays[p] = (parPays[p] || 0) + 1;
+    });
+
+    // Villes
+    const parVille: Record<string, number> = {};
+    visites.forEach(v => {
+      const c = v.city || 'Inconnue';
+      parVille[c] = (parVille[c] || 0) + 1;
+    });
+
     // Performance moyenne (Web Vitals)
     const perfMetrics = visites.filter(v => v.lcp || v.fcp || v.cls || v.ttfb);
     const avg = (arr: number[]) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
@@ -148,6 +171,8 @@ export default factories.createCoreController('api::visite.visite', ({ strapi })
         parDevice: Object.entries(parDevice).sort((a, b) => b[1] - a[1]),
         parOS: Object.entries(parOS).sort((a, b) => b[1] - a[1]),
         parReferrer: Object.entries(parReferrer).sort((a, b) => b[1] - a[1]),
+        parPays: Object.entries(parPays).sort((a, b) => b[1] - a[1]),
+        parVille: Object.entries(parVille).sort((a, b) => b[1] - a[1]),
         performance,
         jours: days,
       },

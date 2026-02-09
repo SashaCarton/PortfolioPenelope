@@ -1,6 +1,6 @@
 /**
  * Tracker analytique léger et respectueux de la vie privée.
- * - Pas de cookies
+ * - Cookies de consentement RGPD (pas de tracking sans accord)
  * - Pas de fingerprinting
  * - Session basée sur sessionStorage (disparaît en fermant l'onglet)
  * - Envoie page views + Web Vitals vers l'API Strapi
@@ -9,6 +9,11 @@
  */
 
 const API_URL = 'https://api.penelopeletienne.ovh/api/visites';
+
+// --- Gestion du consentement ---
+function hasConsent(): boolean {
+  return localStorage.getItem('cookie_consent') === 'accepted';
+}
 
 // Session ID unique par onglet (pas de tracking cross-session)
 function getSessionId(): string {
@@ -40,6 +45,9 @@ interface TrackData {
 
 /** Envoie les données au serveur via sendBeacon (non-bloquant) ou fetch */
 function send(data: Partial<TrackData>): void {
+  // Ne rien envoyer si l'utilisateur n'a pas consenti
+  if (!hasConsent()) return;
+
   const payload = JSON.stringify({ data });
 
   // sendBeacon est préféré : ne bloque pas la navigation, fonctionne sur unload
@@ -156,6 +164,8 @@ export function trackWebVitals(path: string): void {
 
 /**
  * Plugin Vue Router — s'attache au router pour tracker automatiquement.
+ * Respecte le consentement RGPD : ne track que si cookie_consent === 'accepted'.
+ *
  * Usage dans main.ts :
  *   import { setupAnalytics } from './utils/analytics'
  *   setupAnalytics(router)
@@ -168,23 +178,38 @@ export function setupAnalytics(router: any): void {
   }
 
   let currentPath = '';
+  let tracking = hasConsent();
 
   router.afterEach((to: any) => {
     // Envoyer la durée de la page précédente
-    if (currentPath) {
+    if (currentPath && tracking) {
       trackPageLeave(currentPath);
     }
 
     currentPath = to.path;
-    trackPageView(currentPath);
+
+    if (tracking) {
+      trackPageView(currentPath);
+    }
   });
 
-  // Tracker les Web Vitals sur la première page
-  trackWebVitals(window.location.pathname);
+  // Tracker les Web Vitals sur la première page (si consentement déjà donné)
+  if (tracking) {
+    trackWebVitals(window.location.pathname);
+  }
+
+  // Écouter le consentement donné en cours de session
+  window.addEventListener('cookie-consent', ((e: CustomEvent) => {
+    tracking = e.detail?.accepted === true;
+    if (tracking && currentPath) {
+      trackPageView(currentPath);
+      trackWebVitals(currentPath);
+    }
+  }) as EventListener);
 
   // Envoyer la durée quand l'utilisateur quitte le site
   window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && currentPath) {
+    if (document.visibilityState === 'hidden' && currentPath && tracking) {
       trackPageLeave(currentPath);
     }
   });
