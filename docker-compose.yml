@@ -6,5 +6,5 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "4173:80"   # Nginx interne écoute sur 80
+      - "127.0.0.1:4001:80"   # Nginx reverse proxy pointe vers 4001
     restart: always
