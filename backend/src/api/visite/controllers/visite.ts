@@ -10,7 +10,9 @@ export default factories.createCoreController('api::visite.visite', ({ strapi })
   // POST /api/visites — public, crée une visite
   async create(ctx) {
     const raw = ctx.request.body;
+    console.log('[visite:create] raw body:', JSON.stringify(raw));
     const body = raw?.data ?? raw;
+    console.log('[visite:create] resolved body:', JSON.stringify(body));
 
     if (!body?.page) {
       return ctx.badRequest('Le champ "page" est requis');
