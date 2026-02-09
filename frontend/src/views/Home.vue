@@ -29,13 +29,21 @@
                     <!-- Actual projects -->
                     <div
                         v-else
-                        v-for="project in projects"
+                        v-for="(project, index) in projects"
                         :key="project.id"
                         class="carousel-item"
                         @click="goToProjectDetails(project.id)"
                     >
                         <div class="image-container">
-                            <img :src="project.cover" :alt="project.title" />
+                            <img
+                                :src="project.cover"
+                                :alt="project.title"
+                                :loading="index < 4 ? 'eager' : 'lazy'"
+                                :fetchpriority="index < 2 ? 'high' : 'auto'"
+                                decoding="async"
+                                width="600"
+                                height="720"
+                            />
                         </div>
                         <div class="item-overlay">
                             <h2>{{ project.title }}</h2>
@@ -51,7 +59,15 @@
     <!-- Intro Text Section -->
     <div class="home__text">
         <div class="picture" :class="{ 'skeleton': isLoading }">
-            <img v-if="!isLoading" src="\images\ASCII woman.gif" alt="Spinning ASCII art" />
+            <img
+                v-if="!isLoading"
+                src="/images/ASCII woman.gif"
+                alt="Spinning ASCII art"
+                loading="lazy"
+                decoding="async"
+                width="593"
+                height="546"
+            />
             <div v-else class="skeleton-image"></div>
         </div>
         <div class="text" :class="{ 'skeleton-text': isLoading }">
@@ -108,7 +124,8 @@ onMounted(async () => {
         // Map projects and include the "favorite" flag, then sort favorites first
         const mapped = rawProjects.map(proj => {
             const cov = proj.Cover;
-            const fmt = cov?.formats?.medium?.url;
+            // Prefer 'small' format (500px) — sufficient for carousel items (~25% of viewport)
+            const fmt = cov?.formats?.small?.url || cov?.formats?.medium?.url;
             const urlSegment = fmt || cov?.url;
             const fullUrl = urlSegment?.startsWith('http')
                 ? urlSegment
@@ -320,6 +337,7 @@ onUnmounted(() => {
     margin: 0 auto;
     padding-top: 0px;
     padding-bottom: 75px;
+    contain: layout style;
 }
 
 .carousel-window {
@@ -351,6 +369,8 @@ onUnmounted(() => {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    aspect-ratio: 600 / 720;
+    contain: layout style;
 }
 
 .carousel-item img {
@@ -358,6 +378,7 @@ onUnmounted(() => {
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease-in-out;
+    aspect-ratio: 600 / 720;
 }
 
 .carousel-item:hover img {
@@ -427,10 +448,21 @@ onUnmounted(() => {
     padding: 4rem 2.5vw;
     background: #ffffff;
     color: #000;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+}
+
+.home__text .picture {
+    width: 380px;
+    height: 350px;
+    flex-shrink: 0;
+    contain: layout style;
 }
 
 .home__text .picture img {
     width: 100%;
+    height: 100%;
+    object-fit: contain;
     border-radius: 8px;
 }
 
