@@ -13,6 +13,10 @@ echo "Fetching and pulling latest changes from Git..."
 git fetch origin main || { echo "Erreur: git fetch failed"; exit 1; }
 git reset --hard origin/main || { echo "Erreur: git reset failed"; exit 1; }
 
+# ── Corriger les permissions (évite EACCES) ──
+echo "Fixing file ownership..."
+sudo chown -R $(whoami):$(whoami) "$PROJECT_DIR"
+
 # ── Backend ──
 echo "Navigating to backend directory: $BACKEND_DIR"
 cd "$BACKEND_DIR" || { echo "Erreur: répertoire back-end introuvable"; exit 1; }
@@ -20,11 +24,6 @@ pwd
 
 echo "Installing backend dependencies..."
 npm install || { echo "Erreur: npm install backend failed"; exit 1; }
-
-# Corriger les permissions sur dist/ (évite EACCES sur tsbuildinfo)
-if [ -d "dist" ]; then
-  sudo chown -R $(whoami):$(whoami) dist/
-fi
 
 echo "Building backend (Strapi)..."
 npm run build || { echo "Erreur: npm run build backend failed"; exit 1; }
