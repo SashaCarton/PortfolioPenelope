@@ -8,7 +8,14 @@ import { factories } from '@strapi/strapi';
 export default factories.createCoreController('api::visite.visite', ({ strapi }) => ({
   // POST /api/visites — public, crée une visite
   async create(ctx) {
-    const body = ctx.request.body?.data || ctx.request.body;
+    // Strapi v5 peut placer le body dans différentes structures
+    const raw = ctx.request.body;
+    const body = raw?.data ?? raw;
+
+    // Debug temporaire — à retirer après validation
+    strapi.log.info(`[visite] raw body keys: ${JSON.stringify(Object.keys(raw || {}))}`);
+    strapi.log.info(`[visite] resolved body: ${JSON.stringify(body)}`);
+
     if (!body?.page) {
       return ctx.badRequest('Le champ "page" est requis');
     }
