@@ -148,7 +148,8 @@ function loadModel(url: string) {
   const loader = new GLTFLoader();
   // si DRACO est disponible, attacher pour décompresser les maillages
   if (dracoLoader) {
-    loader.setDRACOLoader(dracoLoader);
+    // TypeScript types may not include setDRACOLoader on GLTFLoader; cast to any
+    (loader as any).setDRACOLoader(dracoLoader);
   }
 
   // reset error state
