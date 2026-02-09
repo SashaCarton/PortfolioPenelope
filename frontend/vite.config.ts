@@ -4,6 +4,15 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          gsap: ['gsap'],
+        },
+      },
+    },
+  },
   server: {
     host: true,           // accepte toutes les IP
     // autoriser explicitement l'hôte API (inclut variantes avec port et sous-domaine)
