@@ -59,15 +59,19 @@
     <!-- Intro Text Section -->
     <div class="home__text">
         <div class="picture" :class="{ 'skeleton': isLoading }">
-            <img
+            <video
                 v-if="!isLoading"
-                src="/images/ASCII woman.gif"
-                alt="Spinning ASCII art"
-                loading="lazy"
-                decoding="async"
-                width="593"
-                height="546"
-            />
+                autoplay
+                loop
+                muted
+                playsinline
+                width="380"
+                height="350"
+                aria-label="Spinning ASCII art"
+            >
+                <source src="/images/ASCII woman.webm" type="video/webm" />
+                <source src="/images/ASCII woman.mp4" type="video/mp4" />
+            </video>
             <div v-else class="skeleton-image"></div>
         </div>
         <div class="text" :class="{ 'skeleton-text': isLoading }">
@@ -459,6 +463,7 @@ onUnmounted(() => {
     contain: layout style;
 }
 
+.home__text .picture video,
 .home__text .picture img {
     width: 100%;
     height: 100%;

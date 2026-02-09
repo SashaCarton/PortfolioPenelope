@@ -24,7 +24,14 @@
         @click="goToProjectDetails(project.id)"
       >
         <span v-if="project.has3D" class="three-badge">3D</span>
-        <img :src="project.cover" :alt="project.title" />
+        <img
+          :src="project.cover"
+          :alt="project.title"
+          :loading="index < 3 ? 'eager' : 'lazy'"
+          decoding="async"
+          width="500"
+          height="600"
+        />
         <h3>{{ project.title }}</h3>
         <p>{{ project.description }}</p>
         <div class="fade"></div>
@@ -74,7 +81,9 @@ onMounted(async () => {
         description: project.Description || 'Pas de description',
         favorite: project.Favorite || false,
         createdAt: project.createdAt,
-        cover: project.Cover?.formats?.medium?.url 
+        cover: project.Cover?.formats?.small?.url 
+          ? `https://api.penelopeletienne.ovh${project.Cover.formats.small.url}` 
+          : project.Cover?.formats?.medium?.url
           ? `https://api.penelopeletienne.ovh${project.Cover.formats.medium.url}` 
           : project.Cover?.url 
           ? `https://api.penelopeletienne.ovh${project.Cover.url}` 
@@ -152,6 +161,8 @@ h1 {
   max-height: 70%;
   border-radius: 5px;
   transition: transform 0.3s ease;
+  aspect-ratio: 500 / 600;
+  object-fit: cover;
 }
 
 .project-item:hover img {
