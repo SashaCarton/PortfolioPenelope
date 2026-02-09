@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router'; // Import du routeur
+import { setupAnalytics } from './utils/analytics';
 
 // En production, neutraliser certains console.* pour éviter les logs en live
 if (import.meta.env && import.meta.env.PROD) {
@@ -9,4 +10,10 @@ if (import.meta.env && import.meta.env.PROD) {
   });
 }
 
-createApp(App).use(router).mount('#app');
+const app = createApp(App);
+app.use(router);
+
+// Initialiser le suivi analytique (désactivé automatiquement en dev)
+setupAnalytics(router);
+
+app.mount('#app');
