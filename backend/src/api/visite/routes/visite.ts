@@ -1,28 +1,13 @@
 /**
- * visite routes — inclut les routes CRUD standard + la route stats custom
+ * visite routes — core router avec auth désactivée sur create
  */
-export default {
-  routes: [
-    {
-      method: 'POST',
-      path: '/visites',
-      handler: 'visite.create',
-      config: {
-        // Route publique — pas besoin d'auth pour enregistrer une visite
-        auth: false,
-        policies: [],
-        middlewares: [],
-      },
+import { factories } from '@strapi/strapi';
+
+// @ts-expect-error — type generated after strapi build
+export default factories.createCoreRouter('api::visite.visite', {
+  config: {
+    create: {
+      auth: false,
     },
-    {
-      method: 'GET',
-      path: '/visites/stats',
-      handler: 'visite.stats',
-      config: {
-        // Protégée par Bearer token
-        policies: [],
-        middlewares: [],
-      },
-    },
-  ],
-};
+  },
+});
