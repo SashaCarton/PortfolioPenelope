@@ -25,6 +25,7 @@ module.exports = [
             "https://api.penelopeletienne.ovh:1338",
             "http://api.penelopeletienne.ovh:80",
             "http://localhost:5173",
+            "https://portfolio-penelope-9tyg.vercel.app",
           ],
           "font-src": ["'self'", "https:", "data:"],
           "object-src": ["'none'"],
@@ -36,7 +37,8 @@ module.exports = [
             "https://penelopeletienne.ovh",
             "http://penelopeletienne.ovh",
             "http://localhost:5173",
-            "https://api.penelopeletienne.ovh"
+            "https://api.penelopeletienne.ovh",
+            "https://portfolio-penelope-9tyg.vercel.app"
           ],
         },
       },
@@ -55,6 +57,8 @@ module.exports = [
         'http://api.penelopeletienne.ovh:1338',
         'https://api.penelopeletienne.ovh:1338',
         'http://api.penelopeletienne.ovh:80',
+        'https://portfolio-penelope-9tyg.vercel.app',
+        /https:\/\/.*\.vercel\.app/,
       ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization'],
