@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "visites",
+  "info": {
+    "singularName": "visite",
+    "pluralName": "visites",
+    "displayName": "Visite",
+    "description": "Suivi analytique des visites du site"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "page": {
+      "type": "string",
+      "required": true
+    },
+    "referrer": {
+      "type": "string"
+    },
+    "userAgent": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "screenWidth": {
+      "type": "integer"
+    },
+    "screenHeight": {
+      "type": "integer"
+    },
+    "country": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "device": {
+      "type": "enumeration",
+      "enum": ["desktop", "tablet", "mobile", "unknown"],
+      "default": "unknown"
+    },
+    "browser": {
+      "type": "string"
+    },
+    "os": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "integer",
+      "default": 0
+    },
+    "lcp": {
+      "type": "float"
+    },
+    "fcp": {
+      "type": "float"
+    },
+    "cls": {
+      "type": "float"
+    },
+    "ttfb": {
+      "type": "float"
+    }
+  }
+}

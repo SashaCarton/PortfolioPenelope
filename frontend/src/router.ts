@@ -38,10 +38,21 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Login',
         component: () => import('./views/Login.vue'),
     },
+    {
+        path: '/analytics',
+        name: 'Analytics',
+        component: () => import('./views/Analytics.vue'),
+    },
     // Redirect old gallery route to Projects
     {
         path: '/models',
         redirect: '/projects'
+    },
+    // 404 catch-all — doit rester en dernier
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('./views/NotFound.vue'),
     },
 ];
 

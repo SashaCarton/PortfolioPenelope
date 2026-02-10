@@ -18,6 +18,12 @@ const routes = [
         path: '/contact',
         name: 'contact',
         component: Contact,  // Page de contact
+    },
+    // 404 catch-all — doit rester en dernier
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('../views/NotFound.vue'),
     }
 ]
 

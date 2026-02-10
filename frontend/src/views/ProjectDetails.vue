@@ -9,7 +9,7 @@
         <div v-for="(media, index) in project.media" :key="media.id" class="media-item">
           <template v-if="media.mime.startsWith('image')">
             <img
-              :src="`https://api.penelopeletienne.ovh${media.url}`"
+              :src="mediaImage(`https://api.penelopeletienne.ovh${media.url}`)"
               :alt="media.name"
               class="media-image"
               @click="openLightbox(index)"
@@ -71,6 +71,7 @@
 import { ref, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { fullWidthImage, mediaImage } from '../utils/cdn';
 
 // Lazy-load le viewer pour alléger le bundle
 const ThreeViewer = defineAsyncComponent(() => import('../components/ThreeViewer.vue'));
@@ -174,11 +175,13 @@ onMounted(async () => {
       title: projectData.Titre || 'Sans titre',
       description: projectData.Description || 'Pas de description',
       createdAt: projectData.createdAt,
-      cover: projectData.Cover?.formats?.medium?.url
-        ? `https://api.penelopeletienne.ovh${projectData.Cover.formats.medium.url}`
-        : projectData.Cover?.url
-        ? `https://api.penelopeletienne.ovh${projectData.Cover.url}`
-        : null,
+      cover: fullWidthImage(
+        projectData.Cover?.formats?.medium?.url
+          ? `https://api.penelopeletienne.ovh${projectData.Cover.formats.medium.url}`
+          : projectData.Cover?.url
+          ? `https://api.penelopeletienne.ovh${projectData.Cover.url}`
+          : null
+      ),
       media: projectData.Media || [],
       video: projectData.Video || [],
       has3D: uniqueModelUrls.length > 0,

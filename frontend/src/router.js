@@ -41,6 +41,17 @@ const routes = [
         path: '/models',
         redirect: '/projects'
     },
+    {
+        path: '/analytics',
+        name: 'Analytics',
+        component: () => import('./views/Analytics.vue'),
+    },
+    // 404 catch-all — doit rester en dernier
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('./views/NotFound.vue'),
+    },
 ];
 const router = createRouter({
     history: createWebHistory(),
