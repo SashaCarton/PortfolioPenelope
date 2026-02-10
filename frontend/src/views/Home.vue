@@ -57,7 +57,7 @@
         <div class="text" :class="{ 'skeleton-text': isLoading }">
             <template v-if="!isLoading">
                 <h1>Étudiante en design numérique — approche hybride de l'expérience, de la sensibilité et de la recherche</h1>
-                <p>Après neuf années de formation au beaux-arts, j'ai par la suite obtenu un bac STD2A (arts appliqués) qui m'a naturellement conduite vers le design et l'expérience utilisateur.</p>
+                <p>Après neuf années de formation aux beaux-arts, j'ai par la suite obtenu un bac STD2A (arts appliqués) qui m'a naturellement conduite vers le design et l'expérience utilisateur.</p>
                 <p>Je suis passionnée par l'architecture de l'information, les micro-interactions et la dimension émotionnelle des interfaces. Actuellement, je poursuis ma formation à l'ENSAAMA, école parisienne de design et de métiers d'art.</p>
                 <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus →</button>
             </template>
