@@ -1,7 +1,7 @@
 <template>
   <section class="about-scroll">
     <h1>Étudiante en design numérique — approche hybride de l’expérience, de la sensibilité et de la recherche</h1>
-    <!-- Spacer pour le scroll -->
+    <!-- Spacer pour le scroll --> 
     <div class="ascii-spacer"></div>
     <div class="content">
       <!-- GIF ASCII contrôlé par le scroll -->
