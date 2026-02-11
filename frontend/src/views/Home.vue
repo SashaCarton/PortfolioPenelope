@@ -77,7 +77,7 @@
         <div class="text" :class="{ 'skeleton-text': isLoading }">
             <template v-if="!isLoading">
                 <h1>Étudiante en design numérique — approche hybride de l'expérience, de la sensibilité et de la recherche</h1>
-                <p>Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai ensuite rejoint l'école ESAAT de Roubaix pour obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives..., Aujourd'hui étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire.</p>
+                <p>Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai ensuite rejoint l'école ESAAT de Roubaix pour obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives..., Aujourd'hui étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre 2024, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire.</p>
                 <button @click="router.push({ name: 'About' })" class="btn-secondary">En savoir plus →</button>
             </template>
             <template v-else>
