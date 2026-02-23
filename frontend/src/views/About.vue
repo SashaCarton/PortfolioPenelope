@@ -88,22 +88,22 @@ const textBlocks = [
   {
     title: "Ma démarche —",
     paragraphs: [
-      "Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai ensuite rejoint l'école ESAAT de Roubaix pour obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives...",
-      "Aujourd'hui étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre 2024, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire."
+      "Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai rejoint l'ESAAT de Roubaix et obtenu le BAC STD2A (arts appliqués) en 2024. En parallèle, j'ai travaillé sur de nombreux projets numériques car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives...",
+      "Aujourd'hui étudiante en design numérique à l'ENSAAMA (Olivier de Serres) de Paris depuis septembre 2024, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire dans le cadre de ma 2ème année de DNMADE."
     ]
   },
   {
     title: "Mes études —",
     paragraphs: [
-      "Issu du graphisme numérique, ce cursus vise à former les étudiants à la création-conception et à la production d'environnements numériques, comme : Motion design vidéo 2D/3D, Web documentaires, Interfaces graphiques pour sites web et applis mobiles, Objets connectés, serious games et e‑learning, Installations multimédia, mapping, etc."
+      "Issu du graphisme numérique, le DN MADe Numérique (Parcours expériences narratives et interactives) vise à former les étudiants à la création-conception et à la production d'environnements numériques, comme : Motion design vidéo 2D/3D, Web documentaires, Interfaces graphiques pour sites web et applis mobiles, Objets connectés, serious games et e‑learning, Installations multimédia, mapping, etc."
     ]
   },
   {
     title: "Mes loisirs —",
     paragraphs: [
-      "On me décrit souvent comme ambitieuse, débrouillarde et très curieuse. J'aime toucher à tout, traditionnel ou numérique, et m'instruire en cinéma, mode, pop‑culture, science, histoire...",
+      "On me décrit souvent comme ambitieuse, débrouillarde et très curieuse. J'aime toucher à tout, créer (Impressions 3D, Modelage, Jeux vidéo), dessiner, peindre et me cultiver (cinéma, expos, mode, pop‑culture, science...)",
       "Scout pendant 8 ans, je suis très indépendante mais j'aime aussi œuvrer en équipe.",
-      "J'adore apprendre : j'ai suivi des cours de japonais, modélisation 3D et couture en dehors de la scolarité."
+      "J'adore apprendre et me former : j'ai suivi des cours de japonais, modélisation 3D et couture en dehors de mes études."
     ]
   }
 ];

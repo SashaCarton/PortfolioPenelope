@@ -284,7 +284,7 @@ p {
   line-height: 1.6;
   color: #444;
   margin-bottom: 2rem;
-  text-align: center;
+  text-align: left;
 }
 
 .project-meta {
