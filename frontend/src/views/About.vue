@@ -95,7 +95,7 @@ const textBlocks = [
   {
     title: "Mes études —",
     paragraphs: [
-      "Issu du graphisme numérique, le DN MADe Numérique (Parcours expériences narratives et interactives) vise à former les étudiants à la création-conception et à la production d'environnements numériques, comme : Motion design vidéo 2D/3D, Web documentaires, Interfaces graphiques pour sites web et applis mobiles, Objets connectés, serious games et e‑learning, Installations multimédia, mapping, etc."
+      "Issu du graphisme numérique, le DN MADe Numérique (Parcours expériences narratives et interactives) vise à former les étudiants à la création-conception et à la production d'environnements numériques, comme : Motion design vidéo 2D/3D, web documentaires, interfaces graphiques pour sites web et applis mobiles, objets connectés, serious games et e‑learning, installations multimédia, mapping, etc."
     ]
   },
   {
