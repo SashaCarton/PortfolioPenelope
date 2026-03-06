@@ -277,8 +277,11 @@ p {
 }
 
 .project-cover {
-  width: 50%;
-  height: auto;
+  width: 100%;
+  max-width: 100%;
+  /* smaller banner-like height while filling the container width */
+  height: 260px;
+  display: block;
   border-radius: 12px;
   object-fit: cover;
   margin: 1.5rem 0;
@@ -288,7 +291,7 @@ p {
   font-size: 1.15rem;
   line-height: 1.6;
   color: #444;
-  margin-bottom: 2rem;
+  margin-bottom: 3.5rem; /* augmenté pour espacer la description des médias */
   text-align: left;
 }
 
@@ -309,6 +312,7 @@ p {
   flex-wrap: wrap;
   gap: 1rem;
   width: 100%;
+  margin-top: 1.75rem; /* espace supplémentaire entre description et médias */
 }
 
 .project-media img {
@@ -402,6 +406,11 @@ p {
     width: 100%;
     max-width: 300px;
     margin: 0 auto;
+  }
+
+  /* reduce banner height on small screens */
+  .project-cover {
+    height: 140px;
   }
 }
 
