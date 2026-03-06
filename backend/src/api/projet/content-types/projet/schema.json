@@ -61,6 +61,12 @@
       "type": "string",
       "required": false,
       "default": null
+    },
+    "sections": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::section.section",
+      "mappedBy": "projet"
     }
   }
 }

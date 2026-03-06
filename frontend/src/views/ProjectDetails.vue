@@ -4,27 +4,34 @@
       <h1>{{ project.title }}</h1>
       <img :src="project.cover || ''" :alt="project.title" class="project-cover" />
       <p class="project-description">{{ project.description }}</p>
-      <!-- Images -->
-      <div class="project-media">
-        <div v-for="(media, index) in project.media" :key="media.id" class="media-item">
-          <template v-if="media.mime.startsWith('image')">
-            <img
-              :src="mediaImage(`https://api.penelopeletienne.ovh${media.url}`)"
-              :alt="media.name"
-              class="media-image"
-              @click="openLightbox(index)"
-            />
-          </template>
-        </div>
 
-        <!-- Vidéos -->
-        <div v-for="video in project.video" :key="video.id" class="media-item">
-          <template v-if="video.mime.startsWith('video')">
-            <video controls autoplay muted loop class="media-video">
-              <source :src="`https://api.penelopeletienne.ovh${video.url}`" :type="video.mime" />
-              Votre navigateur ne supporte pas la vidéo.
-            </video>
-          </template>
+      <!-- Boucle sur les sections -->
+      <div v-for="section in project.sections" :key="section.id" class="project-section">
+        <h2>{{ section.titre }}</h2>
+        <p class="section-description" v-if="section.description">{{ section.description }}</p>
+
+        <div class="project-media">
+          <!-- Images de la section -->
+          <div v-for="(media, index) in section.media" :key="media.id" class="media-item">
+            <template v-if="media.mime.startsWith('image')">
+              <img
+                :src="mediaImage(getImageUrl(media.url))"
+                :alt="media.name"
+                class="media-image"
+                @click="openLightbox(calculateGlobalMediaIndex(section.id, index))"
+              />
+            </template>
+          </div>
+
+          <!-- Vidéos de la section -->
+          <div v-for="video in section.video" :key="video.id" class="media-item">
+            <template v-if="video.mime.startsWith('video')">
+              <video controls autoplay muted loop class="media-video">
+                <source :src="getImageUrl(video.url)" :type="video.mime" />
+                Votre navigateur ne supporte pas la vidéo.
+              </video>
+            </template>
+          </div>
         </div>
       </div>
 
@@ -72,6 +79,7 @@ import { ref, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import VueEasyLightbox from 'vue-easy-lightbox';
 import { fullWidthImage, mediaImage } from '../utils/cdn';
+import { getApiUrl, getImageUrl } from '../utils/api';
 
 // Lazy-load le viewer pour alléger le bundle
 const ThreeViewer = defineAsyncComponent(() => import('../components/ThreeViewer.vue'));
@@ -79,14 +87,20 @@ const ThreeViewer = defineAsyncComponent(() => import('../components/ThreeViewer
 // Types for project and media to satisfy TypeScript in the template
 type MediaItem = { id: number | string; mime: string; url: string; name?: string };
 type VideoItem = { id: number | string; mime: string; url: string; name?: string };
+type SectionType = {
+  id: number | string;
+  titre: string;
+  description?: string;
+  media: MediaItem[];
+  video: VideoItem[];
+};
 type ProjectType = {
   id: number;
   title: string;
   description: string;
   createdAt?: string;
   cover?: string | null;
-  media: MediaItem[];
-  video: VideoItem[];
+  sections: SectionType[];
   has3D?: boolean;
   modelUrls?: string[];
 };
@@ -130,7 +144,7 @@ function onKeydown(e: KeyboardEvent) {
 onMounted(async () => {
   const projectId = Number(route.params.id);
   try {
-    const response = await fetch(`https://api.penelopeletienne.ovh/api/projets?populate=*`);
+    const response = await fetch(getApiUrl('/api/projets?populate=*'));
     if (!response.ok) throw new Error('Erreur lors de la récupération des projets');
 
     const { data } = await response.json();
@@ -138,15 +152,18 @@ onMounted(async () => {
 
     if (!projectData) throw new Error('Projet non trouvé');
 
+    console.log('📦 Données du projet reçu:', projectData);
+    console.log('🔧 Sections:', projectData.sections);
+
     // Détection robuste de l'URL du modèle (supporte URL_SUPABASE, media local, champs directs)
     let candidateModelUrl: string | null = null;
 
     if (projectData.URL_SUPABASE && Array.isArray(projectData.URL_SUPABASE) && projectData.URL_SUPABASE[0]?.url) {
       candidateModelUrl = projectData.URL_SUPABASE[0].url;
     } else if (projectData.model?.data?.attributes?.url) {
-      candidateModelUrl = `https://api.penelopeletienne.ovh${projectData.model.data.attributes.url}`;
+      candidateModelUrl = getImageUrl(projectData.model.data.attributes.url);
     } else if (projectData.Model?.data?.attributes?.url) {
-      candidateModelUrl = `https://api.penelopeletienne.ovh${projectData.Model.data.attributes.url}`;
+      candidateModelUrl = getImageUrl(projectData.Model.data.attributes.url);
     } else if (projectData.modelUrl) {
       candidateModelUrl = projectData.modelUrl; // peut être URL absolue (ex: Supabase)
     } else if (projectData.Model && typeof projectData.Model === 'string') {
@@ -159,10 +176,10 @@ onMounted(async () => {
       projectData.URL_SUPABASE.forEach((m: any) => { if (m?.url) modelUrls.push(m.url); });
     }
     if (projectData.model?.data?.attributes?.url) {
-      modelUrls.push(`https://api.penelopeletienne.ovh${projectData.model.data.attributes.url}`);
+      modelUrls.push(getImageUrl(projectData.model.data.attributes.url));
     }
     if (projectData.Model?.data?.attributes?.url) {
-      modelUrls.push(`https://api.penelopeletienne.ovh${projectData.Model.data.attributes.url}`);
+      modelUrls.push(getImageUrl(projectData.Model.data.attributes.url));
     }
     if (projectData.modelUrl) {
       modelUrls.push(projectData.modelUrl);
@@ -177,22 +194,42 @@ onMounted(async () => {
       createdAt: projectData.createdAt,
       cover: fullWidthImage(
         projectData.Cover?.formats?.medium?.url
-          ? `https://api.penelopeletienne.ovh${projectData.Cover.formats.medium.url}`
+          ? getImageUrl(projectData.Cover.formats.medium.url)
           : projectData.Cover?.url
-          ? `https://api.penelopeletienne.ovh${projectData.Cover.url}`
+          ? getImageUrl(projectData.Cover.url)
           : null
       ),
-      media: projectData.Media || [],
-      video: projectData.Video || [],
+      sections: (projectData.sections?.data || []).map((sectionData: any) => ({
+        id: sectionData.id,
+        titre: sectionData.attributes?.titre || 'Sans titre',
+        description: sectionData.attributes?.description || '',
+        media: sectionData.attributes?.media || [],
+        video: sectionData.attributes?.video || [],
+      })) || [
+        // ⚠️ FALLBACK: Si pas de sections, créer une section par défaut avec les vieilles données
+        {
+          id: 'default',
+          titre: 'Galerie',
+          description: '',
+          media: projectData.Media || [],
+          video: projectData.Video || [],
+        }
+      ].filter(s => s.media.length > 0 || s.video.length > 0), // ne montrer la fallback que s'il y a du contenu
       has3D: uniqueModelUrls.length > 0,
       modelUrls: uniqueModelUrls,
     };
 
     // Construire la liste d'images pour la lightbox — robustifier selon la forme des media reçus
-    const rawMedia = ((project.value.media as any[]) || []);
-    const imageMedia = rawMedia.filter((m: any) => {
+    const allImageMedia: any[] = [];
+    project.value.sections.forEach(section => {
+      if (Array.isArray(section.media)) {
+        allImageMedia.push(...section.media);
+      }
+    });
+
+    const imageMedia = allImageMedia.filter((m: any) => {
       if (!m) return false;
-      if (typeof m === 'string') return true; // supposer que c'est déjà une URL valide
+      if (typeof m === 'string') return true;
       return typeof m.mime === 'string' && m.mime.startsWith('image') && !!m.url;
     });
 
@@ -200,7 +237,7 @@ onMounted(async () => {
       .map((m: any) => {
         if (typeof m === 'string') return m;
         const url = m.url || '';
-        return url.startsWith('http') ? url : `https://api.penelopeletienne.ovh${url}`;
+        return getImageUrl(url);
       })
       .filter(Boolean);
 
@@ -231,6 +268,24 @@ function formatDate(dateString?: string) {
   if (!dateString) return '';
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(dateString).toLocaleDateString('fr-FR', options);
+}
+
+function calculateGlobalMediaIndex(sectionId: string | number, indexInSection: number): number {
+  let globalIndex = 0;
+  const sectionIndex = project.value?.sections.findIndex(s => s.id === sectionId) ?? -1;
+
+  // Compter tous les médias des sections précédentes
+  if (project.value && sectionIndex >= 0) {
+    for (let i = 0; i < sectionIndex; i++) {
+      const imageCount = project.value.sections[i].media
+        .filter((m: any) => m.mime?.startsWith('image'))
+        .length;
+      globalIndex += imageCount;
+    }
+  }
+
+  globalIndex += indexInSection;
+  return globalIndex;
 }
 
 function openLightbox(index: number) {
@@ -284,6 +339,26 @@ p {
   line-height: 1.6;
   color: #444;
   margin-bottom: 2rem;
+  text-align: left;
+}
+
+.project-section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.project-section h2 {
+  font-size: 1.8rem;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.section-description {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
