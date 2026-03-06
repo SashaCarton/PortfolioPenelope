@@ -8,12 +8,14 @@
       <div class="project-media">
         <div v-for="(media, index) in project.media" :key="media.id" class="media-item">
           <template v-if="media.mime.startsWith('image')">
-            <img
-              :src="mediaImage(`https://api.penelopeletienne.ovh${media.url}`)"
-              :alt="media.name"
-              class="media-image"
-              @click="openLightbox(index)"
-            />
+            <div class="media-figure" @click="openLightbox(index)">
+              <img
+                :src="mediaImage(`https://api.penelopeletienne.ovh${media.url}`)"
+                :alt="media.name"
+                class="media-image"
+              />
+              <div class="media-overlay">{{ media.caption || media.name || media.alternativeText || 'Description' }}</div>
+            </div>
           </template>
         </div>
 
@@ -327,6 +329,43 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Figure wrapper and overlay for hover effect */
+.media-figure {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}
+.media-figure .media-image {
+  display: block;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: filter 0.28s ease, transform 0.28s ease;
+}
+.media-figure .media-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.media-figure:hover .media-image {
+  filter: grayscale(100%);
+  transform: scale(1.02);
+}
+.media-figure:hover .media-overlay {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
