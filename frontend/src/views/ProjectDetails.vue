@@ -21,13 +21,16 @@
 
         <!-- Vidéos -->
         <div v-for="video in project.video" :key="video.id" class="media-item">
-          <template v-if="video.mime.startsWith('video')">
-            <video controls autoplay muted loop class="media-video">
-              <source :src="`https://api.penelopeletienne.ovh${video.url}`" :type="video.mime" />
-              Votre navigateur ne supporte pas la vidéo.
-            </video>
-          </template>
-        </div>
+            <template v-if="video.mime.startsWith('video')">
+              <div class="media-figure media-figure-video">
+                <video controls autoplay muted loop class="media-video">
+                  <source :src="`https://api.penelopeletienne.ovh${video.url}`" :type="video.mime" />
+                  Votre navigateur ne supporte pas la vidéo.
+                </video>
+                <div class="media-overlay">{{ video.caption || video.name || video.alternativeText || 'Description' }}</div>
+              </div>
+            </template>
+          </div>
       </div>
 
       <!-- Scène 3D si présent et index choisi -->
@@ -346,9 +349,20 @@ p {
   border-radius: 12px;
   transition: filter 0.28s ease, transform 0.28s ease;
 }
+.media-figure .media-video {
+  display: block;
+  width: 200px;
+  height: 200px;
+  /* keep full video visible without cropping */
+  object-fit: contain;
+  border-radius: 12px;
+  /* no grayscale/scale transition for video to preserve colors and controls */
+  transition: opacity 0.28s ease;
+}
 .media-figure .media-overlay {
   position: absolute;
-  inset: 0;
+  /* reduce overlay area so native video controls remain visible */
+  inset: 8%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -359,6 +373,8 @@ p {
   background: rgba(0,0,0,0.35);
   opacity: 0;
   transition: opacity 0.28s ease;
+  pointer-events: none; /* allow clicks to reach the video controls */
+  border-radius: 8px;
 }
 .media-figure:hover .media-image {
   filter: grayscale(100%);
@@ -367,6 +383,7 @@ p {
 .media-figure:hover .media-overlay {
   opacity: 1;
 }
+/* videos are intentionally not transformed or grayscaled on hover */
 
 @media (max-width: 768px) {
   .project-media {
