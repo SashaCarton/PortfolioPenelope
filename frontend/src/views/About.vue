@@ -83,7 +83,7 @@ onUnmounted(() => {
 });
 
 
-// Textes
+
 const textBlocks = [
   {
     title: "Ma démarche —",
