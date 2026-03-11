@@ -36,7 +36,7 @@
 
           <li class="desktop-only"><router-link to="/contact">Contact</router-link></li>
           <li class="desktop-only"><a href="https://www.linkedin.com/in/p%C3%A9n%C3%A9lope-letienne-5515852b0/" target="_blank">LinkedIn</a></li>
-          <li class="desktop-only"><a href="https://github.com/Penny0507" target="_blank">GitHub</a></li>
+          <li class="desktop-only"><a href="https://github.com" target="_blank">GitHub</a></li>
           <a href="/assets/CV_LETIENNE_Penelope.pdf" download class="download-cv-button">Télécharger mon CV</a>
         </ul>
         <p>&copy; 2025 Pénélope Letienne. Tous droits réservés.</p>
@@ -102,6 +102,10 @@ body {
   width: 100%;
   position: relative;
   height: 100%;
+}
+
+main {
+  padding-top: 60px; /* reserve space for fixed header */
 }
 
 .menu-burger {
