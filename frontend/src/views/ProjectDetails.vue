@@ -52,6 +52,7 @@
               loading="lazy"
               decoding="async"
             />
+            <div class="media-overlay"><span class="media-title">{{ media.name }}</span></div>
           </template>
         </div>
 
@@ -60,6 +61,7 @@
             <video controls autoplay muted loop class="media-video" playsinline>
               <source :src="`https://api.penelopeletienne.ovh${video.url}`" :type="video.mime" />
             </video>
+            <div class="media-overlay"><span class="media-title">{{ video.name }}</span></div>
           </template>
         </div>
       </div>
@@ -503,7 +505,12 @@ onUnmounted(() => {
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s;
+  aspect-ratio: 1 / 1; /* force square thumbnails */
+  display: block;
+  background: #f6f6f6; /* subtle placeholder while loading */
 }
+
+.media-item { position: relative; }
 
 .media-item:hover {
   transform: translateY(-4px);
@@ -512,10 +519,29 @@ onUnmounted(() => {
 
 .media-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: cover; /* cover the square area without distortion */
   transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+
+/* Overlay that shows media name on hover */
+.media-overlay {
+  position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center;
+  padding: 0.9rem 1rem; pointer-events: none; /* more spacing from borders */
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%); /* darker bottom for readability */
+  opacity: 0; transition: opacity 180ms ease;
+}
+.media-item:hover .media-overlay { opacity: 1; }
+.media-title { color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; text-align: center; }
+
+/* Place overlay at top for videos */
+.media-video-wrap .media-overlay {
+  align-items: flex-start;
+  background: linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 60%); /* darker top for videos */
+  padding-top: 0.9rem; /* match increased spacing */
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .media-item:hover .media-img {
@@ -528,9 +554,10 @@ onUnmounted(() => {
 
 .media-video {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  border-radius: 12px;
+  border-radius: 0; /* container already has radius */
+  object-fit: cover;
 }
 
 /* ════════════════════════════════════════
