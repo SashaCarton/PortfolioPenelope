@@ -139,8 +139,8 @@
         </div>
         <div class="about-text" ref="aboutTextRef">
           <h3>Étudiante en design numérique — approche hybride de l'expérience, de la sensibilité et de la recherche</h3>
-          <p>Après neuf années de formation aux beaux-arts, j'ai obtenu un bac STD2A (arts appliqués) qui m'a naturellement conduite vers le design et l'expérience utilisateur.</p>
-          <p>Je suis passionnée par l'architecture de l'information, les micro-interactions et la dimension émotionnelle des interfaces. Actuellement, je poursuis ma formation à l'ENSAAMA, école parisienne de design et de métiers d'art.</p>
+          <p>Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai rejoint l'ESAAT de Roubaix et obtenu le BAC STD2A (arts appliqués) en 2024. En parallèle, j'ai travaillé sur de nombreux projets numériques car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives.</p>
+          <p>Aujourd'hui étudiante en design numérique à l'ENSAAMA (Olivier de Serres) de Paris depuis septembre 2024, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire.</p>
           <button @click="router.push({ name: 'About' })" class="link-btn">En savoir plus →</button>
         </div>
       </div>

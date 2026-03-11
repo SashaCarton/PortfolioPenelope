@@ -104,6 +104,10 @@ body {
   height: 100%;
 }
 
+main {
+  padding-top: 60px; /* reserve space for fixed header */
+}
+
 .menu-burger {
   position: relative;
 }

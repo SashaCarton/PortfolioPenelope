@@ -345,8 +345,9 @@ onUnmounted(() => {
   position: relative;
   min-height: 70vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* place content at top so long descriptions don't push title offscreen */
   justify-content: center;
+  padding-top: 4rem; /* spacing from fixed header */
   overflow: hidden;
 }
 
@@ -385,11 +386,12 @@ onUnmounted(() => {
 }
 
 .hero-inner {
-  position: relative; z-index: 1;
+  position: relative; z-index: 3;
   text-align: center;
   display: flex; flex-direction: column; align-items: center;
   max-width: 700px;
   padding: 0 2rem;
+  margin-bottom: 3rem; /* ensure hero pushes following content */
 }
 
 .hero-eyebrow {
@@ -417,6 +419,7 @@ onUnmounted(() => {
   line-height: 1.7;
   color: #666;
   max-width: 550px;
+  text-align: left;
 }
 
 /* ════════════════════════════════════════
@@ -424,7 +427,7 @@ onUnmounted(() => {
    ════════════════════════════════════════ */
 .cover-section {
   padding: 0; /* full-bleed banner within page */
-  margin-top: -3rem;
+  margin-top: 0; /* removed negative margin so hero pushes it down */
   position: relative;
   z-index: 2;
   width: 100%;

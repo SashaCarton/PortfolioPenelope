@@ -41,12 +41,12 @@
         <div class="block-body">
           <div class="block-visual">
             <div class="ascii-container">
-              <img :src="currentFrameSrc" alt="ASCII rotation" loading="eager" />
+              <img :src="butterflySrc" alt="butterfly" loading="eager" />
             </div>
           </div>
           <div class="block-text">
-            <p>Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai ensuite rejoint l'école ESAAT de Roubaix pour obtenir un BAC STD2A (arts appliqués). En parallèle, j'ai travaillé sur de nombreux projets numériques, car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives…</p>
-            <p>Aujourd'hui étudiante en design numérique à l'école ENSAAMA de Paris depuis septembre, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire.</p>
+            <p>Formée aux beaux‑arts pendant 9 ans à l'école des arts plastiques de Lens, j'ai rejoint l'ESAAT de Roubaix et obtenu le BAC STD2A (arts appliqués) en 2024. En parallèle, j'ai travaillé sur de nombreux projets numériques car je suis passionnée par les technologies, le web, les jeux, et les expériences immersives...</p>
+            <p>Aujourd'hui étudiante en design numérique à l'ENSAAMA (Olivier de Serres) de Paris depuis septembre 2024, je suis à la recherche d'un stage alliant nouvelles technologies, créativité et savoir‑faire dans le cadre de ma 2ème année de DNMADE.</p>
           </div>
         </div>
       </div>
@@ -58,9 +58,9 @@
           <h2 class="section-title">Mes études</h2>
           <div class="section-line"></div>
         </div>
-        <div class="block-body reverse">
+        <div class="block-body">
           <div class="block-text">
-            <p>Issu du graphisme numérique, ce cursus vise à former les étudiants à la création-conception et à la production d'environnements numériques, comme&nbsp;:</p>
+            <p>Issu du graphisme numérique, le DN MADe Numérique (Parcours expériences narratives et interactives) vise à former les étudiants à la création-conception et à la production d'environnements numériques, comme &nbsp;:</p>
             <ul>
               <li>Motion design vidéo 2D/3D</li>
               <li>Web documentaires</li>
@@ -70,20 +70,8 @@
             </ul>
           </div>
           <div class="block-visual">
-            <div class="stat-card" ref="statCardRef">
-              <div class="stat-big">ENSAAMA</div>
-              <div class="stat-sub">Paris · Design numérique</div>
-              <div class="stat-row">
-                <div class="stat-item">
-                  <span class="stat-num">9</span>
-                  <span class="stat-lbl">ans beaux-arts</span>
-                </div>
-                <div class="stat-sep"></div>
-                <div class="stat-item">
-                  <span class="stat-num">STD2A</span>
-                  <span class="stat-lbl">baccalauréat</span>
-                </div>
-              </div>
+            <div class="stat-image" ref="statCardRef">
+              <img :src="flowerSrc" alt="flower" loading="eager" />
             </div>
           </div>
         </div>
@@ -98,17 +86,14 @@
         </div>
         <div class="block-body">
           <div class="block-visual">
-            <div class="trait-grid" ref="traitGridRef">
-              <div class="trait" v-for="(trait, i) in traits" :key="i">
-                <span class="trait-icon">{{ trait.icon }}</span>
-                <span class="trait-label">{{ trait.label }}</span>
-              </div>
-            </div>
+                    <div class="deer-image" ref="traitGridRef">
+                      <img :src="deerSrc" alt="deer" loading="eager" />
+                    </div>
           </div>
           <div class="block-text">
-            <p>On me décrit souvent comme ambitieuse, débrouillarde et très curieuse. J'aime toucher à tout, traditionnel ou numérique, et m'instruire en cinéma, mode, pop‑culture, science, histoire…</p>
+            <p>On me décrit souvent comme ambitieuse, débrouillarde et très curieuse. J'aime toucher à tout, créer (Impressions 3D, Modelage, Jeux vidéo), dessiner, peindre et me cultiver (cinéma, expos, mode, pop‑culture, science...)</p>
             <p>Scout pendant 8 ans, je suis très indépendante mais j'aime aussi œuvrer en équipe.</p>
-            <p>J'adore apprendre&nbsp;: j'ai suivi des cours de japonais, modélisation 3D et couture en dehors de la scolarité.</p>
+            <p>J'adore apprendre et me former : j'ai suivi des cours de japonais, modélisation 3D et couture en dehors de mes études.</p>
           </div>
         </div>
       </div>
@@ -118,21 +103,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
-// ── ASCII frames ──
-const totalFrames = 42
-const currentFrame = ref(42)
-
-const currentFrameSrc = computed(() => {
-  const n = String(currentFrame.value).padStart(6, '0')
-  return `/assets/penny_frames/ascii-${n}.png`
-})
+// ── Illustration statique ──
+const butterflySrc = '/assets/ascii/butterfly.webp'
+const flowerSrc = '/assets/ascii/flower.webp'
+const deerSrc = '/assets/ascii/deer.gif'
 
 // ── Traits ──
 const traits = [
@@ -175,15 +156,8 @@ function scrollToSection(id) {
 }
 
 // ── Scroll-driven ASCII frames ──
-function onScroll() {
-  const scrollTop = window.scrollY
-  const maxScroll = document.body.scrollHeight - window.innerHeight
-  const fraction = scrollTop / maxScroll
-  currentFrame.value = Math.min(totalFrames, Math.max(1, Math.round(totalFrames - (fraction * totalFrames)) + 1))
-}
 
 onMounted(() => {
-  window.addEventListener('scroll', onScroll)
   window.scrollTo(0, 0)
 
   gsapCtx = gsap.context(() => {
@@ -264,7 +238,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll)
   gsapCtx?.revert()
 })
 </script>
@@ -379,6 +352,9 @@ onUnmounted(() => {
 .about-block {
   padding: 0 5vw;
   margin-bottom: 8rem;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .about-block:last-child {
@@ -409,7 +385,7 @@ onUnmounted(() => {
 /* Block body */
 .block-body {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 4rem;
 }
 
@@ -469,7 +445,6 @@ onUnmounted(() => {
   border-radius: 16px;
   padding: 2.5rem;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.05);
 }
 
 .stat-big {
@@ -515,6 +490,14 @@ onUnmounted(() => {
   width: 1px; height: 28px; background: rgba(0,0,0,0.1);
 }
 
+/* Stat image replacement */
+.stat-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}
+
 /* Trait grid */
 .trait-grid {
   display: grid;
@@ -547,6 +530,14 @@ onUnmounted(() => {
   letter-spacing: 0.1em;
   color: #666;
   text-transform: uppercase;
+}
+
+/* Deer image replacement */
+.deer-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
 }
 
 /* ════════════════════════════════════════
