@@ -904,6 +904,7 @@ onUnmounted(() => {
 .about-text {
   max-width: 500px;
   opacity: 0; /* GSAP */
+  text-align: left;
 }
 
 .about-text h3 {
@@ -911,6 +912,7 @@ onUnmounted(() => {
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 1.4;
+  text-align: left;
   color: #111;
   margin: 0 0 1.2rem;
 }
@@ -921,6 +923,7 @@ onUnmounted(() => {
   line-height: 1.7;
   color: #555;
   margin: 0 0 1rem;
+  text-align: left;
 }
 
 .link-btn {
@@ -1018,7 +1021,7 @@ onUnmounted(() => {
 
   .about-text {
     max-width: 100%;
-    text-align: center;
+    text-align: left;
   }
 
   .about-text h3 { font-size: 1.2rem; }

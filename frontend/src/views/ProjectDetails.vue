@@ -420,27 +420,31 @@ onUnmounted(() => {
 }
 
 /* ════════════════════════════════════════
-   COVER
+   COVER (banner style)
    ════════════════════════════════════════ */
 .cover-section {
-  padding: 0 5vw;
+  padding: 0; /* full-bleed banner within page */
   margin-top: -3rem;
   position: relative;
   z-index: 2;
+  width: 100%;
+  overflow: hidden;
 }
 
 .cover-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  border-radius: 16px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  border-radius: 0; /* flat banner edges */
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.1);
+  box-shadow: none; /* keep banner flat */
 }
 
 .cover-img {
   width: 100%;
-  height: auto;
+  height: 220px; /* thinner banner height */
   display: block;
+  object-fit: cover; /* crop to banner ratio */
   will-change: transform;
 }
 

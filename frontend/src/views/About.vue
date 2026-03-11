@@ -425,6 +425,7 @@ onUnmounted(() => {
 .block-text {
   flex: 1;
   max-width: 550px;
+  text-align: left;
 }
 
 .block-text p {
@@ -433,6 +434,7 @@ onUnmounted(() => {
   line-height: 1.8;
   color: #555;
   margin: 0 0 1rem;
+  text-align: left;
 }
 
 .block-text ul {
